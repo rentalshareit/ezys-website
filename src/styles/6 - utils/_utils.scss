@@ -221,6 +221,11 @@
   align-items: center;
 }
 
+.grid-count-2 {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+}
+
 .grid-count-4 {
   display: grid;
   grid-gap: $s-size;

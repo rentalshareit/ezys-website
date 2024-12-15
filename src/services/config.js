@@ -1,11 +1,12 @@
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DB_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MSG_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyDzCfvSBSRBNIsaH97LoyDkuUGFo0pSNTQ",
+  authDomain: "ezys-firebase.firebaseapp.com",
+  projectId: "ezys-firebase",
+  storageBucket: "ezys-firebase.firebasestorage.app",
+  messagingSenderId: "391785276401",
+  appId: "1:391785276401:web:1f857abb877900def19a50",
+  measurementId: "G-RVTH510724",
+  databaseURL: "https://ezys-firebase.firebaseio.com",
 };
 
 export default firebaseConfig;

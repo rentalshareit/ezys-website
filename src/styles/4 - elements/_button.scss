@@ -2,6 +2,7 @@
   background: $button-color;
   padding: $m-size;
   border: 1px solid $button-color;
+  border-radius: 5px;
   color: $white;
   font-weight: bold;
   position: relative;
@@ -83,6 +84,17 @@
   &:hover {
     border: 1px solid $border-color;
     background: $border-color;
+  }
+}
+
+.button-border-primary {
+  border: 1px solid $border-color-primary;
+  color: $paragraph-color-primary;
+  border-radius: 5px;
+
+  &:hover {
+    border: 1px solid $border-color-primary-dark;
+    background-color: rgb(var(--color-primary) / .1);
   }
 }
 
