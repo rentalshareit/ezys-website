@@ -1,6 +1,11 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
-import { ColorChooser, ImageLoader, MessageDisplay } from "@/components/common";
-import { ProductShowcaseGrid } from "@/components/product";
+import {
+  ColorChooser,
+  ImageLoader,
+  MessageDisplay,
+  Modal,
+} from "@/components/common";
+import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
 import { RECOMMENDED_PRODUCTS, SHOP } from "@/constants/routes";
 import { displayMoney } from "@/helpers/utils";
 import {
@@ -40,6 +45,7 @@ const styles = {
 };
 
 const ViewProduct = () => {
+  const [showPrice, setShowPrice] = useState(false);
   const { id } = useParams();
   const { product, isLoading, error } = useProduct(id);
   const { addToBasket, isItemOnBasket } = useBasket(id);
@@ -71,6 +77,10 @@ const ViewProduct = () => {
     if (colorOverlay.current) {
       colorOverlay.current.value = color;
     }
+  };
+
+  const handlePriceView = () => {
+    setShowPrice(true);
   };
 
   const handleAddToBasket = () => {
@@ -192,7 +202,6 @@ const ViewProduct = () => {
               </div>
               <br />
 
-              <h1>{displayMoney(product.price)}</h1>
               <div className="product-modal-action">
                 <button
                   className={`button button-small ${
@@ -206,6 +215,13 @@ const ViewProduct = () => {
                   {isItemOnBasket(product.id)
                     ? "Remove From Basket"
                     : "Add To Basket"}
+                </button>
+                <button
+                  className="button button-small"
+                  onClick={handlePriceView}
+                  type="button"
+                >
+                  View Price
                 </button>
               </div>
             </div>
@@ -230,6 +246,9 @@ const ViewProduct = () => {
           </div>
         </div>
       )}
+      <Modal isOpen={showPrice} onRequestClose={() => setShowPrice(false)}>
+        <ProductPrice />
+      </Modal>
     </main>
   );
 };

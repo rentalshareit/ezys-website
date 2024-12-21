@@ -203,6 +203,7 @@
   width: 100%;
   display: flex;
   background: #fff;
+  align-items: flex-start;
 
   @include tablet {
     flex-direction: column;
@@ -211,7 +212,7 @@
 }
 
 .product-modal-image-wrapper {
-  width: 40rem;
+  width: 60rem;
   // height: 40rem;
   height: inherit;
   flex-grow: 1;
@@ -219,7 +220,6 @@
 
   @include mobile {
     width: 100%;
-    height: 20rem;
     margin: auto;
   }
 
@@ -247,8 +247,6 @@
     width: 100%;
     height: auto;
     order: 2;
-    overflow-x: scroll;
-    overflow-y: unset;
     flex-direction: row;
   }
 }
@@ -299,7 +297,7 @@
 
 .product-modal-details {
   width: 740px;
-  padding: $l-size;
+  padding: 0 $xl-size;
 
   @include tablet {
     width: 100%;
@@ -312,6 +310,8 @@
 .product-modal-action {
   display: flex;
   margin-top: $m-size;
+  gap: 2rem;
+  align-items: center;
 
   @include mobile {
     justify-content: center;
