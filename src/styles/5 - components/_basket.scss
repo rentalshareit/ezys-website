@@ -15,6 +15,20 @@
   }
 }
 
+.rs-picker-popup {
+  z-index: 61;
+}
+
+.rs-calendar-table-cell-disabled {
+  opacity: 0.3;
+}
+
+.rs-input-group {
+  --rs-color-focus-ring: #e1e1e1;
+  --rs-input-focus-border: #e1e1e1;
+  --rs-border-primary: #e1e1e1;
+}
+
 .basket-toggle {
   &:hover {
     cursor: pointer;
@@ -31,10 +45,12 @@
 }
 
 .basket-item {
+  border: 1px solid $border-color;
   display: flex;
   align-items: center;
-  border: 1px solid $border-color;
-  margin-bottom: $s-size;
+  border-radius: 5px;
+  padding: 0px 5px;
+  margin-top: $s-size;
   @include bezier-transition();
   animation: slide-up .5s ease;
 }
@@ -51,7 +67,6 @@
 
 .basket-item-specs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
 
   .spec-title {
     color: #8d8d8d;
@@ -79,6 +94,7 @@
   top: -20px;
   background: $white;
   z-index: map-get($z-index, 'basket');
+  margin-bottom: 3rem;
 }
 
 
@@ -101,6 +117,10 @@
 
 .basket-item-details {
   flex-grow: 1;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 .basket-item-price {
@@ -108,12 +128,9 @@
 }
 
 .basket-item-name {
-  margin: $s-size 0;
-  width: 142px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; 
-  position: relative;
+  margin: 1.2rem 0;
+  width: 200px; 
+  overflow-wrap: anywhere;
 }
 
 .basket-item-remove {
@@ -147,17 +164,18 @@
 }
 
 .basket-checkout-button {
-  font-size: $font-medium;
-  padding: $m-size $l-size;
   text-transform: uppercase;
 }
 
 .basket-total {
-  // flex-grow: 1;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .basket-total-title {
   font-size: $font-small;
+  color: #8d8d8d;
   margin: 0;
 }
 
@@ -169,6 +187,7 @@
   width: 30px;
   height: 90px;
   display: flex;
+  gap: 2px;
   flex-direction: column;
   align-items: center;
   font-size: 1.5rem;
