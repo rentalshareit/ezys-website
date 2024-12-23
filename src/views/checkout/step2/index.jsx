@@ -71,7 +71,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
       <div className="checkout">
         <StepTracker current={2} />
         <div className="checkout-step-2">
-          <h3 className="text-center">Shipping Details</h3>
+          <h4 className="text-center">Shipping Details</h4>
           <Formik
             initialValues={initFormikValues}
             validateOnChange
@@ -88,14 +88,17 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
                 {/*  ----- NEXT/PREV BUTTONS --------- */}
                 <div className="checkout-shipping-action">
                   <button
-                    className="button button-muted"
+                    className="button button-muted button-small"
                     onClick={() => history.push(CHECKOUT_STEP_1)}
                     type="button"
                   >
                     <ArrowLeftOutlined />
                     &nbsp; Go Back
                   </button>
-                  <button className="button button-icon" type="submit">
+                  <button
+                    className="button button-icon button-small"
+                    type="submit"
+                  >
                     Next Step &nbsp;
                     <ArrowRightOutlined />
                   </button>

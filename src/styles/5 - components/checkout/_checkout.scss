@@ -40,7 +40,7 @@
   width: 50%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   padding: 0;
   margin: auto;
   position: relative;
@@ -53,11 +53,11 @@
   &:before {
     content: '';
     position: absolute;
-    top: 15px;
+    top: 10px;
     left: 0;
     right: 0;
     margin: auto;
-    width: 85%;
+    width: 82%;
     height: 3px;
     background: transparentize($border-color, .5);
   }
@@ -69,7 +69,7 @@
 }
 
 .checkout-header-item {
-  width: 100px;
+  min-width: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,11 +79,11 @@
 
 .checkout-header-step {
   margin: 0;
-  padding: $m-size;
+  padding: $s-size;
   background: $border-color;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,12 +92,12 @@
 
 .checkout-header-subtitle {
   color: $gray-20;
-  margin-top: $s-size;
+  margin-top: $xxs-size;
   margin-bottom: 0;
 }
 
 .is-active-step .checkout-header-step {
-  background: $black;
+  background: $green;
   color: $white;
 }
 
@@ -161,6 +161,7 @@
 
 .checkout-shipping-form {
   width: 100%;
+  margin-top: $s-size;
 }
 
 .checkout-field {
@@ -174,7 +175,7 @@
 
 .checkout-fieldset {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
   & > div {
     margin-bottom: $s-size;
@@ -192,6 +193,7 @@
   height: 97px;
   overflow: hidden;
   transition: all .5s ease;
+  margin: $s-size 0;
   opacity: .6;
 
   &:hover {
@@ -203,7 +205,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $m-size;
+  padding: $xxs-size $s-size;
+  border-radius: 5px;
   border: 1px solid $border-color;
   background: #f1f1f1;
 }
