@@ -35,15 +35,18 @@ const AddProduct = () => {
           product={{
             name: "",
             brand: "",
-            price: 0,
+            price: [],
             maxQuantity: 0,
+            category: "",
             description: "",
             keywords: [],
-            sizes: [],
             image: "",
             isFeatured: false,
             isRecommended: false,
-            availableColors: [],
+            setup: "",
+            included: "",
+            configuration: "",
+            features: "",
             imageCollection: [],
           }}
         />

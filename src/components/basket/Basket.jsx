@@ -7,12 +7,16 @@ import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { clearBasket } from "@/redux/actions/basketActions";
 
 const Basket = () => {
+  const [date, setDate] = useState([
+    new Date(),
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  ]);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
   const { combine, allowedMaxDays, beforeToday } = DateRangePicker;
   const { basket, user } = useSelector((state) => ({
@@ -60,8 +64,11 @@ const Basket = () => {
 
   const onRequestClose = (e) => {
     const datePickerPopup = document.querySelector(".rs-picker-popup");
-    console.log("e", e, datePickerPopup);
   };
+
+  const rentalPeriod = useMemo(() =>
+    Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24))
+  );
 
   return user && user.role === "ADMIN" ? null : (
     <Boundary>
@@ -118,6 +125,8 @@ const Basket = () => {
           )}
           {basket.length > 0 && (
             <DateRangePicker
+              value={date}
+              onChange={setDate}
               placeholder="Select Rental Period"
               showHeader={false}
               shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}
@@ -129,6 +138,7 @@ const Basket = () => {
               key={`${product.id}_${i}`}
               product={product}
               basket={basket}
+              rentalPeriod={rentalPeriod}
               dispatch={dispatch}
             />
           ))}
@@ -139,7 +149,10 @@ const Basket = () => {
             <h4 className="basket-total-amount">
               {displayMoney(
                 calculateTotal(
-                  basket.map((product) => product.price * product.quantity)
+                  basket.map(
+                    (product) =>
+                      parseInt(product.price[rentalPeriod]) * product.quantity
+                  )
                 )
               )}
             </h4>

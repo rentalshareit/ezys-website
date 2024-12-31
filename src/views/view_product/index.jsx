@@ -6,7 +6,7 @@ import {
   Modal,
 } from "@/components/common";
 import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
-import { RECOMMENDED_PRODUCTS, SHOP } from "@/constants/routes";
+import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
 import { displayMoney } from "@/helpers/utils";
 import {
   useBasket,
@@ -84,11 +84,7 @@ const ViewProduct = () => {
   };
 
   const handleAddToBasket = () => {
-    addToBasket({
-      ...product,
-      selectedColor,
-      selectedSize: selectedSize || product.sizes[0],
-    });
+    addToBasket(product);
   };
 
   return (
@@ -103,12 +99,6 @@ const ViewProduct = () => {
       {error && <MessageDisplay message={error} />}
       {product && !isLoading && (
         <div style={styles.view} className="product-view">
-          <Link to={SHOP}>
-            <h3 className="button-link d-inline-flex">
-              <ArrowLeftOutlined />
-              &nbsp; Back to shop
-            </h3>
-          </Link>
           <div className="product-modal">
             <div className="product-modal-image-wrapper">
               {selectedColor && (
@@ -143,21 +133,20 @@ const ViewProduct = () => {
               )}
             </div>
             <div className="product-modal-details">
-              <br />
               <span className="text-subtle">{product.brand}</span>
-              <h1 className="margin-top-0">{product.name}</h1>
+              <h3 className="margin-top-0">{product.name}</h3>
               <span className="text-subtle">{product.description}</span>
               <br />
               <br />
               <div className="divider" />
               <div
-                class="mt-8 border-t border-gray-200 pt-8"
+                style={{ marginTop: "8px", paddingTop: "8px" }}
                 id="product-specs"
               >
-                <h3 class="text-sm font-medium text-gray-900">
+                <h5 class="text-sm font-medium text-gray-900">
                   Product Information
-                </h3>
-                <div class="mt-4 border-gray-200">
+                </h5>
+                <div style={{ marginTop: "6px" }}>
                   <dl style={styles.productInformation.root}>
                     <div
                       class="grid-count-2 bg-white px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
@@ -228,8 +217,14 @@ const ViewProduct = () => {
           </div>
           <div style={{ marginTop: "10rem" }}>
             <div className="display-header">
-              <h1>Recommended</h1>
-              <Link to={RECOMMENDED_PRODUCTS}>See All</Link>
+              <h3>Recommended</h3>
+              <button
+                className="button button-border button-border-primary button-small"
+                type="button"
+                onClick={() => history.push(RECOMMENDED_PRODUCTS)}
+              >
+                See All
+              </button>
             </div>
             {errorFeatured && !isLoadingFeatured ? (
               <MessageDisplay

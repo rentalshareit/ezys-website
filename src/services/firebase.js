@@ -1,3 +1,4 @@
+import firebaseRoot from "firebase";
 import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -29,6 +30,37 @@ class Firebase {
 
   signInWithGithub = () =>
     this.auth.signInWithPopup(new app.auth.GithubAuthProvider());
+
+  captchaVerify = async () => {
+    if (!window.RecaptchaVerifier) {
+      return new Promise((resolve) => {
+        window.recaptchaVerifier = new firebaseRoot.auth.RecaptchaVerifier(
+          "recaptcha-container",
+          {
+            size: "invisible",
+            callback: () => {
+              resolve(window.recaptchaVerifier);
+            },
+          }
+        );
+        window.recaptchaVerifier.verify();
+      });
+    }
+    return Promise.resolve(window.recaptchaVerifier);
+  };
+
+  sendOTP = async (phoneNumber) => {
+    const appVerifier = await this.captchaVerify();
+    const confirmationResult = await this.auth.signInWithPhoneNumber(
+      phoneNumber,
+      appVerifier
+    );
+    window.confirmationResult = confirmationResult;
+  };
+
+  verifyOTP = (otp) => {
+    window.confirmationResult.confirm(otp);
+  };
 
   signOut = () => this.auth.signOut();
 
@@ -104,59 +136,37 @@ class Firebase {
 
   getSingleProduct = (id) => this.db.collection("products").doc(id).get();
 
-  getProducts = (lastRefKey) => {
+  getProducts = () => {
     let didTimeout = false;
 
     return new Promise((resolve, reject) => {
       (async () => {
-        if (lastRefKey) {
-          try {
-            const query = this.db
-              .collection("products")
-              .orderBy(app.firestore.FieldPath.documentId())
-              .startAfter(lastRefKey)
-              .limit(12);
+        const timeout = setTimeout(() => {
+          didTimeout = true;
+          reject(new Error("Request timeout, please try again"));
+        }, 15000);
 
-            const snapshot = await query.get();
+        try {
+          const totalQuery = await this.db.collection("products").get();
+          const total = totalQuery.docs.length;
+          const query = this.db
+            .collection("products")
+            .orderBy(app.firestore.FieldPath.documentId())
+            .limit(total);
+          const snapshot = await query.get();
+
+          clearTimeout(timeout);
+          if (!didTimeout) {
             const products = [];
             snapshot.forEach((doc) =>
               products.push({ id: doc.id, ...doc.data() })
             );
-            const lastKey = snapshot.docs[snapshot.docs.length - 1];
 
-            resolve({ products, lastKey });
-          } catch (e) {
-            reject(e?.message || ":( Failed to fetch products.");
+            resolve(products);
           }
-        } else {
-          const timeout = setTimeout(() => {
-            didTimeout = true;
-            reject(new Error("Request timeout, please try again"));
-          }, 15000);
-
-          try {
-            const totalQuery = await this.db.collection("products").get();
-            const total = totalQuery.docs.length;
-            const query = this.db
-              .collection("products")
-              .orderBy(app.firestore.FieldPath.documentId())
-              .limit(12);
-            const snapshot = await query.get();
-
-            clearTimeout(timeout);
-            if (!didTimeout) {
-              const products = [];
-              snapshot.forEach((doc) =>
-                products.push({ id: doc.id, ...doc.data() })
-              );
-              const lastKey = snapshot.docs[snapshot.docs.length - 1];
-
-              resolve({ products, lastKey, total });
-            }
-          } catch (e) {
-            if (didTimeout) return;
-            reject(e?.message || ":( Failed to fetch products.");
-          }
+        } catch (e) {
+          if (didTimeout) return;
+          reject(e?.message || ":( Failed to fetch products.");
         }
       })();
     });

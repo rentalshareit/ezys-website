@@ -1,9 +1,7 @@
 .auth {
-  border: 1px solid $border-color-focus;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
-  padding: $l-size;
-  padding-top: $m-size;
   
   @include tablet {
     flex-direction: column;

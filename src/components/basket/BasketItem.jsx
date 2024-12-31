@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { removeFromBasket } from "@/redux/actions/basketActions";
 
-const BasketItem = ({ product }) => {
+const BasketItem = ({ product, rentalPeriod }) => {
   const dispatch = useDispatch();
   const onRemoveFromBasket = () => dispatch(removeFromBasket(product.id));
 
@@ -36,7 +36,9 @@ const BasketItem = ({ product }) => {
         </div>
         <div className="basket-item-price">
           <p className="my-0">
-            {displayMoney(product.price * product.quantity)}
+            {displayMoney(
+              parseInt(product.price[rentalPeriod]) * product.quantity
+            )}
           </p>
         </div>
         <button
@@ -71,6 +73,7 @@ BasketItem.propTypes = {
     isRecommended: PropType.bool,
     availableColors: PropType.arrayOf(PropType.string),
   }).isRequired,
+  rentalPeriod: PropType.number,
 };
 
 export default BasketItem;

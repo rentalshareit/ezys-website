@@ -1,4 +1,11 @@
 import * as Route from "@/constants/routes";
+import {
+  YoutubeFilled,
+  InstagramFilled,
+  LinkedinFilled,
+  GoogleCircleFilled,
+  FacebookFilled,
+} from "@ant-design/icons";
 import logo from "@/images/logo.png";
 import React from "react";
 import { useLocation } from "react-router-dom";
@@ -9,19 +16,101 @@ const Footer = () => {
   const visibleOnlyPath = [Route.HOME, Route.SHOP];
 
   return !visibleOnlyPath.includes(pathname) ? null : (
-    <footer className="footer">
-      <div className="footer-col-1">
-        <strong></strong>
+    <div className="container my-5">
+      <div className="footer_head">
+        <p>Get connected with us on social networks</p>
+        <div className="icons">
+          <a href="">
+            <YoutubeFilled />
+          </a>
+          <a href="">
+            <GoogleCircleFilled />
+          </a>
+          <a href="">
+            <InstagramFilled />
+          </a>
+          <a href="">
+            <LinkedinFilled />
+          </a>
+          <a href="">
+            <FacebookFilled />
+          </a>
+        </div>
       </div>
-      <div className="footer-col-2">
-        <img alt="Footer logo" className="footer-logo" src={logo} />
-        <h5>
-          &copy;&nbsp;
-          {new Date().getFullYear()}
-        </h5>
-      </div>
-      <div className="footer-col-3"></div>
-    </footer>
+
+      <footer className="footer">
+        <div className="footer-col-1">
+          <h6 className="text-uppercase fw-bold">Company name</h6>
+          <hr className="mb-4 mt-0 d-inline-block mx-auto" />
+          <p>
+            Here you can use rows and columns to organize your footer content.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </p>
+        </div>
+
+        <div className="footer-col-2">
+          <h6 className="text-uppercase fw-bold">Navigate</h6>
+          <hr className="mb-4 mt-0 d-inline-block mx-auto" />
+          <p>
+            <a href="#!" className="text-white">
+              About Us
+            </a>
+          </p>
+          <p>
+            <a href="#!" className="text-white">
+              FAQ
+            </a>
+          </p>
+          <p>
+            <a href="#!" className="text-white">
+              Terms & Conditions
+            </a>
+          </p>
+        </div>
+
+        <div className="footer-col-3">
+          <h6 className="text-uppercase fw-bold">Policy</h6>
+          <hr className="mb-4 mt-0 d-inline-block mx-auto" />
+          <p>
+            <a href="#!" className="text-white">
+              Shipping Policy
+            </a>
+          </p>
+          <p>
+            <a href="#!" className="text-white">
+              Privacy Policy
+            </a>
+          </p>
+          <p>
+            <a href="#!" className="text-white">
+              Damage Policy
+            </a>
+          </p>
+          <p>
+            <a href="#!" className="text-white">
+              Cancellation Policy
+            </a>
+          </p>
+        </div>
+
+        <div className="footer-col-4">
+          <h6 className="text-uppercase fw-bold">Contact</h6>
+          <hr className="mb-4 mt-0 d-inline-block mx-auto" />
+          <p>
+            <i className="fas fa-home mr-3"></i> New York, NY 10012, US
+          </p>
+          <p>
+            <i className="fas fa-envelope mr-3"></i> info@example.com
+          </p>
+          <p>
+            <i className="fas fa-phone mr-3"></i> + 01 234 567 88
+          </p>
+          <p>
+            <i className="fas fa-print mr-3"></i> + 01 234 567 89
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 };
 

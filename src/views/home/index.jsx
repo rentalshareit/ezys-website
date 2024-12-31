@@ -4,13 +4,14 @@ import { ProductShowcaseGrid } from "@/components/product";
 import {
   FEATURED_PRODUCTS,
   RECOMMENDED_PRODUCTS,
-  SHOP,
+  PRODUCTS_BY_CATEGORY,
 } from "@/constants/routes";
 import {
   useDocumentTitle,
   useFeaturedProducts,
   useRecommendedProducts,
   useScrollTop,
+  useProducts,
 } from "@/hooks";
 import coverImg from "@/images/cover-image.jpg";
 import React from "react";
@@ -22,17 +23,11 @@ const Home = () => {
   useScrollTop();
 
   const {
-    featuredProducts,
-    fetchFeaturedProducts,
+    products,
+    fetchProducts,
     isLoading: isLoadingFeatured,
     error: errorFeatured,
-  } = useFeaturedProducts(6);
-  const {
-    recommendedProducts,
-    fetchRecommendedProducts,
-    isLoading: isLoadingRecommended,
-    error: errorRecommended,
-  } = useRecommendedProducts(6);
+  } = useProducts();
 
   return (
     <main className="content">
@@ -50,63 +45,37 @@ const Home = () => {
               eyes covered.
             </p>
             <br />
-            <Link to={SHOP} className="button">
-              Shop Now &nbsp;
-              <ArrowRightOutlined />
-            </Link>
           </div>
           <div className="banner-img">
             <img src={coverImg} alt="" />
           </div>
         </div>
-        <div className="display">
-          <div className="display-header">
-            <h2>Featured Products</h2>
-            <button
-              className="button button-border button-border-primary button-small"
-              type="button"
-              onClick={() => history.push(FEATURED_PRODUCTS)}
-            >
-              See All
-            </button>
+        {Object.keys(products).map((category) => (
+          <div className="display">
+            <div className="display-header">
+              <h3>{category}</h3>
+              <button
+                className="button button-border button-border-primary button-small"
+                type="button"
+                onClick={() => history.push(`/products/${category}`)}
+              >
+                See All
+              </button>
+            </div>
+            {errorFeatured && !isLoadingFeatured ? (
+              <MessageDisplay
+                message={errorFeatured}
+                action={fetchFeaturedProducts}
+                buttonLabel="Try Again"
+              />
+            ) : (
+              <ProductShowcaseGrid
+                products={products[category].slice(0, 4)}
+                skeletonCount={4}
+              />
+            )}
           </div>
-          {errorFeatured && !isLoadingFeatured ? (
-            <MessageDisplay
-              message={errorFeatured}
-              action={fetchFeaturedProducts}
-              buttonLabel="Try Again"
-            />
-          ) : (
-            <ProductShowcaseGrid
-              products={featuredProducts}
-              skeletonCount={6}
-            />
-          )}
-        </div>
-        <div className="display">
-          <div className="display-header">
-            <h2>Recommended Products</h2>
-            <button
-              className="button button-border button-border-primary button-small"
-              type="button"
-              onClick={() => history.push(RECOMMENDED_PRODUCTS)}
-            >
-              See All
-            </button>
-          </div>
-          {errorRecommended && !isLoadingRecommended ? (
-            <MessageDisplay
-              message={errorRecommended}
-              action={fetchRecommendedProducts}
-              buttonLabel="Try Again"
-            />
-          ) : (
-            <ProductShowcaseGrid
-              products={recommendedProducts}
-              skeletonCount={6}
-            />
-          )}
-        </div>
+        ))}
       </div>
     </main>
   );

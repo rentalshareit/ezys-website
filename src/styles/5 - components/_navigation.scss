@@ -72,10 +72,6 @@
     a {
       padding: 10px 15px;
       font-size: 1.4rem;
-      
-      &:hover {
-        background: $background-color-01;
-      }
     }
   }
 }
@@ -90,7 +86,6 @@
 .navigation-action {
   display: flex;
   align-items: center;
-  margin-left: $xxl-size;
 }
 
 .navigation-menu-link {
