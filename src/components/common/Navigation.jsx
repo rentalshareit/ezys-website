@@ -57,7 +57,19 @@ const Navigation = () => {
   ];
 
   if (store.user && store.user.role === "ADMIN") {
-    return null;
+    return (
+      <ul className="navigation-menu-main">
+        <li>
+          <NavLink
+            activeClassName="navigation-menu-active"
+            exact
+            to={ROUTE.ADMIN_DASHBOARD}
+          >
+            Go To Admin Dashboard
+          </NavLink>
+        </li>
+      </ul>
+    );
   }
   if (window.screen.width <= 800) {
     return (
