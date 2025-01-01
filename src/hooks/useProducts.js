@@ -28,7 +28,10 @@ const useProducts = (category) => {
           .forEach((data) => {
             const { category } = data;
             items[category] = items[category] || [];
-            items[category].push(data);
+            items[category].push({
+              ...data,
+              price: data.price.split(",").map((a) => parseInt(a.trim())),
+            });
           });
 
         if (didMount) {

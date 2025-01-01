@@ -12,6 +12,7 @@ class Firebase {
     this.storage = app.storage();
     this.db = app.firestore();
     this.auth = app.auth();
+    this.auth.signOut();
   }
 
   // AUTH ACTIONS ------------

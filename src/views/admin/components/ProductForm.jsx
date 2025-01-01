@@ -33,7 +33,7 @@ const FormSchema = Yup.object().shape({
     .max(60, "Product name must only be less than 60 characters."),
   brand: Yup.string().required("Brand name is required."),
   category: Yup.string().required("Category is required."),
-  price: Yup.array().of(Yup.number().required()),
+  price: Yup.string().required(),
   description: Yup.string().required("Description is required."),
   maxQuantity: Yup.number()
     .positive("Max quantity is invalid.")
@@ -55,7 +55,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     name: product?.name || "",
     brand: product?.brand || "",
     category: product?.category || "",
-    price: product?.price || [],
+    price: product?.price || "",
     maxQuantity: product?.maxQuantity || 0,
     description: product?.description || "",
     keywords: product?.keywords || [],

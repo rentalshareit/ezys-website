@@ -35,7 +35,7 @@ const AddProduct = () => {
           product={{
             name: "",
             brand: "",
-            price: [],
+            price: "",
             maxQuantity: 0,
             category: "",
             description: "",

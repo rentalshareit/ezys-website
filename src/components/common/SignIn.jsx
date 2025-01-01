@@ -3,7 +3,7 @@ import firebase from "firebase";
 import { SocialLogin } from "@/components/common";
 import { CustomInput, CustomMobileInput } from "@/components/formik";
 import { FORGOT_PASSWORD, SIGNUP } from "@/constants/routes";
-import { Field, Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik } from "formik";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ const SignInSchema = Yup.object().shape({
   otp: Yup.string().required("OTP is required."),
 });
 
-const SignIn = ({ history }) => {
+const SignIn = () => {
   const [showOtp, setShowOtp] = useState(false);
   const { authStatus, isAuthenticating } = useSelector((state) => ({
     authStatus: state.app.authStatus,
@@ -166,10 +166,6 @@ const SignIn = ({ history }) => {
   );
 };
 
-SignIn.propTypes = {
-  history: PropType.shape({
-    push: PropType.func,
-  }).isRequired,
-};
+SignIn.propTypes = {};
 
 export default SignIn;

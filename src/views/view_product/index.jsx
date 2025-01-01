@@ -242,7 +242,7 @@ const ViewProduct = () => {
         </div>
       )}
       <Modal isOpen={showPrice} onRequestClose={() => setShowPrice(false)}>
-        <ProductPrice />
+        <ProductPrice product={product} />
       </Modal>
     </main>
   );

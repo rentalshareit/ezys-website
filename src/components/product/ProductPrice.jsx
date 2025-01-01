@@ -10,74 +10,34 @@ import { usePagination } from "@table-library/react-table-library/pagination";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useHistory } from "react-router-dom";
 
-const ProductPrice = ({ product, isItemOnBasket, addToBasket }) => {
+const ProductPrice = ({ product }) => {
   const theme = useTheme(getTheme());
   function onPaginationChange(action, state) {
     console.log(action, state);
   }
 
   const data = {
-    nodes: [
-      {
-        id: "0",
-        name: "Shopping List",
-        deadline: new Date(2020, 1, 15),
-        type: "TASK",
-        isComplete: true,
-        nodes: 3,
-      },
-      {
-        id: "1",
-        name: "Shopping List",
-        deadline: new Date(2020, 1, 15),
-        type: "TASK",
-        isComplete: true,
-        nodes: 3,
-      },
-      {
-        id: "2",
-        name: "Shopping List",
-        deadline: new Date(2020, 1, 15),
-        type: "TASK",
-        isComplete: true,
-        nodes: 3,
-      },
-      {
-        id: "3",
-        name: "Shopping List",
-        deadline: new Date(2020, 1, 15),
-        type: "TASK",
-        isComplete: true,
-        nodes: 3,
-      },
-    ],
+    nodes: product.price.map((p, index) => ({
+      days: index + 1,
+      price: p,
+    })),
   };
 
   const pagination = usePagination(data, {
     state: {
       page: 0,
-      size: 2,
+      size: 5,
     },
     onChange: onPaginationChange,
   });
 
   const COLUMNS = [
-    { label: "Task", renderCell: (item) => item.name },
+    { label: "Days", renderCell: (item) => item.days },
     {
-      label: "Deadline",
-      renderCell: (item) =>
-        item.deadline.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }),
+      label: "Price Per Day",
+      renderCell: (item) => displayMoney(item.price),
     },
-    { label: "Type", renderCell: (item) => item.type },
-    {
-      label: "Complete",
-      renderCell: (item) => item.isComplete.toString(),
-    },
-    { label: "Tasks", renderCell: (item) => item.nodes },
+    { label: "Total Price", renderCell: (item) => item.price * item.days },
   ];
 
   return (
