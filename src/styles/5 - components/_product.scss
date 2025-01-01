@@ -506,6 +506,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: $xs-size;
 
   a {
     text-decoration: underline;
@@ -545,7 +546,7 @@
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     @include bezier-transition;
   }
 }

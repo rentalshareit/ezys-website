@@ -10,8 +10,18 @@ import { usePagination } from "@table-library/react-table-library/pagination";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useHistory } from "react-router-dom";
 
-const ProductPrice = ({ product }) => {
-  const theme = useTheme(getTheme());
+const ProductPrice = ({ product, onClose }) => {
+  const stripedTheme = {
+    BaseRow: `
+        font-size: 12px;
+      `,
+    HeaderRow: `
+        background-color: rgb(13, 148, 136);
+        color: #fff;
+      `,
+  };
+
+  const theme = useTheme([getTheme(), stripedTheme]);
   function onPaginationChange(action, state) {
     console.log(action, state);
   }
@@ -35,13 +45,25 @@ const ProductPrice = ({ product }) => {
     { label: "Days", renderCell: (item) => item.days },
     {
       label: "Price Per Day",
+      renderCell: (item) => displayMoney(item.price / item.days),
+    },
+    {
+      label: "Total Price",
       renderCell: (item) => displayMoney(item.price),
     },
-    { label: "Total Price", renderCell: (item) => item.price * item.days },
   ];
 
   return (
     <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "5px",
+        }}
+      >
+        <h6>Price chart for 30 days</h6>
+      </div>
       <CompactTable
         columns={COLUMNS}
         data={data}
@@ -51,7 +73,6 @@ const ProductPrice = ({ product }) => {
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
           marginTop: 20,
         }}
       >
@@ -72,20 +93,25 @@ const ProductPrice = ({ product }) => {
           ))}
         </span>
       </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 20,
+        }}
+      >
+        <button className="button button-small" onClick={onClose} type="button">
+          Close
+        </button>
+      </div>
     </div>
   );
-};
-
-ProductPrice.defaultProps = {
-  isItemOnBasket: undefined,
-  addToBasket: undefined,
 };
 
 ProductPrice.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   product: PropType.object.isRequired,
-  isItemOnBasket: PropType.func,
-  addToBasket: PropType.func,
+  onClose: PropType.func.isRequired,
 };
 
 export default ProductPrice;

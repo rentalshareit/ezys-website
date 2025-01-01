@@ -148,44 +148,56 @@ const ViewProduct = () => {
                 </h5>
                 <div style={{ marginTop: "6px" }}>
                   <dl style={styles.productInformation.root}>
-                    <div
-                      class="grid-count-2 bg-white px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-                      id="product-spec-1"
-                    >
-                      <dt style={styles.productInformation.key}>Setup</dt>
-                      <dd style={styles.productInformation.value}>
-                        Easy Installation, Can be self installed
-                      </dd>
-                    </div>
-                    <div
-                      class="grid-count-2 bg-gray-50 px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-                      id="product-spec-2"
-                    >
-                      <dt style={styles.productInformation.key}>
-                        What's included
-                      </dt>
-                      <dd style={styles.productInformation.value}>
-                        PS4 console, 2 controllers, HDMI cable, Power cable,
-                        Extra Subscription
-                      </dd>
-                    </div>
-                    <div
-                      class="grid-count-2 bg-white px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-                      id="product-spec-3"
-                    >
-                      <dt style={styles.productInformation.key}>
-                        Configuration
-                      </dt>
-                      <dd style={styles.productInformation.value}>
-                        Processor: Custom AMD "Jaguar" x86-64, 8-core CPU
-                        Graphics: 4.20 TFLOPS, AMD Radeon™ based graphics engine
-                        Memory: 8GB GDDR5 RAM Storage: 1TB hard drive Optical
-                        Drive: Blu-ray/DVD Connectivity: Ethernet, Wi-Fi,
-                        Bluetooth 4.0 Ports: 3 x USB 3.1 Gen 1 ports, 1 x AUX
-                        port Dimensions: Approx. 295mm x 55mm x 327mm (width x
-                        height x depth) Weight: Approx. 3.3kg
-                      </dd>
-                    </div>
+                    {product.setup && (
+                      <div
+                        class="grid-count-2 bg-white px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                        id="product-spec-1"
+                      >
+                        <dt style={styles.productInformation.key}>Setup</dt>
+                        <dd style={styles.productInformation.value}>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: product.setup,
+                            }}
+                          />
+                        </dd>
+                      </div>
+                    )}
+                    {product.included && (
+                      <div
+                        class="grid-count-2 bg-gray-50 px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                        id="product-spec-2"
+                      >
+                        <dt style={styles.productInformation.key}>
+                          What's included
+                        </dt>
+                        <dd style={styles.productInformation.value}>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: product.included,
+                            }}
+                          />
+                        </dd>
+                      </div>
+                    )}
+                    {product.configuration && (
+                      <div
+                        class="grid-count-2 bg-white px-4 py-5 first:rounded-t-lg last:rounded-b-lg sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
+                        id="product-spec-3"
+                      >
+                        <dt style={styles.productInformation.key}>
+                          Configuration
+                        </dt>
+
+                        <dd style={styles.productInformation.value}>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: product.configuration,
+                            }}
+                          />
+                        </dd>
+                      </div>
+                    )}
                   </dl>
                 </div>
               </div>
@@ -241,8 +253,12 @@ const ViewProduct = () => {
           </div>
         </div>
       )}
-      <Modal isOpen={showPrice} onRequestClose={() => setShowPrice(false)}>
-        <ProductPrice product={product} />
+      <Modal
+        isOpen={showPrice}
+        overrideStyle={{ padding: "30px 30px" }}
+        onRequestClose={() => setShowPrice(false)}
+      >
+        <ProductPrice product={product} onClose={() => setShowPrice(false)} />
       </Modal>
     </main>
   );
