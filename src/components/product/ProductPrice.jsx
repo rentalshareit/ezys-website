@@ -97,7 +97,7 @@ const ProductPrice = ({ product, onClose }) => {
         style={{
           display: "flex",
           justifyContent: "flex-end",
-          marginTop: 20,
+          marginTop: 10,
         }}
       >
         <button className="button button-small" onClick={onClose} type="button">

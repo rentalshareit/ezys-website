@@ -255,7 +255,7 @@ const ViewProduct = () => {
       )}
       <Modal
         isOpen={showPrice}
-        overrideStyle={{ padding: "30px 30px" }}
+        overrideStyle={{ padding: "30px 30px", width: "50rem" }}
         onRequestClose={() => setShowPrice(false)}
       >
         <ProductPrice product={product} onClose={() => setShowPrice(false)} />

@@ -161,9 +161,9 @@ const Navigation = () => {
       <Modal
         isOpen={show}
         onRequestClose={() => setShow(false)}
-        overrideStyle={{ padding: "20px 20px" }}
+        overrideStyle={{ padding: "20px 20px", width: "50rem" }}
       >
-        <SignIn />
+        <SignIn onClose={() => setShow(false)} />
       </Modal>
     </nav>
   );

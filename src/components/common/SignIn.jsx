@@ -28,7 +28,7 @@ const SignInSchema = Yup.object().shape({
   otp: Yup.string().required("OTP is required."),
 });
 
-const SignIn = () => {
+const SignIn = ({ onClose }) => {
   const [showOtp, setShowOtp] = useState(false);
   const { authStatus, isAuthenticating } = useSelector((state) => ({
     authStatus: state.app.authStatus,
@@ -97,13 +97,22 @@ const SignIn = () => {
                             </Field>
                           </div>
                           <br />
-                          <button
-                            className="button auth-button button-small"
-                            type="button"
-                            onClick={() => handleSendOtp(props.values.phone)}
-                          >
-                            Send OTP
-                          </button>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <button
+                              className="button auth-button button-small"
+                              type="button"
+                              onClick={() => handleSendOtp(props.values.phone)}
+                            >
+                              Send OTP
+                            </button>
+                            <button
+                              className="button button-small button-muted"
+                              onClick={onClose}
+                              type="button"
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </>
                       )}
                       {isAuthenticating && (
@@ -143,13 +152,20 @@ const SignIn = () => {
                               </>
                             )}
                           </Field>
-                          <div className="d-flex justify-content-center">
+                          <div style={{ display: "flex", gap: "10px" }}>
                             <button
                               className="button auth-button button-small"
                               type="button"
                               onClick={() => handleVerifyOtp(props.values.otp)}
                             >
                               Verify OTP
+                            </button>
+                            <button
+                              className="button button-small button-muted"
+                              onClick={onClose}
+                              type="button"
+                            >
+                              Cancel
                             </button>
                           </div>
                         </>
@@ -166,6 +182,8 @@ const SignIn = () => {
   );
 };
 
-SignIn.propTypes = {};
+SignIn.propTypes = {
+  onClose: PropType.func.isRequired,
+};
 
 export default SignIn;
