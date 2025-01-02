@@ -9,13 +9,11 @@ import {
 import logo from "@/images/logo.png";
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const Footer = () => {
   const { pathname } = useLocation();
-
-  const visibleOnlyPath = [Route.HOME, Route.SHOP];
-
-  return !visibleOnlyPath.includes(pathname) ? null : (
+  return (
     <div className="container my-5">
       <div className="footer_head">
         <p>Get connected with us on social networks</p>
@@ -57,9 +55,9 @@ const Footer = () => {
             </a>
           </p>
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.FAQ} className="text-white">
               FAQ
-            </a>
+            </Link>
           </p>
           <p>
             <a href="#!" className="text-white">

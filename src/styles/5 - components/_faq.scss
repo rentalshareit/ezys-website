@@ -1,0 +1,13 @@
+.faq {
+    padding: 5rem 5rem;
+
+    .faq-title {
+        border-bottom: none;
+    }
+
+    .faq-body {
+        .faq-row:last-child {
+            border-bottom: none;
+        }
+    }
+}

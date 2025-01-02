@@ -1,5 +1,6 @@
 input {
   border: 1px solid $border-color;
+  border-radius: 5px;
   background: transparent;
   font-size: $font-small;
   padding: $s-size $m-size;
@@ -42,6 +43,7 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number]:invalid,
 input[type=number]:out-of-range {
   border: 2px solid #ff6347;
+  border-radius: 5px;
 }
 
 input[type=date] {
@@ -133,14 +135,17 @@ input[type=color] {
   // margin-bottom: 1.2rem !important;
   font-size: $font-medium !important;
   border: 1px solid $border-color-focus !important;
+  border-radius: 5px;
 }
 
 .react-tel-input input[type=tel].input-error {
   border: 1px solid $red !important;
+  border-radius: 5px;
 }
 
 .react-tel-input input[type=tel].input-error ~ .flag-dropdown {
   border: 1px solid $red !important;
+  border-radius: 5px;
 }
 
 .input-message {
@@ -153,6 +158,7 @@ input[type=color] {
 .input-form {
   padding: 10px $m-size !important;
   border: 1px solid $border-color-focus !important;
+  border-radius: 5px;
   font-size: $font-medium !important;
   // margin-bottom: $s-size;
 }
