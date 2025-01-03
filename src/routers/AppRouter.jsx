@@ -38,6 +38,10 @@ const AppRouter = () => (
         />
         <PublicRoute component={view.SignUp} path={ROUTES.SIGNUP} />
         <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
+        <PublicRoute component={view.Privacy} path={ROUTES.PRIVACY} />
+        <PublicRoute component={view.Damage} path={ROUTES.DAMAGE} />
+        <PublicRoute component={view.Shipping} path={ROUTES.SHIPPING} />
+        <PublicRoute component={view.Cancellation} path={ROUTES.CANCELLATION} />
         <PublicRoute component={view.SignIn} exact path={ROUTES.SIGNIN} />
         <PublicRoute
           component={view.ForgotPassword}

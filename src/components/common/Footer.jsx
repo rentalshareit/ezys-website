@@ -70,24 +70,24 @@ const Footer = () => {
           <h6 className="text-uppercase fw-bold">Policy</h6>
           <hr className="mb-4 mt-0 d-inline-block mx-auto" />
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.SHIPPING} className="text-white">
               Shipping Policy
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.PRIVACY} className="text-white">
               Privacy Policy
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.DAMAGE} className="text-white">
               Damage Policy
-            </a>
+            </Link>
           </p>
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.CANCELLATION} className="text-white">
               Cancellation Policy
-            </a>
+            </Link>
           </p>
         </div>
 

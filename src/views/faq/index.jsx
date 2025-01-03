@@ -50,7 +50,7 @@ const config = {
   collapseIcon: "-",
 };
 
-export default function App() {
+export default function FAQ() {
   return (
     <div className="faq">
       <Faq data={data} styles={styles} config={config} />
