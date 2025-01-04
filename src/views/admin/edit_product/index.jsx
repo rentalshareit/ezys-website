@@ -1,15 +1,16 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { useDocumentTitle, useProduct, useScrollTop } from '@/hooks';
-import PropType from 'prop-types';
-import React, { lazy, Suspense } from 'react';
-import { useDispatch } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
-import { editProduct } from '@/redux/actions/productActions';
+import { LoadingOutlined } from "@ant-design/icons";
+import { useDocumentTitle, useProduct, useScrollTop } from "@/hooks";
+import PropType from "prop-types";
+import { Spin } from "antd";
+import React, { lazy, Suspense } from "react";
+import { useDispatch } from "react-redux";
+import { Redirect, withRouter } from "react-router-dom";
+import { editProduct } from "@/redux/actions/productActions";
 
-const ProductForm = lazy(() => import('../components/ProductForm'));
+const ProductForm = lazy(() => import("../components/ProductForm"));
 
 const EditProduct = ({ match }) => {
-  useDocumentTitle('Edit Product | Ezys');
+  useDocumentTitle("Edit Product | Ezys");
   useScrollTop();
   const { product, error, isLoading } = useProduct(match.params.id);
   const dispatch = useDispatch();
@@ -23,13 +24,15 @@ const EditProduct = ({ match }) => {
       {error && <Redirect to="/dashboard/products" />}
       <h2>Edit Product</h2>
       {product && (
-        <Suspense fallback={(
-          <div className="loader" style={{ minHeight: '80vh' }}>
-            <h6>Loading ... </h6>
-            <br />
-            <LoadingOutlined />
-          </div>
-        )}
+        <Suspense
+          fallback={
+            <div className="loader" style={{ minHeight: "80vh" }}>
+              <h6>Loading ... </h6>
+              <div className="ezys-spinner">
+                <Spin size="large" />
+              </div>
+            </div>
+          }
         >
           <ProductForm
             isLoading={isLoading}
@@ -45,9 +48,9 @@ const EditProduct = ({ match }) => {
 EditProduct.propTypes = {
   match: PropType.shape({
     params: PropType.shape({
-      id: PropType.string
-    })
-  }).isRequired
+      id: PropType.string,
+    }),
+  }).isRequired,
 };
 
 export default withRouter(EditProduct);

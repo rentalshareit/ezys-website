@@ -1,4 +1,5 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 import { MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
 import {
@@ -13,7 +14,7 @@ import {
   useScrollTop,
   useProducts,
 } from "@/hooks";
-import coverImg from "@/images/cover-image.jpg";
+import coverImg from "@/images/gaming_banner.jpeg";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 
@@ -22,12 +23,7 @@ const Home = () => {
   useDocumentTitle("Ezys | Home");
   useScrollTop();
 
-  const {
-    products,
-    fetchProducts,
-    isLoading: isLoadingFeatured,
-    error: errorFeatured,
-  } = useProducts();
+  const { products, fetchProducts, isLoading, error } = useProducts();
 
   return (
     <main className="content">
@@ -35,14 +31,13 @@ const Home = () => {
         <div className="banner">
           <div className="banner-desc">
             <h1 className="text-thin">
-              <strong>See</strong>
-              &nbsp;everything with&nbsp;
-              <strong>Clarity</strong>
+              <strong>Rent</strong>
+              &nbsp;with ease at&nbsp;
+              <strong>Ezys</strong>
             </h1>
             <p>
-              Buying eyewear should leave you happy and good-looking, with money
-              in your pocket. Glasses, sunglasses, and contacts—we’ve got your
-              eyes covered.
+              Why buy when you can rent? With Ezys, access a wide selection of
+              quality products without the commitment of ownership.
             </p>
             <br />
           </div>
@@ -50,6 +45,14 @@ const Home = () => {
             <img src={coverImg} alt="" />
           </div>
         </div>
+        {isLoading && (
+          <div
+            className="ezys-spinner"
+            style={{ height: "unset", marginTop: "5rem" }}
+          >
+            <Spin size="large" />
+          </div>
+        )}
         {Object.keys(products).map((category) => (
           <div className="display">
             <div className="display-header">
@@ -62,19 +65,11 @@ const Home = () => {
                 See All
               </button>
             </div>
-            {errorFeatured && !isLoadingFeatured ? (
-              <MessageDisplay
-                message={errorFeatured}
-                action={fetchFeaturedProducts}
-                buttonLabel="Try Again"
-              />
-            ) : (
-              <ProductShowcaseGrid
-                products={products[category]}
-                skeletonCount={4}
-                showAll={false}
-              />
-            )}
+            <ProductShowcaseGrid
+              products={products[category]}
+              skeletonCount={4}
+              showAll={false}
+            />
           </div>
         ))}
       </div>

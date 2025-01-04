@@ -1,4 +1,5 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 import { ImageLoader, MessageDisplay, Modal } from "@/components/common";
 import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
 import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
@@ -48,8 +49,6 @@ const ViewProduct = () => {
   useDocumentTitle(`View ${product?.name || "Item"}`);
 
   const [selectedImage, setSelectedImage] = useState(product?.image || "");
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
 
   const {
     recommendedProducts,
@@ -67,13 +66,6 @@ const ViewProduct = () => {
     setSelectedSize(newValue.value);
   };
 
-  const onSelectedColorChange = (color) => {
-    setSelectedColor(color);
-    if (colorOverlay.current) {
-      colorOverlay.current.value = color;
-    }
-  };
-
   const handlePriceView = () => {
     setShowPrice(true);
   };
@@ -86,9 +78,13 @@ const ViewProduct = () => {
     <main className="content">
       {isLoading && (
         <div className="loader">
-          <h4>Loading Product...</h4>
-          <br />
-          <LoadingOutlined style={{ fontSize: "3rem" }} />
+          <h3>Loading Product...</h3>
+          <div
+            className="ezys-spinner"
+            style={{ marginTop: "2rem", height: "unset" }}
+          >
+            <Spin size="large" />
+          </div>
         </div>
       )}
       {error && <MessageDisplay message={error} />}
@@ -96,14 +92,6 @@ const ViewProduct = () => {
         <div style={styles.view} className="product-view">
           <div className="product-modal">
             <div className="product-modal-image-wrapper">
-              {selectedColor && (
-                <input
-                  type="color"
-                  disabled
-                  ref={colorOverlay}
-                  id="color-overlay"
-                />
-              )}
               <ImageLoader
                 alt={product.name}
                 className="product-modal-image"

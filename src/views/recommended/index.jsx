@@ -5,7 +5,7 @@ import {
   useRecommendedProducts,
   useScrollTop,
 } from "@/hooks";
-import bannerImg from "@/images/banner-girl-1.png";
+import bannerImg from "@/images/recommended_products.jpeg";
 import React from "react";
 
 const RecommendedProducts = () => {
@@ -38,7 +38,7 @@ const RecommendedProducts = () => {
               products={recommendedProducts}
               skeletonCount={6}
             />
-          )}  
+          )}
         </div>
       </div>
     </main>

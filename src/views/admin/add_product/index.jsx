@@ -1,6 +1,7 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import React, { lazy, Suspense } from "react";
+import { Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { addProduct } from "@/redux/actions/productActions";
@@ -24,8 +25,9 @@ const AddProduct = () => {
         fallback={
           <div className="loader" style={{ minHeight: "80vh" }}>
             <h6>Loading ... </h6>
-            <br />
-            <LoadingOutlined />
+            <div className="ezys-spinner">
+              <Spin size="large" />
+            </div>
           </div>
         }
       >
