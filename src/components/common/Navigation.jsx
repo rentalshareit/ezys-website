@@ -52,8 +52,6 @@ const Navigation = () => {
     ROUTE.CHECKOUT_STEP_2,
     ROUTE.CHECKOUT_STEP_3,
     ROUTE.SIGNIN,
-    ROUTE.SIGNUP,
-    ROUTE.FORGOT_PASSWORD,
   ];
 
   if (store.user && store.user.role === "ADMIN") {
@@ -115,7 +113,7 @@ const Navigation = () => {
           </NavLink>
         </li>
       </ul>
-      {(pathname === ROUTE.SHOP || pathname === ROUTE.SEARCH) && (
+      {pathname === ROUTE.SEARCH && (
         <FiltersToggle>
           <button className="button-muted button-small" type="button">
             Filters &nbsp;

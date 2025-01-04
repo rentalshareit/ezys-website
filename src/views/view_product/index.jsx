@@ -1,10 +1,5 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
-import {
-  ColorChooser,
-  ImageLoader,
-  MessageDisplay,
-  Modal,
-} from "@/components/common";
+import { ImageLoader, MessageDisplay, Modal } from "@/components/common";
 import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
 import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
 import { displayMoney } from "@/helpers/utils";

@@ -1,8 +1,6 @@
 import { ArrowRightOutlined, LoadingOutlined } from "@ant-design/icons";
 import firebase from "firebase";
-import { SocialLogin } from "@/components/common";
 import { CustomInput, CustomMobileInput } from "@/components/formik";
-import { FORGOT_PASSWORD, SIGNUP } from "@/constants/routes";
 import { Field, Form, Formik } from "formik";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";

@@ -36,17 +36,13 @@ const AppRouter = () => (
           exact
           path={ROUTES.RECOMMENDED_PRODUCTS}
         />
-        <PublicRoute component={view.SignUp} path={ROUTES.SIGNUP} />
         <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
         <PublicRoute component={view.Privacy} path={ROUTES.PRIVACY} />
         <PublicRoute component={view.Damage} path={ROUTES.DAMAGE} />
         <PublicRoute component={view.Shipping} path={ROUTES.SHIPPING} />
         <PublicRoute component={view.Cancellation} path={ROUTES.CANCELLATION} />
         <PublicRoute component={view.SignIn} exact path={ROUTES.SIGNIN} />
-        <PublicRoute
-          component={view.ForgotPassword}
-          path={ROUTES.FORGOT_PASSWORD}
-        />
+
         <Route component={view.ViewProduct} path={ROUTES.VIEW_PRODUCT} />
         <ClientRoute component={view.UserAccount} exact path={ROUTES.ACCOUNT} />
         <ClientRoute

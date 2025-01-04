@@ -2,7 +2,6 @@
 import { CheckOutlined, LoadingOutlined } from "@ant-design/icons";
 import { ImageLoader } from "@/components/common";
 import {
-  CustomColorInput,
   CustomCreatableSelect,
   CustomInput,
   CustomTextarea,
