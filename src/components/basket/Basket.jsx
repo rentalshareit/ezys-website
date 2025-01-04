@@ -12,6 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { clearBasket } from "@/redux/actions/basketActions";
 
+const datesAreOnSameDay = (first, second) =>
+  first.getFullYear() === second.getFullYear() &&
+  first.getMonth() === second.getMonth() &&
+  first.getDate() === second.getDate();
+
 const Basket = () => {
   const [date, setDate] = useState([
     new Date(),
@@ -27,6 +32,12 @@ const Basket = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const didMount = useDidMount();
+
+  const onDateChange = (arg) => {
+    if (!datesAreOnSameDay(arg[0], arg[1])) {
+      setDate(arg);
+    }
+  };
 
   useEffect(() => {
     if (didMount && firebase.auth.currentUser && basket.length !== 0) {
@@ -126,9 +137,10 @@ const Basket = () => {
           {basket.length > 0 && (
             <DateRangePicker
               value={date}
-              onChange={setDate}
+              onChange={onDateChange}
               placeholder="Select Rental Period"
               showHeader={false}
+              ranges={[]}
               shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}
             />
           )}
@@ -151,7 +163,8 @@ const Basket = () => {
                 calculateTotal(
                   basket.map(
                     (product) =>
-                      parseInt(product.price[rentalPeriod]) * product.quantity
+                      parseInt(product.price[rentalPeriod - 1]) *
+                      product.quantity
                   )
                 )
               )}

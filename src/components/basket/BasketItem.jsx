@@ -37,7 +37,7 @@ const BasketItem = ({ product, rentalPeriod }) => {
         <div className="basket-item-price">
           <p className="my-0">
             {displayMoney(
-              parseInt(product.price[rentalPeriod]) * product.quantity
+              parseInt(product.price[rentalPeriod - 1]) * product.quantity
             )}
           </p>
         </div>

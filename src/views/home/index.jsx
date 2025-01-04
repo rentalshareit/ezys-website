@@ -70,8 +70,9 @@ const Home = () => {
               />
             ) : (
               <ProductShowcaseGrid
-                products={products[category].slice(0, 4)}
+                products={products[category]}
                 skeletonCount={4}
+                showAll={false}
               />
             )}
           </div>

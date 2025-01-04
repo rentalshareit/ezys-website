@@ -27,7 +27,10 @@ const useProduct = (id) => {
             if (didMount) {
               setProduct({
                 ...data,
-                price: data.price.split(",").map((a) => parseInt(a.trim())),
+                price: data.price
+                  .replace(/[\[\]']+/g, "")
+                  .split(",")
+                  .map((a) => parseInt(a.trim())),
               });
               setLoading(false);
             }
