@@ -11,8 +11,15 @@ import Badge from "./Badge";
 import FiltersToggle from "./FiltersToggle";
 import MobileNavigation from "./MobileNavigation";
 import SearchBar from "./SearchBar";
-import SignIn from "./SignIn";
-import Modal from "./Modal";
+import Signin from "./SignIn";
+
+const ADMIN_ROUTES = [
+  ROUTE.ADMIN_DASHBOARD,
+  ROUTE.ADMIN_PRODUCTS,
+  ROUTE.ADMIN_USERS,
+  ROUTE.ADD_PRODUCT,
+  ROUTE.EDIT_PRODUCT,
+];
 
 const Navigation = () => {
   const navbar = useRef(null);
@@ -41,7 +48,7 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", scrollHandler);
   }, []);
 
-  const onClickLink = (e) => {
+  const onSignInClick = (e) => {
     e.preventDefault();
     setShow(true);
   };
@@ -51,24 +58,11 @@ const Navigation = () => {
     ROUTE.CHECKOUT_STEP_1,
     ROUTE.CHECKOUT_STEP_2,
     ROUTE.CHECKOUT_STEP_3,
-    ROUTE.SIGNIN,
   ];
 
-  if (store.user && store.user.role === "ADMIN") {
-    return (
-      <ul className="navigation-menu-main">
-        <li>
-          <NavLink
-            activeClassName="navigation-menu-active"
-            exact
-            to={ROUTE.ADMIN_DASHBOARD}
-          >
-            Go To Admin Dashboard
-          </NavLink>
-        </li>
-      </ul>
-    );
-  }
+  // No navigation for admin routes
+  if (ADMIN_ROUTES.includes(pathname)) return null;
+
   if (window.screen.width <= 800) {
     return (
       <MobileNavigation
@@ -82,7 +76,7 @@ const Navigation = () => {
   return (
     <nav className="navigation" ref={navbar}>
       <div className="logo">
-        <Link onClick={onClickLink} to="/">
+        <Link to="/">
           <img alt="Logo" src={logo} />
         </Link>
       </div>
@@ -112,6 +106,16 @@ const Navigation = () => {
             Recommended
           </NavLink>
         </li>
+        {!!store.user && store.user.role === "ADMIN" && (
+          <li>
+            <NavLink
+              activeClassName="navigation-menu-active"
+              to={ROUTE.ADMIN_DASHBOARD}
+            >
+              Admin Dashboard
+            </NavLink>
+          </li>
+        )}
       </ul>
       {pathname === ROUTE.SEARCH && (
         <FiltersToggle>
@@ -145,24 +149,16 @@ const Navigation = () => {
           </li>
         ) : (
           <li className="navigation-action">
-            {pathname !== ROUTE.SIGNIN && (
-              <Link
-                className="button button-small button-muted margin-left-s"
-                onClick={onClickLink}
-              >
-                Sign In
-              </Link>
-            )}
+            <Link
+              className="button button-small button-muted margin-left-s"
+              onClick={onSignInClick}
+            >
+              Sign In
+            </Link>
           </li>
         )}
       </ul>
-      <Modal
-        isOpen={show}
-        onRequestClose={() => setShow(false)}
-        overrideStyle={{ padding: "20px 20px", width: "50rem" }}
-      >
-        <SignIn onClose={() => setShow(false)} />
-      </Modal>
+      <Signin show={show} onClose={() => setShow(false)} />
     </nav>
   );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { BasketItem, BasketToggle } from "@/components/basket";
-import { Boundary, Modal } from "@/components/common";
+import { Boundary, Modal, SignIn } from "@/components/common";
 import { CHECKOUT_STEP_1 } from "@/constants/routes";
 import firebase from "firebase/firebase";
 import "rsuite/styles/index.less";
@@ -22,6 +22,7 @@ const Basket = () => {
     new Date(),
     new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   ]);
+  const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
   const { combine, allowedMaxDays, beforeToday } = DateRangePicker;
   const { basket, user } = useSelector((state) => ({
@@ -63,8 +64,7 @@ const Basket = () => {
 
   const onSignInClick = () => {
     onCloseModal();
-    document.body.classList.remove("basket-open");
-    history.push(CHECKOUT_STEP_1);
+    setShow(true);
   };
 
   const onClearBasket = () => {
@@ -73,114 +73,115 @@ const Basket = () => {
     }
   };
 
-  const onRequestClose = (e) => {
-    const datePickerPopup = document.querySelector(".rs-picker-popup");
-  };
-
   const rentalPeriod = useMemo(() =>
     Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24))
   );
 
   return user && user.role === "ADMIN" ? null : (
-    <Boundary>
-      <Modal isOpen={isOpenModal} onRequestClose={onRequestClose}>
-        <p className="text-center">You must sign in to continue checking out</p>
-        <br />
-        <div className="d-flex-center">
-          <button
-            className="button button-border button-border-gray button-small"
-            onClick={onCloseModal}
-            type="button"
-          >
-            Continue shopping
-          </button>
-          &nbsp;
-          <button
-            className="button button-small"
-            onClick={onSignInClick}
-            type="button"
-          >
-            Sign in to checkout
-          </button>
-        </div>
-      </Modal>
-      <div className="basket">
-        <div className="basket-list">
-          <div className="basket-header">
-            <h3 className="basket-header-title">My Basket</h3>
-            <BasketToggle>
-              {({ onClickToggle }) => (
-                <button
-                  className="basket-toggle button button-border button-border-gray button-small"
-                  onClick={onClickToggle}
-                  style={{ marginRight: "1rem" }}
-                  type="button"
-                >
-                  <span>Close</span>
-                </button>
-              )}
-            </BasketToggle>
+    <>
+      <Boundary>
+        <Modal isOpen={isOpenModal} onRequestClose={onCloseModal}>
+          <p className="text-center">
+            You must sign in to continue checking out
+          </p>
+          <br />
+          <div className="d-flex">
             <button
-              className="basket-clear button button-border button-border-gray button-small"
-              disabled={basket.length === 0}
-              onClick={onClearBasket}
+              className="button button-border button-border-gray button-small"
+              onClick={onCloseModal}
               type="button"
             >
-              <span>Clear Basket</span>
+              Continue shopping
+            </button>
+            &nbsp;
+            <button
+              className="button button-small"
+              onClick={onSignInClick}
+              type="button"
+            >
+              Sign in to checkout
             </button>
           </div>
-          {basket.length <= 0 && (
-            <div className="basket-empty">
-              <h5 className="basket-empty-msg">Your basket is empty</h5>
+        </Modal>
+        <div className="basket">
+          <div className="basket-list">
+            <div className="basket-header">
+              <h3 className="basket-header-title">My Basket</h3>
+              <BasketToggle>
+                {({ onClickToggle }) => (
+                  <button
+                    className="basket-toggle button button-border button-border-gray button-small"
+                    onClick={onClickToggle}
+                    style={{ marginRight: "1rem" }}
+                    type="button"
+                  >
+                    <span>Close</span>
+                  </button>
+                )}
+              </BasketToggle>
+              <button
+                className="basket-clear button button-border button-border-gray button-small"
+                disabled={basket.length === 0}
+                onClick={onClearBasket}
+                type="button"
+              >
+                <span>Clear Basket</span>
+              </button>
             </div>
-          )}
-          {basket.length > 0 && (
-            <DateRangePicker
-              value={date}
-              onChange={onDateChange}
-              placeholder="Select Rental Period"
-              showHeader={false}
-              ranges={[]}
-              shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}
-            />
-          )}
-          {basket.map((product, i) => (
-            <BasketItem
-              // eslint-disable-next-line react/no-array-index-key
-              key={`${product.id}_${i}`}
-              product={product}
-              basket={basket}
-              rentalPeriod={rentalPeriod}
-              dispatch={dispatch}
-            />
-          ))}
-        </div>
-        <div className="basket-checkout">
-          <div className="basket-total">
-            <span className="basket-total-title">Subtotal Amout:</span>
-            <h4 className="basket-total-amount">
-              {displayMoney(
-                calculateTotal(
-                  basket.map(
-                    (product) =>
-                      parseInt(product.price[rentalPeriod - 1]) *
-                      product.quantity
-                  )
-                )
-              )}
-            </h4>
+            {basket.length <= 0 && (
+              <div className="basket-empty">
+                <h5 className="basket-empty-msg">Your basket is empty</h5>
+              </div>
+            )}
+            {basket.length > 0 && (
+              <DateRangePicker
+                value={date}
+                onChange={onDateChange}
+                placeholder="Select Rental Period"
+                showHeader={false}
+                ranges={[]}
+                shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}
+              />
+            )}
+            {basket.map((product, i) => (
+              <BasketItem
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${product.id}_${i}`}
+                product={product}
+                basket={basket}
+                rentalPeriod={rentalPeriod}
+                dispatch={dispatch}
+              />
+            ))}
           </div>
-          <button
-            className="button-small basket-checkout-button button"
-            disabled={basket.length === 0 || pathname === "/checkout"}
-            onClick={onCheckOut}
-            type="button"
-          >
-            Check Out
-          </button>
+          <div className="basket-checkout">
+            <div className="basket-total">
+              <span className="basket-total-title">Subtotal Amout:</span>
+              <h4 className="basket-total-amount">
+                {displayMoney(
+                  calculateTotal(
+                    basket.map(
+                      (product) =>
+                        parseInt(product.price[rentalPeriod - 1]) *
+                        product.quantity
+                    )
+                  )
+                )}
+              </h4>
+            </div>
+            <button
+              className="button-small basket-checkout-button button"
+              disabled={basket.length === 0 || pathname === "/checkout"}
+              onClick={onCheckOut}
+              type="button"
+            >
+              Check Out
+            </button>
+          </div>
         </div>
-      </div>
-    </Boundary>
+      </Boundary>
+      <SignIn show={show} onClose={() => setShow(false)} />
+    </>
   );
 };
 

@@ -10,7 +10,6 @@ export const ADMIN_USERS = "/admin/users";
 export const ADD_PRODUCT = "/admin/add";
 export const EDIT_PRODUCT = "/admin/edit";
 export const SEARCH = "/search/:searchKey";
-export const SIGNIN = "/signin";
 export const FAQ = "/faq";
 export const PRIVACY = "/privacy";
 export const DAMAGE = "/damage";

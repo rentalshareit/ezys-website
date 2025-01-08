@@ -15,22 +15,6 @@ class Firebase {
   }
 
   // AUTH ACTIONS ------------
-
-  createAccount = (email, password) =>
-    this.auth.createUserWithEmailAndPassword(email, password);
-
-  signIn = (email, password) =>
-    this.auth.signInWithEmailAndPassword(email, password);
-
-  signInWithGoogle = () =>
-    this.auth.signInWithPopup(new app.auth.GoogleAuthProvider());
-
-  signInWithFacebook = () =>
-    this.auth.signInWithPopup(new app.auth.FacebookAuthProvider());
-
-  signInWithGithub = () =>
-    this.auth.signInWithPopup(new app.auth.GithubAuthProvider());
-
   captchaVerify = async () => {
     if (!window.RecaptchaVerifier) {
       return new Promise((resolve) => {
@@ -64,28 +48,9 @@ class Firebase {
 
   signOut = () => this.auth.signOut();
 
-  passwordReset = (email) => this.auth.sendPasswordResetEmail(email);
-
   addUser = (id, user) => this.db.collection("users").doc(id).set(user);
 
   getUser = (id) => this.db.collection("users").doc(id).get();
-
-  passwordUpdate = (password) => this.auth.currentUser.updatePassword(password);
-
-  changePassword = (currentPassword, newPassword) =>
-    new Promise((resolve, reject) => {
-      this.reauthenticate(currentPassword)
-        .then(() => {
-          const user = this.auth.currentUser;
-          user
-            .updatePassword(newPassword)
-            .then(() => {
-              resolve("Password updated successfully!");
-            })
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    });
 
   reauthenticate = (currentPassword) => {
     const user = this.auth.currentUser;

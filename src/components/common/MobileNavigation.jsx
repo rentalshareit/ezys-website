@@ -1,19 +1,26 @@
 import { BasketToggle } from "@/components/basket";
-import { HOME, SIGNIN } from "@/constants/routes";
+import { HOME } from "@/constants/routes";
 import PropType from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserNav from "@/views/account/components/UserAvatar";
 import Badge from "./Badge";
 import FiltersToggle from "./FiltersToggle";
 import SearchBar from "./SearchBar";
+import Signin from "./SignIn";
 
 const Navigation = (props) => {
+  const [show, setShow] = useState(false);
   const { isAuthenticating, basketLength, disabledPaths, user } = props;
   const { pathname } = useLocation();
 
   const onClickLink = (e) => {
     if (isAuthenticating) e.preventDefault();
+  };
+
+  const onSignInClick = (e) => {
+    e.preventDefault();
+    setShow(true);
   };
 
   return (
@@ -48,19 +55,11 @@ const Navigation = (props) => {
               <UserNav />
             </li>
           ) : (
-            <>
-              {pathname !== SIGNIN && (
-                <li className="mobile-navigation-item">
-                  <Link
-                    className="navigation-menu-link"
-                    onClick={onClickLink}
-                    to={SIGNIN}
-                  >
-                    Sign In
-                  </Link>
-                </li>
-              )}
-            </>
+            <li className="mobile-navigation-item">
+              <Link className="navigation-menu-link" onClick={onSignInClick}>
+                Sign In
+              </Link>
+            </li>
           )}
         </ul>
       </div>
@@ -72,6 +71,7 @@ const Navigation = (props) => {
           </button>
         </FiltersToggle>
       </div>
+      <Signin show={show} onClose={() => setShow(false)} />
     </nav>
   );
 };

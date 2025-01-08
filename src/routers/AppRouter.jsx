@@ -7,7 +7,6 @@ import { Route, Router, Switch } from "react-router-dom";
 import * as view from "@/views";
 import AdminRoute from "./AdminRoute";
 import ClientRoute from "./ClientRoute";
-import PublicRoute from "./PublicRoute";
 
 // Revert back to history v4.10.0 because
 // v5.0 breaks navigation
@@ -36,12 +35,11 @@ const AppRouter = () => (
           exact
           path={ROUTES.RECOMMENDED_PRODUCTS}
         />
-        <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
-        <PublicRoute component={view.Privacy} path={ROUTES.PRIVACY} />
-        <PublicRoute component={view.Damage} path={ROUTES.DAMAGE} />
-        <PublicRoute component={view.Shipping} path={ROUTES.SHIPPING} />
-        <PublicRoute component={view.Cancellation} path={ROUTES.CANCELLATION} />
-        <PublicRoute component={view.SignIn} exact path={ROUTES.SIGNIN} />
+        <Route component={view.Faq} path={ROUTES.FAQ} />
+        <Route component={view.Privacy} path={ROUTES.PRIVACY} />
+        <Route component={view.Damage} path={ROUTES.DAMAGE} />
+        <Route component={view.Shipping} path={ROUTES.SHIPPING} />
+        <Route component={view.Cancellation} path={ROUTES.CANCELLATION} />
 
         <Route component={view.ViewProduct} path={ROUTES.VIEW_PRODUCT} />
         <ClientRoute component={view.UserAccount} exact path={ROUTES.ACCOUNT} />
@@ -73,7 +71,7 @@ const AppRouter = () => (
           component={view.EditProduct}
           path={`${ROUTES.EDIT_PRODUCT}/:id`}
         />
-        <PublicRoute component={view.PageNotFound} />
+        <Route component={view.PageNotFound} />
       </Switch>
       <Footer />
     </>

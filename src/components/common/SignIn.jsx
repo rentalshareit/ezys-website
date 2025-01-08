@@ -12,6 +12,7 @@ import { sendOtp, verifyOtp } from "@/redux/actions/authActions";
 import auth from "@/services/config";
 import firbaseLocal from "@/services/firebase";
 import { setAuthenticating, setAuthStatus } from "@/redux/actions/miscActions";
+import Modal from "./Modal";
 import * as Yup from "yup";
 
 const SignInSchema = Yup.object().shape({
@@ -36,7 +37,6 @@ const SignIn = ({ onClose }) => {
   const dispatch = useDispatch();
 
   useScrollTop();
-  useDocumentTitle("Sign In | Ezys");
 
   const handleSendOtp = ({ value }) => {
     dispatch(sendOtp(`+${value}`));
@@ -184,4 +184,21 @@ SignIn.propTypes = {
   onClose: PropType.func.isRequired,
 };
 
-export default SignIn;
+const WithModalSignIn = ({ show, onClose }) => {
+  return (
+    <Modal
+      isOpen={show}
+      onRequestClose={onClose}
+      overrideStyle={{ padding: "20px 20px", width: "50rem" }}
+    >
+      <SignIn onClose={onClose} />
+    </Modal>
+  );
+};
+
+WithModalSignIn.propTypes = {
+  show: PropType.bool.isRequired,
+  onClose: PropType.func.isRequired,
+};
+
+export default WithModalSignIn;
