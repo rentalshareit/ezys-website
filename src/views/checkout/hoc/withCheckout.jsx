@@ -16,7 +16,9 @@ const withCheckout = (Component) =>
 
     const shippingFee = 0;
     const subtotal = calculateTotal(
-      state.basket.map((product) => product.price * product.quantity)
+      state.basket.map(
+        (product) => product.price[product.period.days - 1] * product.quantity
+      )
     );
 
     if (state.basket.length === 0) {

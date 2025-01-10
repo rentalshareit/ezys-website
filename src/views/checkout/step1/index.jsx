@@ -30,6 +30,7 @@ const OrderSummary = ({ basket, subtotal }) => {
               basket={basket}
               dispatch={dispatch}
               key={product.id}
+              rentalPeriod={product.period.days}
               product={product}
             />
           ))}

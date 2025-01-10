@@ -7,10 +7,10 @@ import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { clearBasket } from "@/redux/actions/basketActions";
+import { clearBasket, updateRentalPeriod } from "@/redux/actions/basketActions";
 
 const datesAreOnSameDay = (first, second) =>
   first.getFullYear() === second.getFullYear() &&
@@ -34,6 +34,11 @@ const Basket = () => {
   const dispatch = useDispatch();
   const didMount = useDidMount();
 
+  const getRentalPeriod = useCallback(
+    () => Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
+    [date]
+  );
+
   const onDateChange = (arg) => {
     if (!datesAreOnSameDay(arg[0], arg[1])) {
       setDate(arg);
@@ -52,6 +57,15 @@ const Basket = () => {
         });
     }
   }, [basket.length]);
+
+  useEffect(() => {
+    dispatch(
+      updateRentalPeriod({
+        dates: [date[0], date[1]],
+        days: getRentalPeriod(),
+      })
+    );
+  }, [date]);
 
   const onCheckOut = () => {
     if (basket.length !== 0 && user) {
@@ -73,11 +87,7 @@ const Basket = () => {
     }
   };
 
-  const rentalPeriod = useMemo(() =>
-    Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24))
-  );
-
-  return user && user.role === "ADMIN" ? null : (
+  return (
     <>
       <Boundary>
         <Modal isOpen={isOpenModal} onRequestClose={onCloseModal}>
@@ -149,7 +159,7 @@ const Basket = () => {
                 key={`${product.id}_${i}`}
                 product={product}
                 basket={basket}
-                rentalPeriod={rentalPeriod}
+                rentalPeriod={getRentalPeriod()}
                 dispatch={dispatch}
               />
             ))}
@@ -162,7 +172,7 @@ const Basket = () => {
                   calculateTotal(
                     basket.map(
                       (product) =>
-                        parseInt(product.price[rentalPeriod - 1]) *
+                        parseInt(product.price[getRentalPeriod() - 1]) *
                         product.quantity
                     )
                   )

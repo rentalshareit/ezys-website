@@ -2,7 +2,7 @@
 import { useFormikContext } from "formik";
 import React from "react";
 
-const PayPalPayment = () => {
+const PayOnDelivery = () => {
   const { values, setValues } = useFormikContext();
 
   return (
@@ -38,4 +38,4 @@ const PayPalPayment = () => {
   );
 };
 
-export default PayPalPayment;
+export default PayOnDelivery;

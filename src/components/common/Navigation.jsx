@@ -30,6 +30,7 @@ const Navigation = () => {
     basketLength: state.basket.length,
     user: state.auth,
     isAuthenticating: state.app.isAuthenticating,
+    authStatus: state.app.authStatus,
     isLoading: state.app.loading,
   }));
 
@@ -42,6 +43,12 @@ const Navigation = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (store.authStatus?.success && show) {
+      setShow(false);
+    }
+  }, [store.authStatus]);
 
   useEffect(() => {
     window.addEventListener("scroll", scrollHandler);
