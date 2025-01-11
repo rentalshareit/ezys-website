@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { Boundary } from '@/components/common';
-import { AppliedFilters, ProductList } from '@/components/product';
+import { ProductList } from '@/components/product';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -28,7 +28,6 @@ const Products = () => {
       />
       <div className="product-admin-items">
         <ProductList {...store}>
-          <AppliedFilters filter={store.filter} />
           <ProductsTable filteredProducts={store.filteredProducts} />
         </ProductList>
       </div>
