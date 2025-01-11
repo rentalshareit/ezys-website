@@ -1,5 +1,5 @@
 import { FilterOutlined, PlusOutlined } from '@ant-design/icons';
-import { FiltersToggle, SearchBar } from '@/components/common';
+import { SearchBar } from '@/components/common';
 import { ADD_PRODUCT } from '@/constants/routes';
 import PropType from 'prop-types';
 import React from 'react';
@@ -18,13 +18,6 @@ const ProductsNavbar = (props) => {
         )
       </h3>
       <SearchBar />
-            &nbsp;
-      <FiltersToggle>
-        <button className="button-muted button-small" type="button">
-          <FilterOutlined />
-          &nbsp;More Filters
-        </button>
-      </FiltersToggle>
       <button
         className="button button-small"
         onClick={() => history.push(ADD_PRODUCT)}

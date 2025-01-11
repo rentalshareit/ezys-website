@@ -8,18 +8,18 @@ const PayOnDelivery = () => {
   return (
     <div
       className={`checkout-fieldset-collapse ${
-        values.type === "paypal" ? "is-selected-payment" : ""
+        values.type === "payondelivery" ? "is-selected-payment" : ""
       }`}
     >
       <div className="checkout-field margin-0">
         <div className="checkout-checkbox-field">
           <input
-            checked={values.type === "paypal"}
+            checked={values.type === "payondelivery"}
             id="modePayPal"
             name="type"
             onChange={(e) => {
               if (e.target.checked) {
-                setValues({ ...values, type: "paypal" });
+                setValues({ ...values, type: "payondelivery" });
               }
             }}
             type="radio"

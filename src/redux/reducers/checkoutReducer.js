@@ -1,16 +1,14 @@
 import {
-  RESET_CHECKOUT, SET_CHECKOUT_PAYMENT_DETAILS, SET_CHECKOUT_SHIPPING_DETAILS
-} from '@/constants/constants';
+  RESET_CHECKOUT,
+  SET_CHECKOUT_PAYMENT_DETAILS,
+  SET_CHECKOUT_SHIPPING_DETAILS,
+} from "@/constants/constants";
 
 const defaultState = {
   shipping: {},
   payment: {
-    type: 'paypal',
-    name: '',
-    cardnumber: '',
-    expiry: '',
-    ccv: ''
-  }
+    type: "payondelivery",
+  },
 };
 
 export default (state = defaultState, action) => {
@@ -18,12 +16,12 @@ export default (state = defaultState, action) => {
     case SET_CHECKOUT_SHIPPING_DETAILS:
       return {
         ...state,
-        shipping: action.payload
+        shipping: action.payload,
       };
     case SET_CHECKOUT_PAYMENT_DETAILS:
       return {
         ...state,
-        payment: action.payload
+        payment: action.payload,
       };
     case RESET_CHECKOUT:
       return defaultState;

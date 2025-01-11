@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { LoadingOutlined } from "@ant-design/icons";
 import { Boundary, MessageDisplay } from "@/components/common";
-import { ProductGrid } from "@/components/product";
+import { ProductShowcaseGrid } from "@/components/product";
 import { useDidMount } from "@/hooks";
 import { Spin } from "antd";
 import PropType from "prop-types";
@@ -53,15 +53,13 @@ const Search = ({ match }) => {
             {!store.requestStatus && (
               <div className="product-list-header">
                 <div className="product-list-header-title">
-                  <h5>
-                    {`Found ${store.products.length} ${
-                      store.products.length > 1 ? "products" : "product"
-                    } with keyword ${searchKey}`}
-                  </h5>
+                  {`Found ${store.products.length} ${
+                    store.products.length > 1 ? "products" : "product"
+                  } with keyword ${searchKey}`}
                 </div>
               </div>
             )}
-            <ProductGrid products={store.products} />
+            <ProductShowcaseGrid products={store.products} skeletonCount={4} />
           </section>
         </main>
       </Boundary>
@@ -72,7 +70,7 @@ const Search = ({ match }) => {
     <main className="content">
       <div className="loader">
         <h4>Searching Product...</h4>
-        <div className="ezys-spinner">
+        <div className="ezys-spinner" style={{ alignItems: "unset" }}>
           <Spin size="large" />
         </div>
       </div>

@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserNav from "@/views/account/components/UserAvatar";
 import Badge from "./Badge";
-import FiltersToggle from "./FiltersToggle";
 import SearchBar from "./SearchBar";
 import Signin from "./SignIn";
 
@@ -65,11 +64,6 @@ const Navigation = (props) => {
       </div>
       <div className="mobile-navigation-sec">
         <SearchBar />
-        <FiltersToggle>
-          <button className="button-link button-small" type="button">
-            <i className="fa fa-filter" />
-          </button>
-        </FiltersToggle>
       </div>
       <Signin show={show} onClose={() => setShow(false)} />
     </nav>

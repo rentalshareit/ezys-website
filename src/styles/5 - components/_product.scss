@@ -12,10 +12,11 @@
 .product-list-header {
   width: 100%;
   margin-bottom: $line-height;
+  margin-top: $line-height;
 }
 
 .product-list-header-title {
-  text-align: center;
+  color: $button-hover;
 }
 
 .product-list-header-actions {

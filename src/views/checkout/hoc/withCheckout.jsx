@@ -9,12 +9,10 @@ const withCheckout = (Component) =>
     const state = useSelector((store) => ({
       isAuth: !!store.auth.id && !!store.auth.role,
       basket: store.basket,
-      shipping: store.checkout.shipping,
       payment: store.checkout.payment,
       profile: store.profile,
     }));
 
-    const shippingFee = 0;
     const subtotal = calculateTotal(
       state.basket.map(
         (product) => product.price[product.period.days - 1] * product.quantity
@@ -32,8 +30,7 @@ const withCheckout = (Component) =>
           basket={state.basket}
           payment={state.payment}
           profile={state.profile}
-          shipping={state.shipping}
-          subtotal={Number(subtotal + shippingFee)}
+          subtotal={Number(subtotal)}
         />
       );
     }
