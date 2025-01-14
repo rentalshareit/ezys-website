@@ -9,11 +9,7 @@ const PublicRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     component={(props) => {
-      return (
-        <main className="content">
-          <Component {...props} />
-        </main>
-      );
+      return <Component {...props} />;
     }}
   />
 );
