@@ -25,16 +25,9 @@ function* profileSaga({ type, payload }) {
     case UPDATE_PROFILE: {
       try {
         const state = yield select();
-        const { email, password } = payload.credentials;
         const { avatarFile, bannerFile } = payload.files;
 
         yield put(setLoading(true));
-
-        // if email & password exist && the email has been edited
-        // update the email
-        if (email && password && email !== state.profile.email) {
-          yield call(firebase.updateEmail, password, email);
-        }
 
         if (avatarFile || bannerFile) {
           const bannerURL = bannerFile ? yield call(firebase.storeImage, state.auth.id, 'banner', bannerFile) : payload.updates.banner;

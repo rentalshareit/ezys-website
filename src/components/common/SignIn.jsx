@@ -1,6 +1,7 @@
 import { ArrowRightOutlined, LoadingOutlined } from "@ant-design/icons";
 import firebase from "firebase";
 import { CustomInput, CustomMobileInput } from "@/components/formik";
+import { displayActionMessage } from "@/helpers/utils";
 import { Field, Form, Formik } from "formik";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
@@ -29,9 +30,10 @@ const SignInSchema = Yup.object().shape({
 
 const SignIn = ({ onClose }) => {
   const [showOtp, setShowOtp] = useState(false);
-  const { authStatus, isAuthenticating } = useSelector((state) => ({
+  const { authStatus, isAuthenticating, loading } = useSelector((state) => ({
     authStatus: state.app.authStatus,
     isAuthenticating: state.app.isAuthenticating,
+    loading: state.app.loading,
   }));
 
   const dispatch = useDispatch();
@@ -54,128 +56,125 @@ const SignIn = ({ onClose }) => {
     []
   );
 
+  useEffect(() => {
+    if (!authStatus?.success && authStatus?.message) {
+      displayActionMessage(authStatus?.message, "error");
+    }
+  }, [authStatus]);
+
   return (
     <div className="auth-content">
       <div id="recaptcha-container" />
-      {!authStatus?.success && (
-        <>
-          {authStatus?.message && (
-            <h5 className="text-center toast-error">{authStatus?.message}</h5>
-          )}
-          <div
-            className={`auth ${
-              authStatus?.message && !authStatus?.success && "input-error"
-            }`}
+      <div className="auth-main">
+        <h4>Login</h4>
+        <br />
+        <div className="auth-wrapper">
+          <Formik
+            initialValues={{
+              phone: {},
+              otp: "",
+            }}
+            validateOnChange
+            validationSchema={SignInSchema}
           >
-            <div className="auth-main">
-              <h4>Login</h4>
-              <br />
-              <div className="auth-wrapper">
-                <Formik
-                  initialValues={{
-                    phone: {},
-                    otp: "",
-                  }}
-                  validateOnChange
-                  validationSchema={SignInSchema}
-                >
-                  {(props) => (
-                    <Form>
-                      {!isAuthenticating && (
+            {(props) => (
+              <Form>
+                {!isAuthenticating && (
+                  <>
+                    <div className="auth-field">
+                      <Field name="phone">
+                        {({ field, form, meta }) => (
+                          <CustomMobileInput
+                            defaultValue={props.values.phone}
+                            name={field.name}
+                            label="Enter Your Phone Number"
+                          />
+                        )}
+                      </Field>
+                    </div>
+                    <br />
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <button
+                        className="button auth-button button-small"
+                        type="button"
+                        disabled={loading}
+                        onClick={() => handleSendOtp(props.values.phone)}
+                      >
+                        {loading ? <LoadingOutlined /> : ""}&nbsp;Send OTP
+                      </button>
+                      <button
+                        className="button button-small button-muted"
+                        onClick={onClose}
+                        disabled={loading}
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                )}
+                {isAuthenticating && (
+                  <>
+                    <Field name="otp">
+                      {({ field, form, meta }) => (
                         <>
-                          <div className="auth-field">
-                            <Field name="phone">
-                              {({ field, form, meta }) => (
-                                <CustomMobileInput
-                                  defaultValue={props.values.phone}
-                                  name={field.name}
-                                  label="Enter Your Phone Number"
-                                />
-                              )}
-                            </Field>
-                          </div>
-                          <br />
-                          <div style={{ display: "flex", gap: "10px" }}>
-                            <button
-                              className="button auth-button button-small"
-                              type="button"
-                              onClick={() => handleSendOtp(props.values.phone)}
-                            >
-                              Send OTP
-                            </button>
-                            <button
-                              className="button button-small button-muted"
-                              onClick={onClose}
-                              type="button"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </>
-                      )}
-                      {isAuthenticating && (
-                        <>
-                          <Field name="otp">
-                            {({ field, form, meta }) => (
-                              <>
-                                <h6
-                                  style={{
-                                    marginBottom: "10px",
-                                    fontSize: "12px",
-                                  }}
-                                >
-                                  Enter the code sent to your phone
-                                </h6>
-                                <OtpInput
-                                  value={props.values.otp}
-                                  onChange={(value) =>
-                                    form.setFieldValue("otp", value)
-                                  }
-                                  numInputs={6}
-                                  shouldAutoFocus
-                                  renderInput={(props) => (
-                                    <input
-                                      {...props}
-                                      name={field.name}
-                                      style={{
-                                        width: "30px",
-                                        marginRight: "12px",
-                                        marginBottom: "12px",
-                                        padding: "1rem",
-                                        borderRadius: "5px",
-                                      }}
-                                    />
-                                  )}
-                                ></OtpInput>
-                              </>
+                          <h6
+                            style={{
+                              marginBottom: "10px",
+                              fontSize: "12px",
+                            }}
+                          >
+                            Enter the code sent to your phone
+                          </h6>
+                          <OtpInput
+                            value={props.values.otp}
+                            onChange={(value) =>
+                              form.setFieldValue("otp", value)
+                            }
+                            numInputs={6}
+                            shouldAutoFocus
+                            renderInput={(props) => (
+                              <input
+                                {...props}
+                                name={field.name}
+                                style={{
+                                  width: "30px",
+                                  marginRight: "12px",
+                                  marginBottom: "12px",
+                                  padding: "1rem",
+                                  borderRadius: "5px",
+                                }}
+                              />
                             )}
-                          </Field>
-                          <div style={{ display: "flex", gap: "10px" }}>
-                            <button
-                              className="button auth-button button-small"
-                              type="button"
-                              onClick={() => handleVerifyOtp(props.values.otp)}
-                            >
-                              Verify OTP
-                            </button>
-                            <button
-                              className="button button-small button-muted"
-                              onClick={onClose}
-                              type="button"
-                            >
-                              Cancel
-                            </button>
-                          </div>
+                          ></OtpInput>
                         </>
                       )}
-                    </Form>
-                  )}
-                </Formik>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+                    </Field>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <button
+                        className="button auth-button button-small"
+                        type="button"
+                        disabled={loading}
+                        onClick={() => handleVerifyOtp(props.values.otp)}
+                      >
+                        {loading ? <LoadingOutlined /> : ""}&nbsp;Verify OTP
+                      </button>
+                      <button
+                        className="button button-small button-muted"
+                        disabled={loading}
+                        onClick={onClose}
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                )}
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
     </div>
   );
 };

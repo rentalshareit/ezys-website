@@ -13,7 +13,6 @@ import { Spin } from "antd";
 import { setLoading } from "@/redux/actions/miscActions";
 import { updateProfile } from "@/redux/actions/profileActions";
 import * as Yup from "yup";
-import ConfirmModal from "./ConfirmModal";
 import EditForm from "./EditForm";
 
 const FormSchema = Yup.object().shape({
@@ -65,7 +64,7 @@ const EditProfile = () => {
     banner: {},
   });
 
-  const update = (form, credentials = {}) => {
+  const update = (form) => {
     dispatch(
       updateProfile({
         updates: {
@@ -80,15 +79,8 @@ const EditProfile = () => {
           bannerFile: imageFile.banner.file,
           avatarFile: imageFile.avatar.file,
         },
-        credentials,
       })
     );
-  };
-
-  const onConfirmUpdate = (form, password) => {
-    if (password) {
-      update(form, { email: form.email, password });
-    }
   };
 
   const onSubmitUpdate = (form) => {
@@ -101,11 +93,7 @@ const EditProfile = () => {
       fieldsChanged ||
       Boolean(imageFile.banner.file || imageFile.avatar.file)
     ) {
-      if (form.email !== profile.email) {
-        modal.onOpenModal();
-      } else {
-        update(form);
-      }
+      update(form);
     }
   };
 
@@ -186,7 +174,6 @@ const EditProfile = () => {
                 </div>
               </div>
               <EditForm authProvider={auth.provider} isLoading={isLoading} />
-              <ConfirmModal onConfirmUpdate={onConfirmUpdate} modal={modal} />
             </>
           )}
         </Formik>

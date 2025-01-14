@@ -9,6 +9,7 @@ const withCheckout = (Component) =>
     const state = useSelector((store) => ({
       isAuth: !!store.auth.id && !!store.auth.role,
       basket: store.basket,
+      shipping: store.checkout.shipping,
       payment: store.checkout.payment,
       profile: store.profile,
     }));
@@ -29,6 +30,7 @@ const withCheckout = (Component) =>
           {...props}
           basket={state.basket}
           payment={state.payment}
+          shipping={state.shipping}
           profile={state.profile}
           subtotal={Number(subtotal)}
         />

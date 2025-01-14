@@ -13,9 +13,22 @@ export default (state = [], action) => {
     case SET_BASKET_ITEMS:
       return action.payload;
     case ADD_TO_BASKET:
-      return state.some((product) => product.id === action.payload.id)
-        ? state
-        : [action.payload, ...state];
+      if (state.some((product) => product.id === action.payload.id))
+        return state;
+      let period;
+      if (state.length) {
+        period = state[0].period;
+      } else {
+        const date = [
+          new Date(),
+          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        ];
+        period = {
+          dates: [date[0], date[1]],
+          days: Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
+        };
+      }
+      return [{ ...action.payload, period }, ...state];
     case REMOVE_FROM_BASKET:
       return state.filter((product) => product.id !== action.payload);
     case CLEAR_BASKET:

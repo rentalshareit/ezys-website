@@ -42,8 +42,8 @@ class Firebase {
     window.confirmationResult = confirmationResult;
   };
 
-  verifyOTP = (otp) => {
-    window.confirmationResult.confirm(otp);
+  verifyOTP = async (otp) => {
+    return window.confirmationResult.confirm(otp);
   };
 
   signOut = () => this.auth.signOut();
@@ -61,21 +61,6 @@ class Firebase {
 
     return user.reauthenticateWithCredential(cred);
   };
-
-  updateEmail = (currentPassword, newEmail) =>
-    new Promise((resolve, reject) => {
-      this.reauthenticate(currentPassword)
-        .then(() => {
-          const user = this.auth.currentUser;
-          user
-            .updateEmail(newEmail)
-            .then(() => {
-              resolve("Email Successfully updated");
-            })
-            .catch((error) => reject(error));
-        })
-        .catch((error) => reject(error));
-    });
 
   updateProfile = (id, updates) =>
     this.db.collection("users").doc(id).update(updates);

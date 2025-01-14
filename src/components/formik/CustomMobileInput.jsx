@@ -8,7 +8,7 @@ const ReactPhoneInput = PI.default ? PI.default : PI;
 
 const CustomMobileInput = (props) => {
   const [field, meta, helpers] = useField(props);
-  const { label, placeholder, defaultValue } = props;
+  const { label, placeholder, defaultValue, disabled } = props;
   const { touched, error } = meta;
   const { setValue } = helpers;
 
@@ -38,6 +38,7 @@ const CustomMobileInput = (props) => {
         name={field.name}
         country="in"
         disableDropdown
+        disabled={disabled}
         inputClass="input-form d-block"
         style={{
           border: touched && error ? "1px solid red" : "1px solid #cacaca",

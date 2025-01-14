@@ -15,7 +15,9 @@ const FormSchema = Yup.object().shape({
   type: Yup.string().required("Please select paymend mode"),
 });
 
-const Payment = ({ payment, subtotal }) => {
+const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
+  const orderNo =
+    Date.now().toString(36) + Math.random().toString(36).substring(2);
   useDocumentTitle("Check Out Final Step | Ezys");
   useScrollTop();
 
@@ -23,7 +25,33 @@ const Payment = ({ payment, subtotal }) => {
     type: payment.type || "payondelivery",
   };
 
-  const onConfirm = () => {
+  const onConfirm = async (values) => {
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec",
+      {
+        method: "post",
+        redirect: "follow",
+        crossDomain: true,
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          action: "createOrder",
+          orderNo,
+          date: new Date().toLocaleDateString(undefined, {
+            timeZone: "Asia/Kolkata",
+          }),
+          name: shipping.fullname,
+          address: shipping.address,
+          phone: shipping.mobile.value.substring(2),
+          period: basket[0].period.dates.join("-"),
+          email: shipping.email,
+          amount: subtotal,
+          payment: values.type,
+          products: basket.map((b) => b.name).join(","),
+          coupon: "",
+        }),
+      }
+    );
     displayActionMessage("Feature not ready yet :)", "info");
   };
 
@@ -58,6 +86,20 @@ Payment.propTypes = {
     ccv: PropType.string,
     type: PropType.string,
   }).isRequired,
+  shipping: PropType.shape({
+    fullname: PropType.string,
+    email: PropType.string,
+    address: PropType.string,
+    mobile: PropType.object,
+    isDone: PropType.bool,
+  }).isRequired,
+  profile: PropType.shape({
+    fullname: PropType.string,
+    email: PropType.string,
+    address: PropType.string,
+    mobile: PropType.object,
+  }).isRequired,
+  basket: PropType.arrayOf(PropType.object).isRequired,
   subtotal: PropType.number.isRequired,
 };
 

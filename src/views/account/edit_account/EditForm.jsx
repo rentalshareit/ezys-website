@@ -8,10 +8,12 @@ import { ACCOUNT } from "@/constants/routes";
 import { Field, useFormikContext } from "formik";
 import PropType from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const EditForm = ({ isLoading, authProvider }) => {
   const history = useHistory();
+  const profile = useSelector((state) => state.profile);
   const { values, submitForm } = useFormikContext();
 
   return (
@@ -26,7 +28,7 @@ const EditForm = ({ isLoading, authProvider }) => {
         style={{ textTransform: "capitalize" }}
       />
       <Field
-        disabled={authProvider !== "password" || isLoading}
+        disabled={isLoading}
         name="email"
         type="email"
         label="* Email Address"
@@ -37,16 +39,16 @@ const EditForm = ({ isLoading, authProvider }) => {
         disabled={isLoading}
         name="address"
         type="text"
-        label="Address (Will be used for checkout)"
-        placeholder="#245 Brgy. Maligalig, Arayat Pampanga, Philippines"
+        label="Address"
+        placeholder="Flat/House No, Apartment Name, Landmark, Area - PIN"
         component={CustomInput}
         style={{ textTransform: "capitalize" }}
       />
       <CustomMobileInput
-        defaultValue={values.mobile}
+        defaultValue={profile.mobile}
         name="mobile"
-        disabled={isLoading}
-        label="Mobile Number (Will be used for checkout)"
+        disabled
+        label="Mobile Number"
       />
       <br />
       <div className="edit-user-action">

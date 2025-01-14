@@ -18,7 +18,7 @@ const ShippingTotal = ({ subtotal }) => {
             </td>
             <td>
               <h4 className="basket-total-amount text-subtle text-right margin-0 ">
-                displayMoney(0)
+                {displayMoney(0)}
               </h4>
             </td>
           </tr>

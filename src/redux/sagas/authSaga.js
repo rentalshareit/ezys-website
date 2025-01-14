@@ -14,7 +14,11 @@ import { signInSuccess, signOutSuccess } from "@/redux/actions/authActions";
 import { clearBasket, setBasketItems } from "@/redux/actions/basketActions";
 import { resetCheckout } from "@/redux/actions/checkoutActions";
 import { resetFilter } from "@/redux/actions/filterActions";
-import { setAuthenticating, setAuthStatus } from "@/redux/actions/miscActions";
+import {
+  setAuthenticating,
+  setAuthStatus,
+  setLoading,
+} from "@/redux/actions/miscActions";
 import { clearProfile, setProfile } from "@/redux/actions/profileActions";
 import { history } from "@/routers/AppRouter";
 import firebase from "@/services/firebase";
@@ -32,32 +36,11 @@ function* handleError(e) {
         })
       );
       break;
-    case "auth/email-already-in-use":
-      yield put(
-        setAuthStatus({
-          ...obj,
-          message: "Email is already in use. Please use another email",
-        })
-      );
+    case "auth/invalid-verification-code":
+      yield put(setAuthStatus({ ...obj, message: "Invalid OTP" }));
       break;
-    case "auth/wrong-password":
-      yield put(
-        setAuthStatus({ ...obj, message: "Incorrect email or password" })
-      );
-      break;
-    case "auth/user-not-found":
-      yield put(
-        setAuthStatus({ ...obj, message: "Incorrect email or password" })
-      );
-      break;
-    case "auth/reset-password-error":
-      yield put(
-        setAuthStatus({
-          ...obj,
-          message:
-            "Failed to send password reset email. Did you type your email correctly?",
-        })
-      );
+    case "auth/invalid-phone-number":
+      yield put(setAuthStatus({ ...obj, message: "Invalid phone number" }));
       break;
     default:
       yield put(setAuthStatus({ ...obj, message: e.message }));
@@ -65,31 +48,33 @@ function* handleError(e) {
   }
 }
 
-function* initRequest() {
-  yield put(setAuthenticating());
-  yield put(setAuthStatus({}));
-}
-
 function* authSaga({ type, payload }) {
   switch (type) {
     case SEND_OTP:
       try {
-        yield initRequest();
+        yield put(setLoading(true));
+        yield put(setAuthStatus({}));
         yield call(firebase.sendOTP, payload.phoneNumber);
+        yield put(setAuthenticating());
       } catch (e) {
         yield handleError(e);
+      } finally {
+        yield put(setLoading(false));
       }
       break;
     case VERIFY_OTP:
       try {
+        yield put(setLoading(true));
         yield call(firebase.verifyOTP, payload.otp);
       } catch (e) {
         yield handleError(e);
+      } finally {
+        yield put(setLoading(false));
       }
       break;
     case SIGNOUT: {
       try {
-        yield initRequest();
+        yield put(setAuthStatus({}));
         yield call(firebase.signOut);
         yield put(clearBasket());
         yield put(clearProfile());
@@ -119,11 +104,7 @@ function* authSaga({ type, payload }) {
             provider: payload.providerData[0].providerId,
           })
         );
-      } else if (
-        payload.providerData[0].providerId !== "password" &&
-        !snapshot.data()
-      ) {
-        // add the user if auth provider is not password
+      } else {
         const user = {
           fullname: payload.displayName ? payload.displayName : "User",
           avatar: payload.photoURL ? payload.photoURL : defaultAvatar,
@@ -131,7 +112,12 @@ function* authSaga({ type, payload }) {
           email: payload.email,
           address: "",
           basket: [],
-          mobile: { data: {} },
+          mobile: {
+            country: "in",
+            countryCode: "+91",
+            dialCode: "91",
+            value: payload.phoneNumber,
+          },
           role: "USER",
           dateJoined: payload.metadata.creationTime,
         };
