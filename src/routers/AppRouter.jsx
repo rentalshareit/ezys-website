@@ -7,6 +7,7 @@ import { Route, Router, Switch } from "react-router-dom";
 import * as view from "@/views";
 import AdminRoute from "./AdminRoute";
 import ClientRoute from "./ClientRoute";
+import PublicRoute from "./PublicRoute";
 
 // Revert back to history v4.10.0 because
 // v5.0 breaks navigation
@@ -18,30 +19,30 @@ const AppRouter = () => (
       <Navigation />
       <Basket />
       <Switch>
-        <Route component={view.Search} exact path={ROUTES.SEARCH} />
-        <Route component={view.Home} exact path={ROUTES.HOME} />
-        <Route
+        <PublicRoute component={view.Search} exact path={ROUTES.SEARCH} />
+        <PublicRoute component={view.Home} exact path={ROUTES.HOME} />
+        <PublicRoute
           component={view.ProductsByCategory}
           exact
           path={ROUTES.PRODUCTS_BY_CATEGORY}
         />
-        <Route
+        <PublicRoute
           component={view.FeaturedProducts}
           exact
           path={ROUTES.FEATURED_PRODUCTS}
         />
-        <Route
+        <PublicRoute
           component={view.RecommendedProducts}
           exact
           path={ROUTES.RECOMMENDED_PRODUCTS}
         />
-        <Route component={view.Faq} path={ROUTES.FAQ} />
-        <Route component={view.Privacy} path={ROUTES.PRIVACY} />
-        <Route component={view.Damage} path={ROUTES.DAMAGE} />
-        <Route component={view.Shipping} path={ROUTES.SHIPPING} />
-        <Route component={view.Cancellation} path={ROUTES.CANCELLATION} />
+        <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
+        <PublicRoute component={view.Privacy} path={ROUTES.PRIVACY} />
+        <PublicRoute component={view.Damage} path={ROUTES.DAMAGE} />
+        <PublicRoute component={view.Shipping} path={ROUTES.SHIPPING} />
+        <PublicRoute component={view.Cancellation} path={ROUTES.CANCELLATION} />
 
-        <Route component={view.ViewProduct} path={ROUTES.VIEW_PRODUCT} />
+        <PublicRoute component={view.ViewProduct} path={ROUTES.VIEW_PRODUCT} />
         <ClientRoute component={view.UserAccount} exact path={ROUTES.ACCOUNT} />
         <ClientRoute
           component={view.EditAccount}
@@ -71,7 +72,7 @@ const AppRouter = () => (
           component={view.EditProduct}
           path={`${ROUTES.EDIT_PRODUCT}/:id`}
         />
-        <Route component={view.PageNotFound} />
+        <PublicRoute component={view.PageNotFound} />
       </Switch>
       <Footer />
     </>
