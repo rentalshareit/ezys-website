@@ -1,12 +1,169 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Spin } from "antd";
+import classNames from "classnames";
+import { displayMoney } from "@/helpers/utils";
 
-// Just add this feature if you want :P
+function capitalizeFirstLetter(string) {
+  if (!string) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-const UserOrdersTab = () => (
-  <div className="loader" style={{ minHeight: '80vh' }}>
-    <h3>My Orders</h3>
-    <strong><span className="text-subtle">You don&apos;t have any orders</span></strong>
-  </div>
-);
+const UserOrdersTab = () => {
+  const [data, setData] = useState();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const profile = useSelector((state) => state.profile);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
+  useEffect(() => {
+    async function getData() {
+      setLoading(true);
+      const response = await fetch(
+        `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getOrders&phone=7718961560`
+      );
+      const data = await response.json();
+
+      setData([...data, ...data]);
+      setLoading(false);
+    }
+    getData();
+    // Get orders history of a number
+  }, []);
+
+  if (loading)
+    return (
+      <div className="ezys-spinner" style={{ height: "unset" }}>
+        <Spin size="large" />
+      </div>
+    );
+
+  return (
+    <div
+      style={{
+        paddingLeft: "1.25rem",
+        paddingRight: "1.25rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "2rem",
+        maxHeight: "45rem",
+        overflow: "auto",
+      }}
+    >
+      {data && data.length
+        ? data.map((d) => {
+            return (
+              <div
+                key={d.orderId}
+                style={{
+                  border: "solid 1px #e1e1e1",
+                  padding: "1.5rem",
+                  borderRadius: "0.75rem",
+                  boxShadow: "1px 1px #e1e1e1",
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      paddingBottom: "1rem",
+                    }}
+                  >
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Order Id: <span>{d.orderId}</span>
+                    </span>
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Order Date : <span>{d.orderDate}</span>
+                    </span>
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Payment Mode: <span>{d.paymentMode}</span>
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      borderBottom: "solid #e1e1e1 1px",
+                      justifyContent: "space-between",
+                      paddingBottom: "1rem",
+                    }}
+                  >
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Rental Period: <span>{d.rentalPeriod}</span>
+                    </span>
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Status:{" "}
+                      <span style={{ color: "rgb(13, 148, 136)" }}>
+                        {capitalizeFirstLetter(d.status)}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <table className="user-orders-table">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price Per Day</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {d.items.map((item, i) => (
+                        <tr>
+                          <td>{item.name}</td>
+                          <td>{item.quantity}</td>
+                          <td>{item.price}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.2rem",
+                    alignContent: "flex-end",
+                    alignItems: "flex-end",
+                    padding: "1rem 0rem",
+                    borderTop: "solid #e1e1e1 1px",
+                    marginTop: "2rem",
+                  }}
+                >
+                  <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                    Total Rental Days: <span>{d.totalPrice}</span>
+                  </span>
+                  <span
+                    style={{
+                      color: "#818181",
+                      fontSize: "1.4rem",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Total Price: <span>{displayMoney(d.totalPrice)}</span>
+                  </span>
+                  <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                    Shipping Charges: <span>{displayMoney(d.totalPrice)}</span>
+                  </span>
+                  <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                    Discount: <span>{displayMoney(d.totalPrice)}</span>
+                  </span>
+                  <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                    Net Price: <span>{displayMoney(d.totalPrice)}</span>
+                  </span>
+                </div>
+              </div>
+            );
+          })
+        : loading
+        ? null
+        : "No orders found"}
+    </div>
+  );
+};
 
 export default UserOrdersTab;

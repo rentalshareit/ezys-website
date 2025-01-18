@@ -14,9 +14,9 @@ export default function Cancellation() {
         </p>
         <p>
           <span style={{ color: "rgb(100, 116, 139)" }}>
-            At Ezys, we prioritize the security and confidentiality of your
-            personal information. This Privacy Policy outlines how we collect,
-            use, and safeguard your data when you use our services.
+            At Ezys, we understand that plans can change. Our Cancellation
+            Policy is designed to provide flexibility while also ensuring
+            fairness to all parties involved.
           </span>
         </p>
         <p>
@@ -24,123 +24,107 @@ export default function Cancellation() {
         </p>
         <p>
           <strong style={{ color: "rgb(13,148,136)" }}>
-            1. Collection of Personal Information:
+            Cancellation Period:
           </strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          When you sign up or use our services, we may collect personal
-          information such as your email address, name, phone number, and
-          address. This information is used for verification, compliance, and to
-          send you relevant offers based on your preferences. We retain your
-          personal information for as long as necessary to fulfill the purposes
-          outlined in this Privacy Policy or as required by law.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>2. Cookies:</strong>
-        </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
-          We use cookies to enhance your browsing experience on our website and
-          mobile app. These cookies may store information about your browsing
-          behavior, but do not store personally identifiable information unless
-          you have consented. You may control cookie preferences through your
-          browser settings or opt out where applicable.
+          You can cancel your rental order free of charge before the shipping of
+          your order. Once your order has been shipped, cancellation may incur
+          charges as detailed below.
         </span>
         <p>
           <br />
         </p>
         <p>
           <strong style={{ color: "rgb(13,148,136)" }}>
-            3. Sharing of Information:
+            Cancellation Charges:
           </strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          We do not sell or rent your personal information to third parties.
-          However, we may share anonymized or aggregated data with trusted
-          partners to provide you with better services, such as personalized
-          offers. In some cases, third-party service providers may process data
-          on our behalf for payment processing, analytics, or other operational
-          needs.
+          If you cancel your order after shipping but before delivery, we may
+          ask you to pay the shipping charges incurred. This amount will be
+          based on actual costs and deducted from any refund due to you.
         </span>
         <p>
           <br />
         </p>
         <p>
           <strong style={{ color: "rgb(13,148,136)" }}>
-            4. Data Retention and User Rights:
+            No Refunds After Delivery:
           </strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          You have the right to access, modify, or delete your personal
-          information at any time by contacting us. We retain your information
-          for as long as necessary to fulfill the purpose for which it was
-          collected or as required by applicable laws.
+          Once you have accepted delivery of your rental item, no refunds will
+          be provided for cancellations. We encourage you to thoroughly inspect
+          the item upon delivery and report any issues promptly.
         </span>
         <p>
           <br />
         </p>
         <p>
           <strong style={{ color: "rgb(13,148,136)" }}>
-            5. International Data Transfers:
+            Dispute Resolution:
           </strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          In certain instances, your personal information may be transferred to
-          or processed in other countries. We take steps to ensure that your
-          data is protected in accordance with applicable data protection laws.
+          If you believe that you are entitled to a refund due to extenuating
+          circumstances, please contact our customer service team. We will
+          review your request and work with you to find a fair resolution.
         </span>
         <p>
           <br />
         </p>
         <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            6. Security Measures:
-          </strong>
+          <strong style={{ color: "rgb(13,148,136)" }}>Exceptions:</strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          All transactions on our platform are secured with 128-Bit Encryption
-          using SSL certificates. Our payment partners, including Razorpay,
-          ensure the security of your transactions. Ezys does not store any
-          payment details on our servers.
+          In certain cases, such as product unavailability or unforeseen
+          circumstances, we may cancel your order and provide a full refund
+          without any charges.
         </span>
         <p>
           <br />
         </p>
         <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            7. Payment Gateway:
-          </strong>
+          <strong style={{ color: "rgb(13,148,136)" }}>How to Cancel:</strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          Our payment gateway partners handle all transaction-related
-          information securely. We do not have access to your payment details
-          and are not liable for any issues related to their services.
+          To cancel your order, please contact our customer service team via
+          email or phone. Be sure to provide your order details and reason for
+          cancellation to expedite the process.
         </span>
         <p>
           <br />
         </p>
         <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            8. Consent and Updates:
-          </strong>
+          <strong style={{ color: "rgb(13,148,136)" }}>Refund Policy:</strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          By using our services, you consent to the terms outlined in this
-          Privacy Policy. We may update this policy from time to time, and users
-          will be notified via email for any significant changes.
+          In case of eligible refunds, we aim to process and credit the amount
+          to the customer's bank account within 5-7 working days.
         </span>
         <p>
           <br />
         </p>
         <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>9. Contact Us:</strong>
+          <strong style={{ color: "rgb(13,148,136)" }}>Policy Updates:</strong>
         </p>
         <span style={{ color: "rgb(100, 116, 139)" }}>
-          If you have any questions or concerns about our Privacy Policy, please
-          contact us at contact@ezyshare.in.
+          We reserve the right to update or modify our Cancellation Policy at
+          any time. Any changes will be communicated to customers via our
+          website or email.
         </span>
+        <p>
+          <br />
+        </p>
+        <p>
+          <span style={{ color: "rgb(100, 116, 139)" }}>
+            We appreciate your understanding and cooperation in adhering to our
+            Cancellation Policy. If you have any questions or concerns, please
+            don't hesitate to reach out to our customer service team for
+            assistance.
+          </span>
+        </p>
       </div>
     </main>
   );

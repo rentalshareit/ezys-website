@@ -88,3 +88,33 @@
 .user-profile-name {
   text-transform: capitalize;
 }
+
+.user-orders-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 1.4rem;
+
+  tbody{
+    display:block;
+    width: 100%;
+    overflow: auto;
+  }
+
+  thead tr {
+    display: block;
+  }
+
+  thead {
+    background: $green;
+    color:#fff;
+  }
+
+  th, td {
+    padding: 5px;
+    text-align: left;
+    width: 200px;
+    text-align: center; 
+    vertical-align: middle;
+  }
+}

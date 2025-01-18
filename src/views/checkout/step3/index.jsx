@@ -3,19 +3,23 @@ import { Form, Formik } from "formik";
 import { displayActionMessage } from "@/helpers/utils";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import * as Yup from "yup";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
 import PayOnDelivery from "./PayOnDelivery";
 import Total from "./Total";
+import Confirm from "../confirm";
 
 const FormSchema = Yup.object().shape({
   type: Yup.string().required("Please select paymend mode"),
 });
 
 const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
+  const [loading, isLoading] = useState(false);
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const email = shipping.email || profile.email;
   const orderNo =
     Date.now().toString(36) + Math.random().toString(36).substring(2);
   useDocumentTitle("Check Out Final Step | Ezys");
@@ -26,6 +30,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
   };
 
   const onConfirm = async (values) => {
+    setLoading(true);
     await fetch(
       "https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec",
       {
@@ -52,8 +57,11 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
         }),
       }
     );
-    displayActionMessage("Feature not ready yet :)", "info");
+    setLoading(false);
+    setOrderConfirmed(true);
   };
+
+  useEffect(() => {}, [orderConfirmed]);
 
   if (!shipping || !shipping.isDone) {
     return <Redirect to={CHECKOUT_STEP_1} />;
@@ -74,6 +82,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           </Form>
         )}
       </Formik>
+      <Confirm isOpen={orderConfirmed} orderId={orderNo} email={email} />
     </div>
   );
 };

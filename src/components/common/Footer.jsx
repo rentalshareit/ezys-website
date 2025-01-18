@@ -5,6 +5,9 @@ import {
   LinkedinFilled,
   GoogleCircleFilled,
   FacebookFilled,
+  PhoneFilled,
+  WhatsAppOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import logo from "@/images/logo.png";
 import React from "react";
@@ -18,19 +21,19 @@ const Footer = () => {
       <div className="footer_head">
         <p>Get connected with us on social networks</p>
         <div className="icons">
-          <a href="">
+          <a href="https://www.youtube.com/@ezyshare" target="_blank">
             <YoutubeFilled />
           </a>
-          <a href="">
-            <GoogleCircleFilled />
-          </a>
-          <a href="">
+          <a href="https://www.instagram.com/ezyshare.in/" target="_blank">
             <InstagramFilled />
           </a>
-          <a href="">
+          <a href="https://www.linkedin.com/company/ezys/" target="_blank">
             <LinkedinFilled />
           </a>
-          <a href="">
+          <a
+            href="https://www.facebook.com/profile.php?id=61557265544552"
+            target="_blank"
+          >
             <FacebookFilled />
           </a>
         </div>
@@ -94,17 +97,27 @@ const Footer = () => {
         <div className="footer-col-4">
           <h6 className="text-uppercase fw-bold">Contact</h6>
           <hr className="mb-4 mt-0 d-inline-block mx-auto" />
-          <p>
-            <i className="fas fa-home mr-3"></i> New York, NY 10012, US
+          <p
+            style={{ display: "flex", gap: "5px", justifyContent: "flex-end" }}
+          >
+            BMSA TECHNOLOGIES PRIVATE LIMITED, F-2, F/F, Plot No-9, Sector - 9,
+            Judge Colony, VAISHALI, Ghaziabad, Uttar Pradesh, India, 201010
           </p>
-          <p>
-            <i className="fas fa-envelope mr-3"></i> info@example.com
+          <p
+            style={{ display: "flex", gap: "5px", justifyContent: "flex-end" }}
+          >
+            <MailOutlined />
+            contact@ezyshare.in
           </p>
-          <p>
-            <i className="fas fa-phone mr-3"></i> + 01 234 567 88
+          <p
+            style={{ display: "flex", gap: "5px", justifyContent: "flex-end" }}
+          >
+            <PhoneFilled /> +91 80694 09278
           </p>
-          <p>
-            <i className="fas fa-print mr-3"></i> + 01 234 567 89
+          <p
+            style={{ display: "flex", gap: "5px", justifyContent: "flex-end" }}
+          >
+            <WhatsAppOutlined /> +91 90324 77570
           </p>
         </div>
       </footer>
