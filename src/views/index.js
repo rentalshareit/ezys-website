@@ -11,6 +11,8 @@ export { default as PageNotFound } from "./error/PageNotFound";
 export { default as FeaturedProducts } from "./featured";
 export { default as Home } from "./home";
 export { default as Faq } from "./faq";
+export { default as AboutUs } from "./about_us";
+export { default as Terms } from "./terms";
 export { default as Privacy } from "./privacy";
 export { default as Damage } from "./damage";
 export { default as Shipping } from "./shipping";

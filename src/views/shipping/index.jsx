@@ -11,7 +11,7 @@ export default function Shipping() {
           <br />
         </p>
         <p>
-          <span style={{ color: "rgb(100, 116, 139)" }}>
+          <span style={{ color: "#818181" }}>
             At Ezys, we aim to provide you with a seamless and efficient
             shipping experience. This Shipping Policy outlines the key aspects
             of our shipping process.
@@ -25,7 +25,7 @@ export default function Shipping() {
             1. Order Delivery:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           Once you place an order with Ezys, you will receive a confirmation
           email from us 24 to 48 hours before the rental period begins. Your
           item will be delivered within 24 hours of receiving the confirmation
@@ -40,7 +40,7 @@ export default function Shipping() {
             2. Minimum Rental Period:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           The minimum rental period for our products is one day.
         </span>
         <p>
@@ -51,7 +51,7 @@ export default function Shipping() {
             3. Late Return Charges:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           If you return your rental item after the agreed-upon return date,
           additional fees may apply. Please ensure timely returns to avoid any
           late fees.
@@ -64,7 +64,7 @@ export default function Shipping() {
             4. Delivery Process:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           If you've chosen home delivery, please ensure you or a designated
           representative is present to receive the item and sign for it. This
           ensures the correct delivery and a smooth process.
@@ -77,7 +77,7 @@ export default function Shipping() {
             5. Damaged Items:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           If any rental items arrive in poor condition or do not match the
           product description, notify us within 24 hours of receiving the item.
           Our customer service team will work with you to find an appropriate
@@ -91,7 +91,7 @@ export default function Shipping() {
             6. Rental Extensions:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           You can extend your rental period if needed. Contact our customer
           service team to make the necessary arrangements.
         </span>
@@ -103,7 +103,7 @@ export default function Shipping() {
             7. Cancellation Policy:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           Cancellation before shipping incurs no charges. After shipping, you
           may be asked to pay actual shipping charges. No refunds are available
           after accepting the delivery. Refer to our Cancellation Policy for
@@ -117,7 +117,7 @@ export default function Shipping() {
             8. Quality Assurance:
           </strong>
         </p>
-        <span style={{ color: "rgb(100, 116, 139)" }}>
+        <span style={{ color: "#818181" }}>
           We have a thorough vetting process for all items listed on our
           platform to ensure safety and quality. Vendors/Suppliers provide
           detailed information and photos of items to help you make informed
@@ -127,7 +127,7 @@ export default function Shipping() {
           <br />
         </p>
         <p>
-          <span style={{ color: "rgb(100, 116, 139)" }}>
+          <span style={{ color: "#818181" }}>
             Your satisfaction is our priority, and we strive to make your
             renting experience with Ezys smooth and enjoyable. If you have any
             questions, feel free to reach out to our customer service team.

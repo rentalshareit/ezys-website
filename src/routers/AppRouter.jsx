@@ -37,6 +37,8 @@ const AppRouter = () => (
           path={ROUTES.RECOMMENDED_PRODUCTS}
         />
         <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
+        <PublicRoute component={view.AboutUs} path={ROUTES.ABOUT_US} />
+        <PublicRoute component={view.Terms} path={ROUTES.TERMS} />
         <PublicRoute component={view.Privacy} path={ROUTES.PRIVACY} />
         <PublicRoute component={view.Damage} path={ROUTES.DAMAGE} />
         <PublicRoute component={view.Shipping} path={ROUTES.SHIPPING} />

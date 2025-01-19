@@ -21,7 +21,10 @@ const Footer = () => {
       <div className="footer_head">
         <p>Get connected with us on social networks</p>
         <div className="icons">
-          <a href="https://www.youtube.com/@ezyshare" target="_blank">
+          <a
+            href="https://youtube.com/@ezys_ezys?si=mL4VXCzwah0CY34s"
+            target="_blank"
+          >
             <YoutubeFilled />
           </a>
           <a href="https://www.instagram.com/ezyshare.in/" target="_blank">
@@ -41,11 +44,14 @@ const Footer = () => {
 
       <footer className="footer">
         <div className="footer-col-1">
-          <h6 className="text-uppercase fw-bold">Company name</h6>
+          <h6 className="text-uppercase fw-bold">
+            Ezys, A BMSA Technologies Venture
+          </h6>
           <hr className="mb-4 mt-0 d-inline-block mx-auto" />
           <p>
-            Here you can use rows and columns to organize your footer content.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            offers premium gaming & VR rentals like PS4, PS5, Meta Quest VR and
+            many more. Enjoy flexible plans, doorstep delivery, and unmatched
+            convenience for top-tier entertainment.
           </p>
         </div>
 
@@ -53,9 +59,9 @@ const Footer = () => {
           <h6 className="text-uppercase fw-bold">Navigate</h6>
           <hr className="mb-4 mt-0 d-inline-block mx-auto" />
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.ABOUT_US} className="text-white">
               About Us
-            </a>
+            </Link>
           </p>
           <p>
             <Link to={Route.FAQ} className="text-white">
@@ -63,9 +69,9 @@ const Footer = () => {
             </Link>
           </p>
           <p>
-            <a href="#!" className="text-white">
+            <Link to={Route.TERMS} className="text-white">
               Terms & Conditions
-            </a>
+            </Link>
           </p>
         </div>
 

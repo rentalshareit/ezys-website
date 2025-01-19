@@ -35,7 +35,7 @@ const Home = () => {
               &nbsp;with ease at&nbsp;
               <strong>Ezys</strong>
             </h1>
-            <p>
+            <p style={{ color: "#818181" }}>
               Why buy when you can rent? With Ezys, access a wide selection of
               quality products without the commitment of ownership.
             </p>
