@@ -32,6 +32,6 @@
 
 .ReactModal__Content {
   @include mobile {
-    width: 90%;
+    width: 90%!important;
   }
 }

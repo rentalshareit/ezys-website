@@ -148,6 +148,7 @@ const Basket = () => {
                 value={date}
                 onChange={onDateChange}
                 placeholder="Select Rental Period"
+                showOneCalendar
                 showHeader={false}
                 ranges={[]}
                 shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}

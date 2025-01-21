@@ -3,6 +3,11 @@
   background-color: $paragraph-color-primary;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
+  @include mobile {
+    padding-left: $xs-size;
+  }
 
   p, a {
     color: $white;
@@ -58,7 +63,6 @@
 
   @include mobile {
     flex-basis: none;
-    order: 1;
     text-align: center;
   }
 }
@@ -69,7 +73,6 @@
 
   @include mobile {
     flex-basis: none;
-    order: 3;
     padding-bottom: 0;
     margin-bottom: 0;
   }
@@ -81,7 +84,6 @@
 
   @include mobile {
     flex-basis: none;
-    order: 2;
     text-align: center;
   }
 }
@@ -97,7 +99,6 @@
 
   @include mobile {
     flex-basis: none;
-    order: 2;
     text-align: center;
   }
 }

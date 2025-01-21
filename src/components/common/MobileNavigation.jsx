@@ -1,4 +1,5 @@
 import { BasketToggle } from "@/components/basket";
+import { ShoppingOutlined } from "@ant-design/icons";
 import { HOME } from "@/constants/routes";
 import PropType from "prop-types";
 import React, { useState } from "react";
@@ -40,10 +41,7 @@ const Navigation = (props) => {
               type="button"
             >
               <Badge count={basketLength}>
-                <i
-                  className="fa fa-shopping-bag"
-                  style={{ fontSize: "2rem" }}
-                />
+                <ShoppingOutlined style={{ fontSize: "2.4rem" }} />
               </Badge>
             </button>
           )}

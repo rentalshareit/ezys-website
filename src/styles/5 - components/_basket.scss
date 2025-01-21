@@ -19,8 +19,16 @@
   z-index: 61;
 }
 
+.rs-picker-toggle-wrapper {
+  width: 100%;
+}
+
 .rs-calendar-table-cell-disabled {
   opacity: 0.3;
+}
+
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus, .rs-input-group:focus-within {
+  outline: none!important;
 }
 
 .rs-input-group {
@@ -62,7 +70,7 @@
   padding: 0 $s-size;
 
   display: grid;
-  grid-template-columns: 100px 1fr 80px 40px;
+  grid-template-columns: 80px 1fr 80px 40px;
 }
 
 .basket-item-specs {
@@ -104,8 +112,8 @@
 }
 
 .basket-item-img-wrapper {
-  width: 90px;
-  height: 90px;
+  width: 75px;
+  height: 75px;
   margin-right: $m-size;
   position: relative;
 }
@@ -130,7 +138,7 @@
 
 .basket-item-name {
   margin: 1.2rem 0;
-  width: 200px; 
+  min-width: 100px; 
   overflow-wrap: anywhere;
 }
 

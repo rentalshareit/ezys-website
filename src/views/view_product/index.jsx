@@ -210,7 +210,7 @@ const ViewProduct = () => {
               </div>
             </div>
           </div>
-          <div style={{ marginTop: "10rem" }}>
+          <div style={{ marginTop: "5rem" }}>
             <div className="display-header">
               <h3>Recommended</h3>
               <button
