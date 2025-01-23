@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 export default function Damage() {
   return (
     <main className="content">
-      <div style={{ padding: "5rem 0 0 5rem" }}>
+      <div style={{ padding: "7rem 0 0 5rem" }}>
         <h3>
           <strong style={{ color: "rgb(13,148,136)" }}>Damage Policy</strong>
         </h3>
