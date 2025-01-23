@@ -12,16 +12,30 @@ const BasketToggle = ({ children }) => {
   document.addEventListener("click", (e) => {
     const closest = e.target.closest(".basket");
     const datePicker = e.target.closest(".rs-picker-popup");
+    const datePickerWorkaround = e.target.classList?.some((c) =>
+      c?.startsWith("rs-calendar")
+    );
     const toggle = e.target.closest(".basket-toggle");
     const closeToggle = e.target.closest(".basket-item-remove");
 
     if (
       !closest &&
       !datePicker &&
+      !datePickerWorkaround &&
       document.body.classList.contains("is-basket-open") &&
       !toggle &&
       !closeToggle
     ) {
+      console.log(
+        "test",
+        closest,
+        datePicker,
+        toggle,
+        closeToggle,
+        e.target,
+        e,
+        datePickerWorkaround
+      );
       document.body.classList.remove("is-basket-open");
     }
   });

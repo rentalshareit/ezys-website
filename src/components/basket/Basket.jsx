@@ -25,9 +25,10 @@ const Basket = () => {
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
   const { combine, allowedMaxDays, beforeToday } = DateRangePicker;
-  const { basket, user } = useSelector((state) => ({
+  const { basket, user, authStatus } = useSelector((state) => ({
     basket: state.basket,
     user: state.auth,
+    authStatus: state.app.authStatus,
   }));
   const history = useHistory();
   const { pathname } = useLocation();
@@ -66,6 +67,12 @@ const Basket = () => {
       })
     );
   }, [date]);
+
+  useEffect(() => {
+    if (authStatus?.success && show) {
+      setShow(false);
+    }
+  }, [authStatus]);
 
   const onCheckOut = () => {
     if (basket.length !== 0 && user) {

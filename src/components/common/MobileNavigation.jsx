@@ -2,7 +2,7 @@ import { BasketToggle } from "@/components/basket";
 import { ShoppingOutlined } from "@ant-design/icons";
 import { HOME } from "@/constants/routes";
 import PropType from "prop-types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserNav from "@/views/account/components/UserAvatar";
 import Badge from "./Badge";
@@ -11,7 +11,8 @@ import Signin from "./SignIn";
 
 const Navigation = (props) => {
   const [show, setShow] = useState(false);
-  const { isAuthenticating, basketLength, disabledPaths, user } = props;
+  const { isAuthenticating, basketLength, disabledPaths, user, authStatus } =
+    props;
   const { pathname } = useLocation();
 
   const onClickLink = (e) => {
@@ -22,6 +23,12 @@ const Navigation = (props) => {
     e.preventDefault();
     setShow(true);
   };
+
+  useEffect(() => {
+    if (authStatus?.success && show) {
+      setShow(false);
+    }
+  }, [authStatus]);
 
   return (
     <nav className="mobile-navigation">
@@ -76,6 +83,7 @@ Navigation.propTypes = {
   basketLength: PropType.number.isRequired,
   disabledPaths: PropType.arrayOf(PropType.string).isRequired,
   user: PropType.oneOfType([PropType.bool, PropType.object]).isRequired,
+  authStatus: PropType.objectOf({}).isRequired,
 };
 
 export default Navigation;
