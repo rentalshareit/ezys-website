@@ -12,11 +12,14 @@ const Confirm = ({ orderId, isOpen, email }) => {
   const history = useHistory();
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setTimer((timer) => timer - 1);
-    }, 1000);
+    let t;
+    if (isOpen) {
+      t = setInterval(() => {
+        setTimer((timer) => timer - 1);
+      }, 1000);
+    }
     return () => clearInterval(t);
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     if (timer === 0) {

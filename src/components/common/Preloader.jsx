@@ -1,5 +1,5 @@
 import React from "react";
-import logoWordmark from "../../../static/logo-wordmark.png";
+import logo from "@/images/logo.png";
 
 const Preloader = () => (
   <div className="preloader">
@@ -7,7 +7,7 @@ const Preloader = () => (
       <circle cx="20.62" cy="20.62" r="20.62" />
       <circle className="fill-white" cx="29.97" cy="14.93" r="6.58" />
     </svg>
-    <img alt="Ezys logo wordmark" src={logoWordmark} />
+    <img alt="Ezys logo wordmark" className="rotating" src={logo} />
   </div>
 );
 
