@@ -53,7 +53,10 @@ const Navigation = (props) => {
             </li>
           ) : (
             <li className="mobile-navigation-item">
-              <Link className="navigation-menu-link" onClick={onSignInClick}>
+              <Link
+                className="button button-small button-muted margin-left-s"
+                onClick={onSignInClick}
+              >
                 Sign In
               </Link>
             </li>

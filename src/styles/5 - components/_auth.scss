@@ -71,12 +71,6 @@
   }
 }
 
-.auth-button {
-  @include tablet {
-    width: 100%;
-  }
-}
-
 .provider-facebook {
   @extend .button;
   background: $color-facebook;

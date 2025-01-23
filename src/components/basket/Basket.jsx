@@ -91,9 +91,7 @@ const Basket = () => {
     <>
       <Boundary>
         <Modal isOpen={isOpenModal} onRequestClose={onCloseModal}>
-          <p className="text-center">
-            You must sign in to continue checking out
-          </p>
+          <p>You must sign in to continue checking out</p>
           <br />
           <div className="d-flex">
             <button

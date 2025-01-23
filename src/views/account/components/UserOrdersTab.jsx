@@ -36,7 +36,10 @@ const UserOrdersTab = () => {
 
   if (loading)
     return (
-      <div className="ezys-spinner" style={{ height: "unset" }}>
+      <div
+        className="ezys-spinner"
+        style={{ height: "unset", margin: "10px 0" }}
+      >
         <Spin size="large" />
       </div>
     );
@@ -44,8 +47,7 @@ const UserOrdersTab = () => {
   return (
     <div
       style={{
-        paddingLeft: "1.25rem",
-        paddingRight: "1.25rem",
+        padding: "1.25rem",
         display: "flex",
         flexDirection: "column",
         gap: "2rem",

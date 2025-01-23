@@ -1,9 +1,9 @@
 .basket {
   width: 60rem;
-  height: 100vh;
   background: $white;
   position: fixed;
   top: 0;
+  bottom: 0;
   right: 0;
   transform: translateX(100%);
   box-shadow: 0 10px 15px rgba(0, 0, 0, .08);
