@@ -62,7 +62,7 @@ const Basket = () => {
   useEffect(() => {
     dispatch(
       updateRentalPeriod({
-        dates: [date[0], date[1]],
+        dates: [date[0].toLocaleDateString(), date[1].toLocaleDateString()],
         days: getRentalPeriod(),
       })
     );

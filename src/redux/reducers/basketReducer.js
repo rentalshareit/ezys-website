@@ -24,7 +24,7 @@ export default (state = [], action) => {
           new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         ];
         period = {
-          dates: [date[0], date[1]],
+          dates: [date[0].toLocaleDateString(), date[1].toLocaleDateString()],
           days: Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
         };
       }

@@ -17,7 +17,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
-  const [loading, isLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const email = shipping.email || profile.email;
   const orderNo =
@@ -48,11 +48,13 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           name: shipping.fullname,
           address: shipping.address,
           phone: shipping.mobile.value.substring(2),
-          period: basket[0].period.dates.join("-"),
+          period: `${basket[0].period.dates.join("-")} (${
+            basket[0].period.days
+          })`,
           email: shipping.email,
           amount: subtotal,
           payment: values.type,
-          products: basket.map((b) => b.name).join(","),
+          products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n "),
           coupon: "",
         }),
       }
@@ -78,7 +80,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
         {() => (
           <Form className="checkout-step-3">
             <PayOnDelivery />
-            <Total subtotal={subtotal} />
+            <Total subtotal={subtotal} loading={loading} />
           </Form>
         )}
       </Formik>

@@ -1,4 +1,8 @@
-import { ArrowLeftOutlined, CheckOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  CheckOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { CHECKOUT_STEP_2 } from "@/constants/routes";
 import { useFormikContext } from "formik";
 import { displayMoney } from "@/helpers/utils";
@@ -8,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setPaymentDetails } from "@/redux/actions/checkoutActions";
 
-const Total = ({ subtotal }) => {
+const Total = ({ subtotal, loading }) => {
   const { values, submitForm } = useFormikContext();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -31,6 +35,7 @@ const Total = ({ subtotal }) => {
       <div className="checkout-shipping-action">
         <button
           className="button button-muted button-small"
+          disabled={loading}
           onClick={() => onClickBack(values)}
           type="button"
         >
@@ -39,11 +44,11 @@ const Total = ({ subtotal }) => {
         </button>
         <button
           className="button button-small"
-          disabled={false}
+          disabled={loading}
           onClick={submitForm}
           type="button"
         >
-          <CheckOutlined />
+          {loading ? <LoadingOutlined /> : <CheckOutlined />}
           &nbsp; Confirm
         </button>
       </div>
@@ -53,6 +58,7 @@ const Total = ({ subtotal }) => {
 
 Total.propTypes = {
   subtotal: PropType.number.isRequired,
+  loading: PropType.bool.isRequired,
 };
 
 export default Total;

@@ -12,7 +12,7 @@ const BasketToggle = ({ children }) => {
   document.addEventListener("click", (e) => {
     const closest = e.target.closest(".basket");
     const datePicker = e.target.closest(".rs-picker-popup");
-    const datePickerWorkaround = e.target.classList?.some((c) =>
+    const datePickerWorkaround = Array.from(e.target.classList).some((c) =>
       c?.startsWith("rs-calendar")
     );
     const toggle = e.target.closest(".basket-toggle");
