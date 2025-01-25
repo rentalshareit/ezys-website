@@ -153,21 +153,26 @@ const UserOrdersTab = () => {
                     Total Price:{" "}
                     <span>
                       {displayMoney(
-                        d.items.reduce((acc, i) => acc + i.price, 0) *
-                          d.rentalDays
+                        d.items.reduce(
+                          (acc, i) => acc + i.price * i.quantity,
+                          0
+                        ) * d.rentalDays
                       )}
                     </span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                    Shipping Charges: <span>{displayMoney(d.totalPrice)}</span>
+                    Shipping Charges: <span>{displayMoney(0)}</span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                     Discount:{" "}
                     <span>
                       {displayMoney(
-                        d.totalPrice -
-                          d.items.reduce((acc, i) => acc + i.price, 0) *
-                            d.rentalDays
+                        d.items.reduce(
+                          (acc, i) => acc + i.price * i.quantity,
+                          0
+                        ) *
+                          d.rentalDays -
+                          d.totalPrice
                       )}
                     </span>
                   </span>
