@@ -83,8 +83,7 @@ const UserOrdersTab = () => {
                       Order Id: <span>{d.orderId}</span>
                     </span>
                     <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                      Order Date :{" "}
-                      <span>{d.orderDate.toLocaleDateString()}</span>
+                      Order Date : <span>{d.orderDate}</span>
                     </span>
                     <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                       Payment Mode: <span>{d.paymentMode}</span>
