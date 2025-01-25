@@ -31,7 +31,7 @@ const UserOrdersTab = () => {
       );
       const data = await response.json();
 
-      setData([...data, ...data]);
+      setData(data);
       setLoading(false);
     }
     getData();

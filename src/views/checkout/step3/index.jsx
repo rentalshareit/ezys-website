@@ -48,13 +48,16 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           name: shipping.fullname,
           address: shipping.address,
           phone: shipping.mobile.value.substring(2),
-          period: `${basket[0].period.dates.join("-")} (${
+          period: `${basket[0].period.dates.join(" - ")} (${
             basket[0].period.days
           })`,
           email: shipping.email,
           amount: subtotal,
           payment: values.type,
-          products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n "),
+          products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),
+          orderTotal: basket
+            .map((b) => b.price[basket[0].period.days - 1])
+            .join("\n"),
           coupon: "",
         }),
       }
