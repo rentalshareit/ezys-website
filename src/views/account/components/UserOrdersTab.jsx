@@ -83,7 +83,8 @@ const UserOrdersTab = () => {
                       Order Id: <span>{d.orderId}</span>
                     </span>
                     <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                      Order Date : <span>{d.orderDate}</span>
+                      Order Date :{" "}
+                      <span>{d.orderDate.toLocaleDateString()}</span>
                     </span>
                     <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                       Payment Mode: <span>{d.paymentMode}</span>
@@ -141,7 +142,7 @@ const UserOrdersTab = () => {
                   }}
                 >
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                    Total Rental Days: <span>{d.totalPrice}</span>
+                    Total Rental Days: <span>{d.rentalDays}</span>
                   </span>
                   <span
                     style={{
@@ -150,13 +151,26 @@ const UserOrdersTab = () => {
                       marginBottom: "0.5rem",
                     }}
                   >
-                    Total Price: <span>{displayMoney(d.totalPrice)}</span>
+                    Total Price:{" "}
+                    <span>
+                      {displayMoney(
+                        d.items.reduce((acc, i) => acc + i.price, 0) *
+                          d.rentalDays
+                      )}
+                    </span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                     Shipping Charges: <span>{displayMoney(d.totalPrice)}</span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                    Discount: <span>{displayMoney(d.totalPrice)}</span>
+                    Discount:{" "}
+                    <span>
+                      {displayMoney(
+                        d.totalPrice -
+                          d.items.reduce((acc, i) => acc + i.price, 0) *
+                            d.rentalDays
+                      )}
+                    </span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                     Net Price: <span>{displayMoney(d.totalPrice)}</span>
