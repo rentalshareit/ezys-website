@@ -2,7 +2,7 @@
 import { BasketItem, BasketToggle } from "@/components/basket";
 import { Boundary, Modal, SignIn } from "@/components/common";
 import { CHECKOUT_STEP_1 } from "@/constants/routes";
-import firebase from "firebase/firebase";
+import firebase from "@/services/firebase";
 import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
 import { calculateTotal, displayMoney } from "@/helpers/utils";

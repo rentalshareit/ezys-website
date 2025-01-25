@@ -21,9 +21,13 @@ const UserOrdersTab = () => {
 
   useEffect(() => {
     async function getData() {
+      const { value, countryCode } = profile.mobile;
+      const phone = value.substr(
+        value.indexOf(countryCode) + countryCode.length
+      );
       setLoading(true);
       const response = await fetch(
-        `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getOrders&phone=7718961560`
+        `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getOrders&phone=${phone}`
       );
       const data = await response.json();
 

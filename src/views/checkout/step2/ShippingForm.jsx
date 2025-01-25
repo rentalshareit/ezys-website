@@ -43,7 +43,11 @@ const ShippingForm = () => {
             />
           </div>
           <div className="d-block checkout-field">
-            <CustomMobileInput name="mobile" defaultValue={values.mobile} />
+            <CustomMobileInput
+              name="mobile"
+              disabled
+              defaultValue={values.mobile}
+            />
           </div>
         </div>
       </div>
