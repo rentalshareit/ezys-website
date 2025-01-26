@@ -5,6 +5,8 @@ import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearBasket } from "@/redux/actions/basketActions";
 import * as Yup from "yup";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
@@ -19,6 +21,7 @@ const FormSchema = Yup.object().shape({
 const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
   const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const dispatch = useDispatch();
   const email = shipping.email || profile.email;
   const orderNo =
     Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -31,6 +34,8 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
 
   const onConfirm = async (values) => {
     setLoading(true);
+    const { value, countryCode } = shipping.mobile;
+    const phone = value.substr(value.indexOf(countryCode) + countryCode.length);
     await fetch(
       "https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec",
       {
@@ -47,7 +52,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           }),
           name: shipping.fullname,
           address: shipping.address,
-          phone: shipping.mobile.value.substring(2),
+          phone,
           period: `${basket[0].period.dates.join(" - ")} (${
             basket[0].period.days
           })`,
@@ -56,12 +61,15 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           payment: values.type,
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),
           orderTotal: basket
-            .map((b) => b.price[basket[0].period.days - 1])
+            .map(
+              (b) => b.price[basket[0].period.days - 1] / basket[0].period.days
+            )
             .join("\n"),
           coupon: "",
         }),
       }
     );
+    dispatch(clearBasket());
     setLoading(false);
     setOrderConfirmed(true);
   };
