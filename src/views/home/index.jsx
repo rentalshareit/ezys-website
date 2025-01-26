@@ -33,7 +33,7 @@ const Home = () => {
             <h1 className="text-thin">
               <strong>Rent</strong>
               &nbsp;with ease at&nbsp;
-              <strong>Ezys</strong>
+              <strong style={{ color: "rgb(13, 148, 136)" }}>Ezys</strong>
             </h1>
             <p style={{ color: "#818181" }}>
               Why buy when you can rent? With Ezys, access a wide selection of
