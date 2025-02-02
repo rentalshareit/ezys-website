@@ -5,6 +5,7 @@ import { CHECKOUT_STEP_1 } from "@/constants/routes";
 import firebase from "@/services/firebase";
 import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
+import moment from "moment";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
@@ -19,12 +20,16 @@ const datesAreOnSameDay = (first, second) =>
 
 const Basket = () => {
   const [date, setDate] = useState([
-    new Date(),
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    moment(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    ).add("days", 1),
+    moment(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    ).add("days", 31),
   ]);
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
-  const { combine, allowedMaxDays, beforeToday } = DateRangePicker;
+  const { combine, allowedMaxDays, before } = DateRangePicker;
   const { basket, user, authStatus } = useSelector((state) => ({
     basket: state.basket,
     user: state.auth,
@@ -36,13 +41,19 @@ const Basket = () => {
   const didMount = useDidMount();
 
   const getRentalPeriod = useCallback(
-    () => Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
+    () => Math.abs(date[1].diff(date[0], "days")),
     [date]
   );
 
   const onDateChange = (arg) => {
     if (!datesAreOnSameDay(arg[0], arg[1])) {
-      setDate(arg);
+      setDate(
+        arg.map((a) =>
+          moment(
+            new Date(a).toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+          )
+        )
+      );
     }
   };
 
@@ -62,7 +73,7 @@ const Basket = () => {
   useEffect(() => {
     dispatch(
       updateRentalPeriod({
-        dates: [date[0].toLocaleDateString(), date[1].toLocaleDateString()],
+        dates: [date[0].format("DD/MM/YYYY"), date[1].format("DD/MM/YYYY")],
         days: getRentalPeriod(),
       })
     );
@@ -150,13 +161,24 @@ const Basket = () => {
             )}
             {basket.length > 0 && (
               <DateRangePicker
-                value={date}
+                value={date.map((d) => d.toDate())}
                 onChange={onDateChange}
                 placeholder="Select Rental Period"
                 showOneCalendar
                 showHeader={false}
                 ranges={[]}
-                shouldDisableDate={combine(allowedMaxDays(31), beforeToday())}
+                shouldDisableDate={combine(
+                  allowedMaxDays(30),
+                  before(
+                    moment(
+                      new Date().toLocaleString("en-US", {
+                        timeZone: "Asia/Kolkata",
+                      })
+                    )
+                      .add("days", 1)
+                      .toDate()
+                  )
+                )}
               />
             )}
             {basket.map((product, i) => (
