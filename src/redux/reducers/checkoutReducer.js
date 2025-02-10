@@ -8,6 +8,7 @@ const defaultState = {
   shipping: {},
   payment: {
     type: "payondelivery",
+    tncAccepted: false,
   },
 };
 

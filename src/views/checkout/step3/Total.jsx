@@ -3,27 +3,13 @@ import {
   CheckOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { CHECKOUT_STEP_2 } from "@/constants/routes";
 import { useFormikContext } from "formik";
 import { displayMoney } from "@/helpers/utils";
 import PropType from "prop-types";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { setPaymentDetails } from "@/redux/actions/checkoutActions";
 
-const Total = ({ subtotal, loading }) => {
+const Total = ({ subtotal, loading, onClickBack, valid }) => {
   const { values, submitForm } = useFormikContext();
-  const history = useHistory();
-  const dispatch = useDispatch();
-
-  const onClickBack = () => {
-    // destructure to only select left fields omitting cardnumber and ccv
-    const { cardnumber, ccv, ...rest } = values;
-
-    dispatch(setPaymentDetails({ ...rest })); // save payment details
-    history.push(CHECKOUT_STEP_2);
-  };
 
   return (
     <>
@@ -44,7 +30,7 @@ const Total = ({ subtotal, loading }) => {
         </button>
         <button
           className="button button-small"
-          disabled={loading}
+          disabled={loading || !valid}
           onClick={submitForm}
           type="button"
         >
@@ -57,6 +43,8 @@ const Total = ({ subtotal, loading }) => {
 };
 
 Total.propTypes = {
+  valid: PropType.bool.isRequired,
+  onClickBack: PropType.func.isRequired,
   subtotal: PropType.number.isRequired,
   loading: PropType.bool.isRequired,
 };

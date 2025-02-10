@@ -11,8 +11,7 @@ import {
 } from "@ant-design/icons";
 import logo from "@/images/logo.png";
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation, Link } from "react-router-dom";
 
 const Footer = () => {
   const { pathname } = useLocation();

@@ -234,3 +234,7 @@
   border: 1px solid $border-color;
   background: $white;
 }
+
+#tncAcceptedCheckbox + label::before, #tncAcceptedCheckbox + label::after {
+  display: none;
+}

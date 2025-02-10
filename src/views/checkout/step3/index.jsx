@@ -1,12 +1,20 @@
-import { CHECKOUT_STEP_1 } from "@/constants/routes";
+import {
+  CHECKOUT_STEP_1,
+  TERMS,
+  DAMAGE,
+  SHIPPING,
+  CANCELLATION,
+} from "@/constants/routes";
 import { Form, Formik } from "formik";
 import { displayActionMessage } from "@/helpers/utils";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearBasket } from "@/redux/actions/basketActions";
+import { CHECKOUT_STEP_2 } from "@/constants/routes";
+import { setPaymentDetails } from "@/redux/actions/checkoutActions";
 import * as Yup from "yup";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
@@ -16,12 +24,14 @@ import Confirm from "../confirm";
 
 const FormSchema = Yup.object().shape({
   type: Yup.string().required("Please select paymend mode"),
+  tncAccepted: Yup.boolean().isTrue(),
 });
 
 const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
   const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const dispatch = useDispatch();
+  const history = useHistory();
   const email = shipping.email || profile.email;
   const orderNo =
     Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -30,6 +40,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
 
   const initFormikValues = {
     type: payment.type || "payondelivery",
+    tncAccepted: !!payment.tncAccepted || false,
   };
 
   const onConfirm = async (values) => {
@@ -74,6 +85,11 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
     setOrderConfirmed(true);
   };
 
+  const onClickBack = (values) => {
+    dispatch(setPaymentDetails({ ...values })); // save payment details
+    history.push(CHECKOUT_STEP_2);
+  };
+
   useEffect(() => {}, [orderConfirmed]);
 
   if (!shipping || !shipping.isDone) {
@@ -85,13 +101,46 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
       <Formik
         initialValues={initFormikValues}
         validateOnChange
+        validateOnMount
         validationSchema={FormSchema}
         onSubmit={onConfirm}
       >
-        {() => (
+        {(props) => (
           <Form className="checkout-step-3">
             <PayOnDelivery />
-            <Total subtotal={subtotal} loading={loading} />
+            <div
+              style={{ paddingLeft: "1.2rem", display: "flex", gap: "1rem" }}
+            >
+              <input
+                id="tncAcceptedCheckbox"
+                type="checkbox"
+                onChange={props.handleChange}
+                value={props.values.tncAccepted}
+                checked={props.values.tncAccepted}
+                style={{ display: "unset" }}
+                name="tncAccepted"
+              />
+              <label
+                for="tncAcceptedCheckbox"
+                style={{
+                  color: "#818181",
+                  fontSize: "1.1rem",
+                  display: "block",
+                }}
+              >
+                I acknowledge that I have read, understand, and agree to the
+                <Link to={TERMS}> Terms & Conditions</Link>,
+                <Link to={DAMAGE}> Damage Policy</Link>,
+                <Link to={CANCELLATION}> Cancellation Policy</Link> and
+                <Link to={SHIPPING}> Shipping Policy</Link>.
+              </label>
+            </div>
+            <Total
+              valid={props.isValid}
+              subtotal={subtotal}
+              loading={loading}
+              onClickBack={onClickBack}
+            />
           </Form>
         )}
       </Formik>
@@ -102,11 +151,8 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
 
 Payment.propTypes = {
   payment: PropType.shape({
-    name: PropType.string,
-    cardnumber: PropType.string,
-    expiry: PropType.string,
-    ccv: PropType.string,
     type: PropType.string,
+    tncAccepted: PropType.bool,
   }).isRequired,
   shipping: PropType.shape({
     fullname: PropType.string,
