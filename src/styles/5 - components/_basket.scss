@@ -182,10 +182,14 @@
   align-items: center;
 }
 
-.basket-total-title {
+.basket-total-title, .rental-duration {
   font-size: $font-small;
   color: #8d8d8d;
   margin: 0;
+}
+
+.rental-duration {
+  text-align: end;
 }
 
 .basket-total-amount {

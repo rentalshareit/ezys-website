@@ -160,26 +160,31 @@ const Basket = () => {
               </div>
             )}
             {basket.length > 0 && (
-              <DateRangePicker
-                value={date.map((d) => d.toDate())}
-                onChange={onDateChange}
-                placeholder="Select Rental Period"
-                showOneCalendar
-                showHeader={false}
-                ranges={[]}
-                shouldDisableDate={combine(
-                  allowedMaxDays(30),
-                  before(
-                    moment(
-                      new Date().toLocaleString("en-US", {
-                        timeZone: "Asia/Kolkata",
-                      })
+              <>
+                <DateRangePicker
+                  value={date.map((d) => d.toDate())}
+                  onChange={onDateChange}
+                  label="Select Rental Period"
+                  showOneCalendar
+                  showHeader={false}
+                  ranges={[]}
+                  shouldDisableDate={combine(
+                    allowedMaxDays(30),
+                    before(
+                      moment(
+                        new Date().toLocaleString("en-US", {
+                          timeZone: "Asia/Kolkata",
+                        })
+                      )
+                        .add("days", 1)
+                        .toDate()
                     )
-                      .add("days", 1)
-                      .toDate()
-                  )
-                )}
-              />
+                  )}
+                />
+                <span className="rental-duration">
+                  Rental Duration: {getRentalPeriod()} Days
+                </span>
+              </>
             )}
             {basket.map((product, i) => (
               <BasketItem
@@ -192,6 +197,7 @@ const Basket = () => {
               />
             ))}
           </div>
+
           <div className="basket-checkout">
             <div className="basket-total">
               <span className="basket-total-title">Subtotal Amout:</span>
