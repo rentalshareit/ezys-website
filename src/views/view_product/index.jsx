@@ -12,7 +12,7 @@ import {
   useScrollTop,
 } from "@/hooks";
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import Select from "react-select";
 
 const styles = {
@@ -43,6 +43,7 @@ const styles = {
 const ViewProduct = () => {
   const [showPrice, setShowPrice] = useState(false);
   const { id } = useParams();
+  const history = useHistory();
   const { product, isLoading, error } = useProduct(id);
   const { addToBasket, isItemOnBasket } = useBasket(id);
   useScrollTop();

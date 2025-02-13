@@ -33,8 +33,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const email = shipping.email || profile.email;
-  const orderNo =
-    Date.now().toString(36) + Math.random().toString(36).substring(2);
+  const orderNo = Date.now().toString(36);
   useDocumentTitle("Check Out Final Step | Ezys");
   useScrollTop();
 
