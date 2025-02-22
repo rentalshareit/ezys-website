@@ -67,6 +67,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
             basket[0].period.days
           })`,
           email: shipping.email,
+          deliveryTimeSlot: shipping.deliveryTimeSlot,
           amount: subtotal,
           payment: values.type,
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),

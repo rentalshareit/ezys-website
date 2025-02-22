@@ -48,6 +48,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
     address: shipping.address || profile.address || "",
     mobile: shipping.mobile || profile.mobile || {},
     isDone: shipping.isDone || false,
+    deliveryTimeSlot: shipping.deliveryTimeSlot || "11-13",
   };
 
   const onSubmitForm = (form) => {
@@ -57,6 +58,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
         email: form.email,
         address: form.address,
         mobile: form.mobile,
+        deliveryTimeSlot: form.deliveryTimeSlot,
         isDone: true,
       })
     );

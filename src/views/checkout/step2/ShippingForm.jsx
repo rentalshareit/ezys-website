@@ -3,9 +3,19 @@ import {
   CustomInput,
   CustomMobileInput,
   CustomTextarea,
+  CustomCreatableSelect,
 } from "@/components/formik";
 import { Field, useFormikContext } from "formik";
 import React from "react";
+
+const deliveryTimeSlots = [
+  { label: "11 AM - 1 PM", value: "11-13" },
+  { label: "1 PM - 3 PM", value: "13-15" },
+  { label: "3 PM - 5 PM", value: "15-17" },
+  { label: "5 PM - 7 PM", value: "17-19" },
+  { label: "7 PM - 9 PM", value: "19-21" },
+  { label: "9 PM - 11 PM", value: "21-23" },
+];
 
 const ShippingForm = () => {
   const { values } = useFormikContext();
@@ -47,6 +57,26 @@ const ShippingForm = () => {
               name="mobile"
               disabled
               defaultValue={values.mobile}
+            />
+          </div>
+        </div>
+        <div className="checkout-fieldset">
+          <div className="checkout-field">
+            <CustomCreatableSelect
+              name="deliveryTimeSlot"
+              id="deliveryTimeSlot"
+              options={deliveryTimeSlots}
+              placeholder="Choose Delivery Time Slot"
+              label="Delivery Time Slot"
+              value={deliveryTimeSlots.find(
+                (o) => o.value === values.deliveryTimeSlot
+              )}
+              styles={{
+                control: {
+                  borderColor: "#cacaca!important",
+                  boxShadow: "none",
+                },
+              }}
             />
           </div>
         </div>
