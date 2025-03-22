@@ -168,6 +168,7 @@ const Basket = () => {
                   showOneCalendar
                   showHeader={false}
                   ranges={[]}
+                  editable={false}
                   shouldDisableDate={combine(
                     allowedMaxDays(30),
                     before(
