@@ -24,6 +24,7 @@ const categoryOptions = [
   { value: "Gaming Consoles", label: "Gaming Consoles" },
   { value: "Virtual Reality", label: "Virtual Reality" },
   { value: "Games & Controllers", label: "Games & Controllers" },
+  { value: "Projectors & Screen", label: "Projectors & Screen" },
 ];
 
 const FormSchema = Yup.object().shape({
