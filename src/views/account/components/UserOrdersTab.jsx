@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 import classNames from "classnames";
 import { displayMoney } from "@/helpers/utils";
+import WithModalKyc from "@/components/common/Kyc";
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -11,6 +12,7 @@ function capitalizeFirstLetter(string) {
 
 const UserOrdersTab = () => {
   const [data, setData] = useState();
+  const [kycOrderId, setKycOrderId] = useState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
@@ -92,9 +94,9 @@ const UserOrdersTab = () => {
                   <div
                     style={{
                       display: "flex",
-                      borderBottom: "solid #e1e1e1 1px",
-                      justifyContent: "space-between",
                       paddingBottom: "1rem",
+                      gap: "2rem",
+                      alignItems: "center",
                     }}
                   >
                     <span style={{ color: "#818181", fontSize: "1.4rem" }}>
@@ -108,6 +110,16 @@ const UserOrdersTab = () => {
                     </span>
                   </div>
                 </div>
+                {(d.status === "kyc_pending" || d.status === "kyc_failed") && (
+                  <button
+                    className="button button-small"
+                    style={{ marginBottom: "1rem" }}
+                    onClick={() => setKycOrderId(d.orderId)}
+                    type="button"
+                  >
+                    Start Kyc
+                  </button>
+                )}
                 <div>
                   <table className="user-orders-table">
                     <thead>
@@ -186,6 +198,11 @@ const UserOrdersTab = () => {
         : loading
         ? null
         : "No orders found"}
+      <WithModalKyc
+        show={!!kycOrderId}
+        onClose={() => setKycOrderId(null)}
+        orderId={kycOrderId}
+      />
     </div>
   );
 };

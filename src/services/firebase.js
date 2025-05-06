@@ -216,7 +216,57 @@ class Firebase {
     return downloadURL;
   };
 
-  deleteImage = (id) => this.storage.ref("products").child(id).delete();
+  getImage = async (id, folder = "products") => {
+    try {
+      const downloadURL = await this.storage
+        .ref(folder)
+        .child(id)
+        .getDownloadURL();
+      return downloadURL;
+    } catch (error) {
+      throw new Error("Failed to get download URL: " + error.message);
+    }
+  };
+
+  deleteImage = (id, folder = "products") =>
+    this.storage.ref(folder).child(id).delete();
+
+  uploadBase64Image = async (idPrefix, folder, dataUrl) => {
+    const id = [idPrefix, Date.now()].join("_");
+    const storageRef = this.storage.ref(folder).child(id);
+    await storageRef.putString(
+      dataUrl.replace("data:image/jpeg;base64,", ""),
+      "base64"
+    );
+    const url = await storageRef.getDownloadURL();
+    return url;
+  };
+
+  deleteFolder = async (folder) => {
+    const folderRef = this.storage.ref(folder);
+    const listResult = await folderRef.listAll();
+
+    const deletePromises = listResult.items.map((item) => item.delete());
+    await Promise.all(deletePromises);
+
+    const subfolderPromises = listResult.prefixes.map((subfolder) =>
+      this.deleteFolder(subfolder.fullPath)
+    );
+    await Promise.all(subfolderPromises);
+  };
+
+  uploadFiles = async (files, folder, idPrefix) => {
+    await this.deleteFolder(folder);
+    const uploadPromises = files.map(async (file, index) => {
+      const id = [idPrefix, Date.now(), index].join("_");
+      const storageRef = this.storage.ref(folder).child(id);
+      await storageRef.put(file);
+      const url = await storageRef.getDownloadURL();
+      return url;
+    });
+
+    return Promise.all(uploadPromises);
+  };
 
   editProduct = (id, updates) =>
     this.db.collection("products").doc(id).update(updates);

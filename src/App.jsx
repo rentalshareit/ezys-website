@@ -15,10 +15,10 @@ const wa_btnSetting = {
   marginBottom: 20,
   marginLeft: 20,
   marginRight: 20,
-  btnPosition: "left",
+  btnPosition: "right",
   whatsAppNumber: "919032477570",
   welcomeMessage: "Hello, Can you please help me with more information.",
-  zIndex: 999999,
+  zIndex: 59,
   btnColorScheme: "light",
 };
 
