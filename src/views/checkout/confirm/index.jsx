@@ -51,9 +51,16 @@ const Confirm = ({ orderId, isOpen, email }) => {
             fontSize: "1.1rem",
           }}
         >
-          Your order now has been placed. You will shortly receive confirmation
-          to email shortly. You can check the status of your order at any time
-          by going to "My Account".
+          Your order now has been placed. You will receive details over email
+          shortly. <br />
+          <br />
+          Please note that your order is not confirmed yet. It will be confirmed
+          once your KYC is submitted and verified. Please complete the KYC to
+          confirm your order by visitng "Orders" tab under "My Account" section
+          . <br />
+          <br />
+          You can check the status of your order at any time by going to "My
+          Account".
         </div>
         <div
           style={{
