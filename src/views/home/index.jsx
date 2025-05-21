@@ -2,6 +2,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import { MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
+import GoogleReviews from "@/components/misc/GoogleReviews";
 import {
   FEATURED_PRODUCTS,
   RECOMMENDED_PRODUCTS,
@@ -26,7 +27,7 @@ const Home = () => {
   const { products, fetchProducts, isLoading, error } = useProducts();
 
   return (
-    <main className="content">
+    <main className="content" style={{ flexDirection: "column" }}>
       <div className="home">
         <div className="banner">
           <div className="banner-desc">
@@ -73,6 +74,7 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <GoogleReviews />
     </main>
   );
 };
