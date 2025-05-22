@@ -26,7 +26,7 @@ const GoogleReviews = () => {
               },
               starRating: r.rating,
               comment: r.text,
-              createTime: r.time,
+              createTime: new Date(r.time * 1000),
             }))
           );
         } else {
