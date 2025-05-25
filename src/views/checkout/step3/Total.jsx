@@ -17,7 +17,13 @@ const Total = ({ subtotal, loading, onClickBack, valid }) => {
         <p className="basket-total-title">Total:</p>
         <h4 className="basket-total-amount">{displayMoney(subtotal)}</h4>
       </div>
-      <br />
+      <div className="checkout-note-wrapper">
+        <b>Note:</b>{" "}
+        <span className="checkout-note">
+          Avoid refreshing the page during checkout to prevent losing your
+          progress.
+        </span>
+      </div>
       <div className="checkout-shipping-action">
         <button
           className="button button-muted button-small"

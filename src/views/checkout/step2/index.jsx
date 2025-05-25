@@ -62,7 +62,9 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
         isDone: true,
       })
     );
-    history.push(CHECKOUT_STEP_3);
+    history.push(CHECKOUT_STEP_3, {
+      fromAction: true,
+    });
   };
 
   return (
@@ -83,12 +85,22 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
                 <br />
                 {/*  ---- TOTAL --------- */}
                 <ShippingTotal subtotal={subtotal} />
-                <br />
+                <div className="checkout-note-wrapper">
+                  <b>Note:</b>{" "}
+                  <span className="checkout-note">
+                    Avoid refreshing the page during checkout to prevent losing
+                    your progress.
+                  </span>
+                </div>
                 {/*  ----- NEXT/PREV BUTTONS --------- */}
                 <div className="checkout-shipping-action">
                   <button
                     className="button button-muted button-small"
-                    onClick={() => history.push(CHECKOUT_STEP_1)}
+                    onClick={() =>
+                      history.push(CHECKOUT_STEP_1, {
+                        fromAction: true,
+                      })
+                    }
                     type="button"
                   >
                     <ArrowLeftOutlined />

@@ -1,11 +1,28 @@
 /* eslint-disable no-nested-ternary */
 import { calculateTotal } from "@/helpers/utils";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
+import {
+  Redirect,
+  withRouter,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
+import { useIdleRouteRedirect } from "@/hooks";
 
 const withCheckout = (Component) =>
   withRouter((props) => {
+    const location = useLocation();
+    const history = useHistory();
+    // Redirect to home if the user is idle for a certain period
+    // and not coming from a basket checkout click
+    useIdleRouteRedirect();
+
+    useEffect(() => {
+      if (location.state?.fromAction) window.history.replaceState({}, "");
+      else history.replace("/");
+    }, [location.state, history]);
+
     const state = useSelector((store) => ({
       isAuth: !!store.auth.id && !!store.auth.role,
       basket: store.basket,

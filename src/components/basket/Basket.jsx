@@ -7,11 +7,16 @@ import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
 import moment from "moment";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
-import { useDidMount, useModal } from "@/hooks";
+import {
+  useDidMount,
+  useModal,
+  useRefreshOnISTDateChangeMoment,
+} from "@/hooks";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { clearBasket, updateRentalPeriod } from "@/redux/actions/basketActions";
+import { set } from "date-fns";
 
 const datesAreOnSameDay = (first, second) =>
   first.getFullYear() === second.getFullYear() &&
@@ -27,9 +32,11 @@ const Basket = () => {
       new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
     ).add("days", 31),
   ]);
+  useRefreshOnISTDateChangeMoment();
+  const [itemsAvailable, setItemsAvailable] = useState([]);
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
-  const { combine, allowedMaxDays, before } = DateRangePicker;
+  const { combine, allowedMaxDays, before, after } = DateRangePicker;
   const { basket, user, authStatus } = useSelector((state) => ({
     basket: state.basket,
     user: state.auth,
@@ -56,6 +63,14 @@ const Basket = () => {
       );
     }
   };
+
+  useEffect(async () => {
+    const response = await fetch(
+      `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getCurrentAvailability`
+    );
+    const data = await response.json();
+    setItemsAvailable(data);
+  }, []);
 
   useEffect(() => {
     if (didMount && firebase.auth.currentUser && basket.length !== 0) {
@@ -88,7 +103,9 @@ const Basket = () => {
   const onCheckOut = () => {
     if (basket.length !== 0 && user) {
       document.body.classList.remove("is-basket-open");
-      history.push(CHECKOUT_STEP_1);
+      history.push(CHECKOUT_STEP_1, {
+        fromAction: true,
+      });
     } else {
       onOpenModal();
     }
@@ -104,6 +121,72 @@ const Basket = () => {
       dispatch(clearBasket());
     }
   };
+
+  const isAvailable = useCallback(
+    (product) => {
+      const { tag = "ps4slim" } = product;
+      const tagItemsAvailable = itemsAvailable.filter(
+        (item) => item.type === tag
+      );
+      return tagItemsAvailable.some((availableItem) => {
+        return availableItem.availability.some(([start, end]) => {
+          const rentalStart = date[0].toDate();
+          const rentalEnd = date[1].toDate();
+
+          return (
+            moment(start, "DD/MM/YYYY").toDate() <= rentalStart &&
+            moment(end, "DD/MM/YYYY").toDate() >= rentalEnd
+          );
+        });
+      });
+    },
+    [date, itemsAvailable]
+  );
+
+  const isAnyItemOutOfStock = useMemo(() => {
+    return basket.some((product) => !isAvailable(product));
+  }, [basket, isAvailable]);
+
+  const getAvailableSlots = useCallback(
+    (product) => {
+      const { tag = "ps4slim" } = product;
+      const tagItemsAvailable = itemsAvailable.filter(
+        (item) => item.type === tag
+      );
+      const mergedIntervals = tagItemsAvailable
+        .flatMap((availableItem) => availableItem.availability)
+        .map(([start, end]) => ({
+          start: moment(start, "DD/MM/YYYY").toDate(),
+          end: moment(end, "DD/MM/YYYY").toDate(),
+        }))
+        .sort((a, b) => a.start - b.start)
+        .reduce((merged, current) => {
+          const last = merged[merged.length - 1];
+          if (!last || current.start > last.end) {
+            merged.push(current);
+          } else if (current.end <= last.end) {
+            // Skip the current interval as it is fully covered by the last interval
+            return merged;
+          }
+          return merged;
+        }, [])
+        .map(({ start, end }) => [
+          moment(start).format("DD/MM/YYYY"),
+          moment(end).format("DD/MM/YYYY"),
+        ]);
+
+      return mergedIntervals
+        .map(
+          ([start, end]) =>
+            `${moment(start, "DD/MM/YYYY").format("DD MMM")} - ${moment(
+              end,
+              "DD/MM/YYYY"
+            ).format("DD MMM")}`
+        )
+        .join(", ");
+    },
+    [itemsAvailable]
+  );
 
   return (
     <>
@@ -170,14 +253,25 @@ const Basket = () => {
                   ranges={[]}
                   editable={false}
                   shouldDisableDate={combine(
-                    allowedMaxDays(30),
-                    before(
+                    combine(
+                      allowedMaxDays(30),
+                      before(
+                        moment(
+                          new Date().toLocaleString("en-US", {
+                            timeZone: "Asia/Kolkata",
+                          })
+                        )
+                          .add("days", 1)
+                          .toDate()
+                      )
+                    ),
+                    after(
                       moment(
                         new Date().toLocaleString("en-US", {
                           timeZone: "Asia/Kolkata",
                         })
                       )
-                        .add("days", 1)
+                        .add("days", 61)
                         .toDate()
                     )
                   )}
@@ -192,9 +286,9 @@ const Basket = () => {
                 // eslint-disable-next-line react/no-array-index-key
                 key={`${product.id}_${i}`}
                 product={product}
-                basket={basket}
                 rentalPeriod={getRentalPeriod()}
-                dispatch={dispatch}
+                isAvailable={isAvailable(product)}
+                getAvailableSlots={getAvailableSlots}
               />
             ))}
           </div>
@@ -216,7 +310,11 @@ const Basket = () => {
             </div>
             <button
               className="button-small basket-checkout-button button"
-              disabled={basket.length === 0 || pathname === "/checkout"}
+              disabled={
+                basket.length === 0 ||
+                pathname === "/checkout" ||
+                isAnyItemOutOfStock
+              }
               onClick={onCheckOut}
               type="button"
             >

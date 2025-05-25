@@ -8,10 +8,30 @@ import {
   SET_BASKET_ITEMS,
 } from "@/constants/constants";
 
+const getDefaultDate = () => [
+  new Date(),
+  new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+];
+
+const getDefaultPeriod = () => {
+  const date = getDefaultDate();
+  return {
+    dates: [date[0].toLocaleDateString(), date[1].toLocaleDateString()],
+    days: Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
+  };
+};
+
 export default (state = [], action) => {
   switch (action.type) {
     case SET_BASKET_ITEMS:
-      return action.payload;
+      return (
+        action.payload?.map((product) => ({
+          ...product,
+          period: getDefaultPeriod(),
+        })) || []
+      );
+    // Ensure the period is set correctly when loading from persisted state
+    // This is to handle the case when the basket is loaded from local storage or server
     case ADD_TO_BASKET:
       if (state.some((product) => product.id === action.payload.id))
         return state;
@@ -19,14 +39,7 @@ export default (state = [], action) => {
       if (state.length) {
         period = state[0].period;
       } else {
-        const date = [
-          new Date(),
-          new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        ];
-        period = {
-          dates: [date[0].toLocaleDateString(), date[1].toLocaleDateString()],
-          days: Math.floor(Math.abs(date[1] - date[0]) / (1000 * 60 * 60 * 24)),
-        };
+        period = getDefaultPeriod();
       }
       return [{ ...action.payload, period }, ...state];
     case REMOVE_FROM_BASKET:

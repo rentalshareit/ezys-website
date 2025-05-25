@@ -87,13 +87,19 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
 
   const onClickBack = (values) => {
     dispatch(setPaymentDetails({ ...values })); // save payment details
-    history.push(CHECKOUT_STEP_2);
+    history.push(CHECKOUT_STEP_2, {
+      fromAction: true,
+    });
   };
 
   useEffect(() => {}, [orderConfirmed]);
 
   if (!shipping || !shipping.isDone) {
-    return <Redirect to={CHECKOUT_STEP_1} />;
+    return (
+      <Redirect
+        to={{ pathname: CHECKOUT_STEP_1, state: { fromAction: true } }}
+      />
+    );
   }
   return (
     <div className="checkout">

@@ -16,7 +16,10 @@ const OrderSummary = ({ basket, subtotal }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const onClickPrevious = () => history.push("/");
-  const onClickNext = () => history.push(CHECKOUT_STEP_2);
+  const onClickNext = () =>
+    history.push(CHECKOUT_STEP_2, {
+      fromAction: true,
+    });
 
   return (
     <div className="checkout">
@@ -32,6 +35,7 @@ const OrderSummary = ({ basket, subtotal }) => {
               key={product.id}
               rentalPeriod={product.period.days}
               product={product}
+              isAvailable
             />
           ))}
         </div>
@@ -40,7 +44,13 @@ const OrderSummary = ({ basket, subtotal }) => {
           <p className="basket-total-title">Subtotal:</p>
           <p className="basket-total-amount">{displayMoney(subtotal)}</p>
         </div>
-        <br />
+        <div className="checkout-note-wrapper">
+          <b>Note:</b>{" "}
+          <span className="checkout-note">
+            Avoid refreshing the page during checkout to prevent losing your
+            progress.
+          </span>
+        </div>
         <div className="checkout-shipping-action">
           <button
             className="button button-muted button-small"

@@ -1,20 +1,17 @@
-import {
-  applyMiddleware,
-  compose, createStore
-} from 'redux';
-import { persistCombineReducers, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import createSagaMiddleware from 'redux-saga';
-import rootReducer from '../reducers';
-import rootSaga from '../sagas/rootSaga';
+import { applyMiddleware, compose, createStore } from "redux";
+import { persistCombineReducers, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import createSagaMiddleware from "redux-saga";
+import rootReducer from "../reducers";
+import rootSaga from "../sagas/rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const authPersistConfig = {
-  key: 'root',
+  key: "root",
   storage,
-  whitelist: ['auth', 'profile', 'basket', 'checkout']
+  whitelist: ["auth", "profile", "basket"],
 };
 
 export default () => {

@@ -96,7 +96,6 @@ function* authSaga({ type, payload }) {
 
         yield put(setProfile(user));
         yield put(setBasketItems(user.basket));
-        yield put(setBasketItems(user.basket));
         yield put(
           signInSuccess({
             id: payload.uid,

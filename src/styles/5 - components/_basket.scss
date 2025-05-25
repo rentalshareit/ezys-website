@@ -55,9 +55,11 @@
 .basket-item {
   border: 1px solid $border-color;
   display: flex;
+  flex-direction: column;
+  gap: 5px;
   align-items: center;
   border-radius: 5px;
-  padding: 0px 5px;
+  padding: 0px 5px 2px 5px;
   margin-top: $s-size;
   @include bezier-transition();
   animation: slide-up .5s ease;
@@ -215,4 +217,13 @@
 
 .basket-control-count {
   margin: 5px;
+}
+
+.basket-item-error {
+  color: $red;
+}
+
+.basket-item-availability {
+  font-size: 1rem;
+  color: $green;
 }

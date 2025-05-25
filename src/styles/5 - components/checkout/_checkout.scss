@@ -238,3 +238,13 @@
 #tncAcceptedCheckbox + label::before, #tncAcceptedCheckbox + label::after {
   display: none;
 }
+
+.checkout-note-wrapper {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.checkout-note {
+  font-size: 1.2rem;
+  color: $gray-10;
+}
