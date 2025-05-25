@@ -6,6 +6,7 @@ import {
   REMOVE_FROM_BASKET,
   SET_BASKET_ITEMS,
   UPDATE_RENTAL_PERIOD,
+  UPDATE_AVAILABLE_TAG_ITEMS,
 } from "@/constants/constants";
 
 export const setBasketItems = (items = []) => ({
@@ -40,4 +41,9 @@ export const minusQtyItem = (id) => ({
 export const updateRentalPeriod = (period) => ({
   type: UPDATE_RENTAL_PERIOD,
   payload: period,
+});
+
+export const updateAvailableTagItems = (id, availableTagItems) => ({
+  type: UPDATE_AVAILABLE_TAG_ITEMS,
+  payload: { id, availableTagItems },
 });

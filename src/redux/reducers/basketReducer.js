@@ -6,6 +6,7 @@ import {
   MINUS_QTY_ITEM,
   REMOVE_FROM_BASKET,
   SET_BASKET_ITEMS,
+  UPDATE_AVAILABLE_TAG_ITEMS,
 } from "@/constants/constants";
 
 const getDefaultDate = () => [
@@ -42,6 +43,16 @@ export default (state = [], action) => {
         period = getDefaultPeriod();
       }
       return [{ ...action.payload, period }, ...state];
+    case UPDATE_AVAILABLE_TAG_ITEMS:
+      return state.map((product) => {
+        if (product.id === action.payload.id) {
+          return {
+            ...product,
+            availableTagItems: action.payload.availableTagItems,
+          };
+        }
+        return product;
+      });
     case REMOVE_FROM_BASKET:
       return state.filter((product) => product.id !== action.payload);
     case CLEAR_BASKET:

@@ -5,6 +5,7 @@ import { createBrowserHistory } from "history";
 import React from "react";
 import { Route, Router, Switch } from "react-router-dom";
 import * as view from "@/views";
+import PageRefreshOnDateChange from "@/components/misc/PageRefreshOnDateChange";
 import AdminRoute from "./AdminRoute";
 import ClientRoute from "./ClientRoute";
 import PublicRoute from "./PublicRoute";
@@ -18,6 +19,7 @@ const AppRouter = () => (
     <>
       <Navigation />
       <Basket />
+      <PageRefreshOnDateChange />
       <div style={{ flex: 1 }}>
         <Switch>
           <PublicRoute component={view.Search} exact path={ROUTES.SEARCH} />

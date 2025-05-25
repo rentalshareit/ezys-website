@@ -7,11 +7,7 @@ import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
 import moment from "moment";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
-import {
-  useDidMount,
-  useModal,
-  useRefreshOnISTDateChangeMoment,
-} from "@/hooks";
+import { useDidMount, useModal } from "@/hooks";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -32,7 +28,7 @@ const Basket = () => {
       new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
     ).add("days", 31),
   ]);
-  useRefreshOnISTDateChangeMoment();
+
   const [itemsAvailable, setItemsAvailable] = useState([]);
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
@@ -122,60 +118,108 @@ const Basket = () => {
     }
   };
 
-  const isAvailable = useCallback(
+  const getTagItemsForProducts = useCallback(
     (product) => {
-      const { tag = "ps4slim" } = product;
-      const tagItemsAvailable = itemsAvailable.filter(
-        (item) => item.type === tag
-      );
-      return tagItemsAvailable.some((availableItem) => {
-        return availableItem.availability.some(([start, end]) => {
-          const rentalStart = date[0].toDate();
-          const rentalEnd = date[1].toDate();
+      const tags = JSON.parse(product.tags || JSON.stringify(["ps5digital"]));
+      const tagsItems = tags.map((tag) => {
+        const tagItemsAvailable = itemsAvailable.filter(
+          (item) => item.type === tag
+        );
+        const tagItem = tagItemsAvailable.find((availableItem) => {
+          return availableItem.availability.some(([start, end]) => {
+            const rentalStart = date[0].toDate();
+            const rentalEnd = date[1].toDate();
 
-          return (
-            moment(start, "DD/MM/YYYY").toDate() <= rentalStart &&
-            moment(end, "DD/MM/YYYY").toDate() >= rentalEnd
-          );
+            return (
+              moment(start, "DD/MM/YYYY").toDate() <= rentalStart &&
+              moment(end, "DD/MM/YYYY").toDate() >= rentalEnd
+            );
+          });
         });
+        return tagItem;
       });
+
+      return tagsItems;
     },
     [date, itemsAvailable]
   );
 
   const isAnyItemOutOfStock = useMemo(() => {
-    return basket.some((product) => !isAvailable(product));
-  }, [basket, isAvailable]);
+    return basket.some((product) =>
+      getTagItemsForProducts(product).some((item) => !item)
+    );
+  }, [basket, getTagItemsForProducts]);
 
   const getAvailableSlots = useCallback(
     (product) => {
-      const { tag = "ps4slim" } = product;
-      const tagItemsAvailable = itemsAvailable.filter(
-        (item) => item.type === tag
-      );
-      const mergedIntervals = tagItemsAvailable
-        .flatMap((availableItem) => availableItem.availability)
-        .map(([start, end]) => ({
-          start: moment(start, "DD/MM/YYYY").toDate(),
-          end: moment(end, "DD/MM/YYYY").toDate(),
-        }))
-        .sort((a, b) => a.start - b.start)
-        .reduce((merged, current) => {
-          const last = merged[merged.length - 1];
-          if (!last || current.start > last.end) {
-            merged.push(current);
-          } else if (current.end <= last.end) {
-            // Skip the current interval as it is fully covered by the last interval
-            return merged;
-          }
-          return merged;
-        }, [])
-        .map(({ start, end }) => [
-          moment(start).format("DD/MM/YYYY"),
-          moment(end).format("DD/MM/YYYY"),
-        ]);
+      const { tags = ["ps5digital"] } = product;
 
-      return mergedIntervals
+      const allTagsIntervals = tags.map((tag) => {
+        const tagItemsAvailable = itemsAvailable.filter(
+          (item) => item.type === tag
+        );
+        const mergedIntervals = tagItemsAvailable
+          .flatMap((availableItem) => availableItem.availability)
+          .map(([start, end]) => ({
+            start: moment(start, "DD/MM/YYYY").toDate(),
+            end: moment(end, "DD/MM/YYYY").toDate(),
+          }))
+          .sort((a, b) => a.start - b.start)
+          .reduce((merged, current) => {
+            const last = merged[merged.length - 1];
+            if (!last || current.start > last.end) {
+              merged.push(current);
+            } else if (current.end <= last.end) {
+              // Skip the current interval as it is fully covered by the last interval
+              return merged;
+            }
+            return merged;
+          }, [])
+          .map(({ start, end }) => [
+            moment(start).format("DD/MM/YYYY"),
+            moment(end).format("DD/MM/YYYY"),
+          ]);
+
+        return mergedIntervals;
+      });
+
+      const commonIntervals = allTagsIntervals.reduce((common, intervals) => {
+        if (!common.length) return intervals;
+
+        return common
+          .map(([commonStart, commonEnd]) => {
+            return intervals
+              .map(([start, end]) => {
+                const overlapStart = moment.max(
+                  moment(commonStart, "DD/MM/YYYY"),
+                  moment(start, "DD/MM/YYYY")
+                );
+                const overlapEnd = moment.min(
+                  moment(commonEnd, "DD/MM/YYYY"),
+                  moment(end, "DD/MM/YYYY")
+                );
+
+                if (
+                  overlapStart.isBefore(overlapEnd) ||
+                  overlapStart.isSame(overlapEnd)
+                ) {
+                  return [
+                    overlapStart.format("DD/MM/YYYY"),
+                    overlapEnd.format("DD/MM/YYYY"),
+                  ];
+                }
+                return null;
+              })
+              .filter(Boolean);
+          })
+          .flat();
+      }, []);
+
+      if (!commonIntervals.length) {
+        return "No available slots for next 2 months. Please check back later.";
+      }
+
+      return commonIntervals
         .map(
           ([start, end]) =>
             `${moment(start, "DD/MM/YYYY").format("DD MMM")} - ${moment(
@@ -287,7 +331,7 @@ const Basket = () => {
                 key={`${product.id}_${i}`}
                 product={product}
                 rentalPeriod={getRentalPeriod()}
-                isAvailable={isAvailable(product)}
+                getTagItemsForProducts={getTagItemsForProducts}
                 getAvailableSlots={getAvailableSlots}
               />
             ))}

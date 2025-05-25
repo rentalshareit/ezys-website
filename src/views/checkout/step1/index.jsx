@@ -30,12 +30,11 @@ const OrderSummary = ({ basket, subtotal }) => {
         <div className="checkout-items">
           {basket.map((product) => (
             <BasketItem
-              basket={basket}
-              dispatch={dispatch}
               key={product.id}
               rentalPeriod={product.period.days}
               product={product}
-              isAvailable
+              getTagItemsForProducts={() => null}
+              getAvailableSlots={() => null}
             />
           ))}
         </div>

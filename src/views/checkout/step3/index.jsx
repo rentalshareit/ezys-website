@@ -71,12 +71,18 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           amount: subtotal,
           payment: values.type,
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),
+          tags: basket.map((b) => b.tags.join("\n")).join("\n"),
           orderTotal: basket
             .map(
               (b) => b.price[basket[0].period.days - 1] / basket[0].period.days
             )
             .join("\n"),
           coupon: "",
+          tags: basket
+            .map((b) =>
+              b.availableTagItems.map((a) => a.productCode).join("\n")
+            )
+            .join("\n"),
         }),
       }
     );

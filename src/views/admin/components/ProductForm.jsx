@@ -12,6 +12,14 @@ import PropType from "prop-types";
 import React from "react";
 import * as Yup from "yup";
 
+// Possible Tag Names
+const tagOptions = [
+  { value: "ps4slim", label: "PS4 Slim" },
+  { value: "ps4pro", label: "PS4 Pro" },
+  { value: "ps5digital", label: "PS5 Digital" },
+  { value: "gta5", label: "GTA5" },
+];
+
 // Default brand names that I used. You can use what you want
 const brandOptions = [
   { value: "sony", label: "Sony" },
@@ -48,6 +56,9 @@ const FormSchema = Yup.object().shape({
   included: Yup.string(),
   configuration: Yup.string(),
   features: Yup.string(),
+  tags: Yup.array()
+    .of(Yup.string())
+    .min(1, "Please select at least 1 tag for this product."),
 });
 
 const ProductForm = ({ product, onSubmit, isLoading }) => {
@@ -65,6 +76,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     included: product?.included || "",
     configuration: product?.configuration || "",
     features: product?.features || "",
+    tags: product?.tags || "",
   };
 
   const { imageFile, isFileLoading, onFileChange, removeImage } =
@@ -138,6 +150,17 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   disabled={isLoading}
                   placeholder="Select/Create Category"
                   label="* Category"
+                />
+              </div>
+              <div className="product-form-field">
+                <CustomCreatableSelect
+                  name="tags"
+                  id="tags"
+                  isMulti
+                  options={tagOptions}
+                  disabled={isLoading}
+                  placeholder="Select Tags"
+                  label="* Tags"
                 />
               </div>
               <div className="product-form-field">
