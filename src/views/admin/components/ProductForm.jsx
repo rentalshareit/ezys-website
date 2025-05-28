@@ -17,7 +17,20 @@ const tagOptions = [
   { value: "ps4slim", label: "PS4 Slim" },
   { value: "ps4pro", label: "PS4 Pro" },
   { value: "ps5digital", label: "PS5 Digital" },
-  { value: "gta5", label: "GTA5" },
+  { value: "metaquest3s", label: "Meta Quest 3S" },
+  { value: "ac", label: "Assassins Creed" },
+  { value: "cod", label: "Call Of Duty" },
+  { value: "fc24", label: "FIFA 24" },
+  { value: "fc25", label: "FIFA 25" },
+  { value: "gt", label: "Gran Tursimo" },
+  { value: "hz", label: "Horizon Zero Dawn" },
+  { value: "nfs", label: "Need for Speed" },
+  { value: "sp", label: "Spiderman" },
+  { value: "wwe", label: "WWE 2K18" },
+  { value: "t", label: "Tekken 7" },
+  { value: "gta5", label: "GTA 5" },
+  { value: "screen", label: "Screen" },
+  { value: "projector", label: "Projector" },
 ];
 
 // Default brand names that I used. You can use what you want
@@ -86,7 +99,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     });
 
   const onSubmitForm = (form) => {
-    if (imageFile.image.file || product.imageUrl) {
+    if (imageFile.image.file || product.image) {
       onSubmit({
         ...form,
         quantity: 1,
@@ -94,7 +107,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
         // of name here instead in firebase functions
         name_lower: form.name.toLowerCase(),
         dateAdded: new Date().getTime(),
-        image: imageFile?.image?.file || product.imageUrl,
+        image: imageFile?.image?.file || product.image,
         imageCollection: imageFile.imageCollection,
       });
     } else {
@@ -154,6 +167,10 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
               </div>
               <div className="product-form-field">
                 <CustomCreatableSelect
+                  defaultValue={(values.tags || []).map((tag) => ({
+                    value: tag,
+                    label: tag,
+                  }))}
                   name="tags"
                   id="tags"
                   isMulti
@@ -391,7 +408,6 @@ ProductForm.propTypes = {
     keywords: PropType.arrayOf(PropType.string),
     imageCollection: PropType.arrayOf(PropType.object),
     image: PropType.string,
-    imageUrl: PropType.string,
     isFeatured: PropType.bool,
     isRecommended: PropType.bool,
     setup: PropType.string,

@@ -131,7 +131,6 @@ ProductItem.propTypes = {
     imageCollection: PropType.arrayOf(PropType.object),
     sizes: PropType.arrayOf(PropType.string),
     image: PropType.string,
-    imageUrl: PropType.string,
     isFeatured: PropType.bool,
     isRecommended: PropType.bool,
     dateAdded: PropType.number,

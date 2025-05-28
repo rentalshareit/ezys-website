@@ -26,10 +26,12 @@ export default (state = [], action) => {
   switch (action.type) {
     case SET_BASKET_ITEMS:
       return (
-        action.payload?.map((product) => ({
-          ...product,
-          period: getDefaultPeriod(),
-        })) || []
+        action.payload
+          ?.filter((p) => p.tags)
+          .map((product) => ({
+            ...product,
+            period: getDefaultPeriod(),
+          })) || []
       );
     // Ensure the period is set correctly when loading from persisted state
     // This is to handle the case when the basket is loaded from local storage or server

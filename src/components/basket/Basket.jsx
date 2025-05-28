@@ -70,8 +70,14 @@ const Basket = () => {
 
   useEffect(() => {
     if (didMount && firebase.auth.currentUser && basket.length !== 0) {
+      const clonedBasket = basket.map((obj) => {
+        // Create a shallow copy of the object
+        const newObj = { ...obj };
+        delete newObj.availableTagItems;
+        return newObj;
+      });
       firebase
-        .saveBasketItems(basket, firebase.auth.currentUser.uid)
+        .saveBasketItems(clonedBasket, firebase.auth.currentUser.uid)
         .then(() => {
           console.log("Item saved to basket");
         })
@@ -120,7 +126,7 @@ const Basket = () => {
 
   const getTagItemsForProducts = useCallback(
     (product) => {
-      const tags = JSON.parse(product.tags || JSON.stringify(["ps5digital"]));
+      const { tags } = product;
       const tagsItems = tags.map((tag) => {
         const tagItemsAvailable = itemsAvailable.filter(
           (item) => item.type === tag
@@ -152,7 +158,7 @@ const Basket = () => {
 
   const getAvailableSlots = useCallback(
     (product) => {
-      const { tags = ["ps5digital"] } = product;
+      const { tags } = product;
 
       const allTagsIntervals = tags.map((tag) => {
         const tagItemsAvailable = itemsAvailable.filter(
@@ -172,6 +178,8 @@ const Basket = () => {
             } else if (current.end <= last.end) {
               // Skip the current interval as it is fully covered by the last interval
               return merged;
+            } else {
+              merged.push(current);
             }
             return merged;
           }, [])

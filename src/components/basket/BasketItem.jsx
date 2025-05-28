@@ -98,7 +98,13 @@ const BasketItem = ({
                 </p>
               ),
               children: (
-                <p className="basket-item-availability">{availableSlots}</p>
+                <>
+                  <span>
+                    Please select a date that fits within one of the available
+                    slots below.
+                  </span>
+                  <p className="basket-item-availability">{availableSlots}</p>
+                </>
               ),
             },
           ]}
@@ -123,7 +129,6 @@ BasketItem.propTypes = {
     imageCollection: PropType.arrayOf(PropType.string),
     sizes: PropType.arrayOf(PropType.number),
     image: PropType.string,
-    imageUrl: PropType.string,
     isFeatured: PropType.bool,
     isRecommended: PropType.bool,
     availableColors: PropType.arrayOf(PropType.string),
