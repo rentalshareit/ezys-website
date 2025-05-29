@@ -69,7 +69,7 @@ const Basket = () => {
   }, []);
 
   useEffect(() => {
-    if (didMount && firebase.auth.currentUser && basket.length !== 0) {
+    if (didMount && firebase.auth.currentUser) {
       const clonedBasket = basket.map((obj) => {
         // Create a shallow copy of the object
         const newObj = { ...obj };

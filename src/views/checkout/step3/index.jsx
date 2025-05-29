@@ -98,8 +98,6 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
     });
   };
 
-  useEffect(() => {}, [orderConfirmed]);
-
   if (!shipping || !shipping.isDone) {
     return (
       <Redirect

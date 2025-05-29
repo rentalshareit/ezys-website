@@ -1,44 +1,59 @@
-import { useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 
-function useIdleRouteRedirect(thresholdMinutes = 15, homeRoute = "/") {
+function useIdleRouteRedirect(idleTimeMs = 15 * 60 * 1000, redirectUrl = "/") {
   const history = useHistory();
-  const location = useLocation();
+  // useRef to store the timer ID, allowing it to persist across re-renders
+  const idleTimerRef = useRef(null);
 
+  // Function to reset the idle timer.
+  const resetIdleTimer = () => {
+    // Clear any existing timer.
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+    // Set a new timer.
+    idleTimerRef.current = setTimeout(() => {
+      // Use history.push from React Router v5 for redirection.
+      console.log(
+        `User idle for ${
+          idleTimeMs / 1000
+        } seconds. Redirecting to: ${redirectUrl}`
+      );
+      history.push(redirectUrl);
+    }, idleTimeMs);
+  };
+
+  // useEffect to set up and tear down event listeners.
   useEffect(() => {
-    let timerId;
-    const startTime = Date.now();
+    // Initialize the timer when the component mounts.
+    resetIdleTimer();
 
-    const checkIdleTime = () => {
-      const currentTime = Date.now();
-      const elapsedTimeMinutes = (currentTime - startTime) / (1000 * 60);
-
-      if (elapsedTimeMinutes > thresholdMinutes) {
-        history.push(homeRoute);
-      }
+    // Define the event handler for user activity.
+    const handleActivity = () => {
+      resetIdleTimer(); // Reset the timer on any user activity.
     };
 
-    const resetTimer = () => {
-      clearTimeout(timerId);
-      timerId = setTimeout(checkIdleTime, 60 * 1000); // Check every minute
-    };
+    // Add event listeners for common user interactions.
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+    window.addEventListener("click", handleActivity);
+    window.addEventListener("scroll", handleActivity);
+    window.addEventListener("touchstart", handleActivity); // For mobile touch events
 
-    // Set initial timer
-    resetTimer();
-
-    // Reset timer on user activity (mousemove, keydown, scroll)
-    window.addEventListener("mousemove", resetTimer);
-    window.addEventListener("keydown", resetTimer);
-    window.addEventListener("scroll", resetTimer);
-
-    // Clear timer and remove event listeners on unmount
+    // Cleanup function: This runs when the component unmounts.
     return () => {
-      clearTimeout(timerId);
-      window.removeEventListener("mousemove", resetTimer);
-      window.removeEventListener("keydown", resetTimer);
-      window.removeEventListener("scroll", resetTimer);
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current); // Clear the timer.
+      }
+      // Remove all event listeners.
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+      window.removeEventListener("click", handleActivity);
+      window.removeEventListener("scroll", handleActivity);
+      window.removeEventListener("touchstart", handleActivity);
     };
-  }, [history, location, thresholdMinutes, homeRoute]);
+  }, [redirectUrl, idleTimeMs, history]); // Add history to dependencies.
 }
 
 export default useIdleRouteRedirect;

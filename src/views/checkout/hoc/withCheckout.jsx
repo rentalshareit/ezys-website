@@ -37,10 +37,7 @@ const withCheckout = (Component) =>
       )
     );
 
-    if (state.basket.length === 0) {
-      return <Redirect to="/" />;
-    }
-    if (state.isAuth && state.basket.length !== 0) {
+    if (state.isAuth) {
       return (
         <Component
           // eslint-disable-next-line react/jsx-props-no-spreading

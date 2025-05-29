@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
 const Confirm = ({ orderId, isOpen, email }) => {
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(30);
   const history = useHistory();
 
   useEffect(() => {
@@ -32,9 +32,8 @@ const Confirm = ({ orderId, isOpen, email }) => {
       <Modal
         isOpen={isOpen}
         overrideStyle={{
-          padding: "10px 10px",
-          width: "50rem",
-          height: "20rem",
+          padding: "10px 50px",
+          width: "80%",
         }}
       >
         <CheckCircleFilled
@@ -46,6 +45,7 @@ const Confirm = ({ orderId, isOpen, email }) => {
         />
         <p className="text-center">Thank you for your order!</p>
         <div
+          className="text-center"
           style={{
             paddingTop: "1.4rem",
             fontSize: "1.1rem",
@@ -54,20 +54,26 @@ const Confirm = ({ orderId, isOpen, email }) => {
           Your order now has been placed. You will receive details over email
           shortly. <br />
           <br />
-          Please note that your order is not confirmed yet. It will be confirmed
-          once your KYC is submitted and verified. Please complete the KYC to
-          confirm your order by visitng "Orders" tab under "My Account" section
-          . <br />
+          <span
+            style={{
+              color: "rgb(13, 148, 136)",
+            }}
+          >
+            Please note that your order is <b>not confirmed</b> yet. It will be
+            confirmed once your KYC is submitted and verified. Please complete
+            the KYC to confirm your order by visitng <b>"Orders"</b> tab under{" "}
+            <b>"My Account"</b> section . <br />
+          </span>
           <br />
-          You can check the status of your order at any time by going to "My
-          Account".
+          You can check the status of your order at any time by going to{" "}
+          <b>"My Account"</b>.
         </div>
         <div
           style={{
             display: "flex",
             marginTop: "1rem",
             justifyContent: "center",
-            color: "rgb(13, 148, 136)",
+            color: "rgb(228, 165, 31)",
           }}
         >
           Redirecting to order page in {timer} seconds ...
