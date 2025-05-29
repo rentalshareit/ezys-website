@@ -9,7 +9,6 @@ import {
   WhatsAppOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import logo from "@/images/logo.png";
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 

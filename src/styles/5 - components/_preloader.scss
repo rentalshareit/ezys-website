@@ -4,13 +4,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    background: $background-color;
-    animation: fadeIn .5s ease;
 
     img {
         width: 200px;
-        height: 120px;
         object-fit: contain;
     }
 }

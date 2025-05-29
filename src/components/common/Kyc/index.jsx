@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Steps, ConfigProvider } from "antd";
 import PropType from "prop-types";
-import logo from "@/images/logo-tb.png";
+import logo from "@/images/ezys-logo.png";
 import Modal from "../Modal";
 import Address from "./address";
 import Identification from "./identification";

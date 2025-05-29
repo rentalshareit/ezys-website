@@ -1,9 +1,9 @@
 import React from "react";
-import logo from "@/images/logo-tb.png";
+import logo from "@/images/ezys-loader.gif";
 
 const Preloader = () => (
   <div className="preloader">
-    <img alt="Ezys logo wordmark" className="rotating" src={logo} />
+    <img alt="Ezys Loader" src={logo} />
   </div>
 );
 
