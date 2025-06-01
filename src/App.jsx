@@ -3,6 +3,7 @@ import { Preloader } from "@/components/common";
 import PropType from "prop-types";
 import React, { StrictMode, useEffect } from "react";
 import { Provider } from "react-redux";
+import { ConfigProvider } from "antd";
 import { Helmet } from "react-helmet";
 import { PersistGate } from "redux-persist/integration/react";
 import AppRouter from "@/routers/AppRouter";
@@ -31,17 +32,32 @@ const App = ({ store, persistor }) => {
 
   return (
     <StrictMode>
-      <Provider store={store}>
-        <Helmet>
-          <script
-            async
-            src="https://d2mpatx37cqexb.cloudfront.net/delightchat-whatsapp-widget/embeds/embed.min.js"
-          ></script>
-        </Helmet>
-        <PersistGate loading={<Preloader />} persistor={persistor}>
-          <AppRouter />
-        </PersistGate>
-      </Provider>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "rgb(13, 148, 136)",
+            fontSize: 10,
+            colorText: "#0d9488",
+          },
+          components: {
+            Button: {
+              colorTextLightSolid: "#FFF",
+            },
+          },
+        }}
+      >
+        <Provider store={store}>
+          <Helmet>
+            <script
+              async
+              src="https://d2mpatx37cqexb.cloudfront.net/delightchat-whatsapp-widget/embeds/embed.min.js"
+            ></script>
+          </Helmet>
+          <PersistGate loading={<Preloader />} persistor={persistor}>
+            <AppRouter />
+          </PersistGate>
+        </Provider>
+      </ConfigProvider>
     </StrictMode>
   );
 };

@@ -27,7 +27,14 @@ const FormSchema = Yup.object().shape({
   tncAccepted: Yup.boolean().isTrue(),
 });
 
-const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
+const Payment = ({
+  payment,
+  shipping,
+  profile,
+  basket,
+  subtotal,
+  miscCharges,
+}) => {
   const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const dispatch = useDispatch();
@@ -69,6 +76,7 @@ const Payment = ({ payment, shipping, profile, basket, subtotal }) => {
           email: shipping.email,
           deliveryTimeSlot: shipping.deliveryTimeSlot,
           amount: subtotal,
+          shippingCharges: miscCharges.shippingCharges,
           payment: values.type,
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),
           tags: basket.map((b) => b.tags.join("\n")).join("\n"),

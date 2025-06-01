@@ -2,11 +2,13 @@
 /* eslint-disable react/forbid-prop-types */
 import PropType from "prop-types";
 import React from "react";
+import { Input } from "antd";
 
 const CustomInput = ({
   field,
   form: { touched, errors },
   label,
+  placeholder,
   inputRef,
   ...props
 }) => (
@@ -18,13 +20,10 @@ const CustomInput = ({
         {label}
       </label>
     )}
-    <input
-      type="text"
+    <Input
+      status={touched[field.name] && errors[field.name] && "error"}
+      placeholder={placeholder}
       id={field.name}
-      className={`input-form ${
-        touched[field.name] && errors[field.name] && "input-error"
-      }`}
-      ref={inputRef}
       {...field}
       {...props}
     />

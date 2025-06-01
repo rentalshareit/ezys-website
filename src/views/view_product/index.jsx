@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
-import { ImageLoader, MessageDisplay, Modal } from "@/components/common";
+import { ImageLoader, MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
 import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
 import { displayMoney } from "@/helpers/utils";
@@ -237,13 +237,11 @@ const ViewProduct = () => {
           </div>
         </div>
       )}
-      <Modal
-        isOpen={showPrice}
-        overrideStyle={{ padding: "30px 30px", width: "50rem" }}
-        onRequestClose={() => setShowPrice(false)}
-      >
-        <ProductPrice product={product} onClose={() => setShowPrice(false)} />
-      </Modal>
+      <ProductPrice
+        product={product}
+        showPrice={showPrice}
+        onClose={() => setShowPrice(false)}
+      />
     </main>
   );
 };

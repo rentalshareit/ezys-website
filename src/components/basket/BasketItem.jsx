@@ -11,6 +11,7 @@ import {
   removeFromBasket,
   updateAvailableTagItems,
 } from "@/redux/actions/basketActions";
+import { calculateProductPrice } from "@/helpers/utils";
 
 const BasketItem = ({
   product,
@@ -47,6 +48,12 @@ const BasketItem = ({
     [getAvailableSlots, product]
   );
 
+  const [originalPrice, discountedPrice] = calculateProductPrice(
+    product,
+    rentalPeriod,
+    true
+  );
+
   return (
     <div className="basket-item">
       <div style={{ display: "flex", width: "100%" }}>
@@ -72,8 +79,13 @@ const BasketItem = ({
           </div>
           <div className="basket-item-price">
             <p className="my-0">
-              {displayMoney(
-                parseInt(product.price[rentalPeriod - 1]) * product.quantity
+              {product.discount ? (
+                <>
+                  <strike>{originalPrice}</strike>
+                  <span>{discountedPrice}</span>
+                </>
+              ) : (
+                originalPrice
               )}
             </p>
           </div>

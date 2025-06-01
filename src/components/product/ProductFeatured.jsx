@@ -1,39 +1,63 @@
 import { ImageLoader } from "@/components/common";
+import { Badge, Button, Card } from "antd";
 import PropType from "prop-types";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useHistory } from "react-router-dom";
+import ProductPrice from "./ProductPrice";
 
 const ProductFeatured = ({ product }) => {
+  const [showPrice, setShowPrice] = useState(false);
   const history = useHistory();
-  const onClickItem = () => {
-    if (!product) return;
 
+  const onClickItem = useCallback(() => {
+    if (!product) return;
     history.push(`/product/${product.id}`);
-  };
+  }, []);
+
+  const onViewPriceClick = useCallback((e) => {
+    e.stopPropagation();
+    setShowPrice(true);
+  }, []);
 
   return (
-    <SkeletonTheme color="#e1e1e1" highlightColor="#f2f2f2">
-      <div
-        className="product-display"
-        onClick={onClickItem}
-        role="presentation"
+    <div style={{ marginTop: "10px" }}>
+      <Badge
+        color="rgb(13,148,136)"
+        count={product.discount ? `${product.discount}% off` : 0}
       >
-        <div className="product-display-img">
-          {product.image ? (
-            <ImageLoader className="product-card-img" src={product.image} />
-          ) : (
-            <Skeleton width="100%" height="100%" />
-          )}
-        </div>
-        <div className="product-display-details">
-          <p>{product.name || <Skeleton width={80} />}</p>
-          <p className="text-subtle">
-            {product.brand || <Skeleton width={40} />}
-          </p>
-        </div>
-      </div>
-    </SkeletonTheme>
+        <Card
+          hoverable
+          loading={!product?.image}
+          onClick={onClickItem}
+          style={{
+            width: 240,
+            height: 420,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+          size="small"
+          actions={[
+            <Button
+              type="primary"
+              className="button-view-price"
+              onClick={onViewPriceClick}
+            >
+              View Price
+            </Button>,
+          ]}
+          cover={<img src={product.image} />}
+        >
+          <Card.Meta title={product.name} description={product.brand} />
+        </Card>
+      </Badge>
+      <ProductPrice
+        product={product}
+        onClose={() => setShowPrice(false)}
+        showPrice={showPrice}
+      />
+    </div>
   );
 };
 

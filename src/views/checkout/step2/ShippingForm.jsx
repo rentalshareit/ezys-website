@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   CustomInput,
-  CustomMobileInput,
   CustomTextarea,
   CustomCreatableSelect,
 } from "@/components/formik";
 import { Field, useFormikContext } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
+import { updateMiscCharges } from "@/redux/actions/checkoutActions";
 
 const deliveryTimeSlots = [
   { label: "11 AM - 1 PM", value: "11-13" },
@@ -19,6 +19,7 @@ const deliveryTimeSlots = [
 
 const ShippingForm = () => {
   const { values } = useFormikContext();
+
   return (
     <div className="checkout-shipping-wrapper">
       <div className="checkout-shipping-form">
@@ -53,10 +54,12 @@ const ShippingForm = () => {
             />
           </div>
           <div className="d-block checkout-field">
-            <CustomMobileInput
-              name="mobile"
-              disabled
-              defaultValue={values.mobile}
+            <Field
+              name="pinCode"
+              type="number"
+              label="* Pin Code"
+              placeholder="Enter your pin code"
+              component={CustomInput}
             />
           </div>
         </div>

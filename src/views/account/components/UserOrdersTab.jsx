@@ -173,7 +173,8 @@ const UserOrdersTab = () => {
                     </span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                    Shipping Charges: <span>{displayMoney(0)}</span>
+                    Shipping Charges:{" "}
+                    <span>{displayMoney(d.shippingCharges || 0)}</span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                     Discount:{" "}

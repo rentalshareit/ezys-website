@@ -1,5 +1,5 @@
 import { CheckOutlined } from "@ant-design/icons";
-import { ImageLoader } from "@/components/common";
+import { ImageLoader, Modal } from "@/components/common";
 import { displayMoney } from "@/helpers/utils";
 import PropType from "prop-types";
 import React from "react";
@@ -9,102 +9,81 @@ import { getTheme } from "@table-library/react-table-library/baseline";
 import { usePagination } from "@table-library/react-table-library/pagination";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useHistory } from "react-router-dom";
+import { Table } from "antd";
+import { calculateProductPrice } from "@/helpers/utils";
 
-const ProductPrice = ({ product, onClose }) => {
-  const stripedTheme = {
-    BaseRow: `
-        font-size: 12px;
-      `,
-    HeaderRow: `
-        background-color: rgb(13, 148, 136);
-        color: #fff;
-      `,
-  };
-
-  const theme = useTheme([getTheme(), stripedTheme]);
-  function onPaginationChange(action, state) {
-    console.log(action, state);
-  }
-
-  const data = {
-    nodes: product.price.map((p, index) => ({
+const ProductPrice = ({ product, onClose, showPrice }) => {
+  const data = (product?.price || []).map((p, index) => {
+    const [original, discounted] = calculateProductPrice(
+      product,
+      index + 1,
+      true
+    );
+    return {
       days: index + 1,
-      price: p,
-    })),
-  };
-
-  const pagination = usePagination(data, {
-    state: {
-      page: 0,
-      size: 5,
-    },
-    onChange: onPaginationChange,
+      original,
+      discounted,
+    };
   });
 
-  const COLUMNS = [
-    { label: "Days", renderCell: (item) => item.days },
+  const columns = [
+    { title: "Days", key: "days", dataIndex: "days" },
     {
-      label: "Price Per Day",
-      renderCell: (item) => displayMoney(item.price / item.days),
+      title: "Original Price",
+      key: "original",
+      dataIndex: "original",
     },
-    {
-      label: "Total Price",
-      renderCell: (item) => displayMoney(item.price),
-    },
-  ];
+    product.discount
+      ? {
+          title: "Discounted Price",
+          key: "discounted",
+          dataIndex: "discounted",
+        }
+      : null,
+  ].filter((_) => _);
+
+  if (!product) return null;
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "5px",
-        }}
-      >
-        <h6>Price chart for 30 days</h6>
+    <Modal
+      isOpen={showPrice}
+      overrideStyle={{ padding: "30px 30px", width: "50rem" }}
+      onRequestClose={onClose}
+    >
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "15px",
+          }}
+        >
+          <h6>Price Table</h6>
+        </div>
+        <Table
+          columns={columns}
+          dataSource={data}
+          size="small"
+          pagination={{ defaultPageSize: 5 }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 10,
+          }}
+        >
+          <button
+            className="button button-small"
+            onClick={onClose}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
       </div>
-      <CompactTable
-        columns={COLUMNS}
-        data={data}
-        theme={theme}
-        pagination={pagination}
-      />
-      <div
-        style={{
-          display: "flex",
-          marginTop: 20,
-        }}
-      >
-        <span>
-          Page:{" "}
-          {pagination.state.getPages(data.nodes).map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              style={{
-                fontWeight: pagination.state.page === index ? "bold" : "normal",
-                marginLeft: 10,
-              }}
-              onClick={() => pagination.fns.onSetPage(index)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </span>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 10,
-        }}
-      >
-        <button className="button button-small" onClick={onClose} type="button">
-          Close
-        </button>
-      </div>
-    </div>
+    </Modal>
   );
 };
 

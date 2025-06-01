@@ -71,15 +71,7 @@ const Kyc = ({ orderId, onClose }) => {
   }
 
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: "#0d9488",
-          fontSize: 10,
-          colorText: "#0d9488",
-        },
-      }}
-    >
+    <>
       <div
         style={{
           display: "flex",
@@ -131,7 +123,7 @@ const Kyc = ({ orderId, onClose }) => {
         )}
         {current === 2 && <Address onSubmit={onSubmit} orderId={orderId} />}
       </div>
-    </ConfigProvider>
+    </>
   );
 };
 

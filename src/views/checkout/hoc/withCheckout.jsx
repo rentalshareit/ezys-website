@@ -9,6 +9,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useIdleRouteRedirect } from "@/hooks";
+import { calculateProductPrice } from "@/helpers/utils";
 
 const withCheckout = (Component) =>
   withRouter((props) => {
@@ -27,14 +28,20 @@ const withCheckout = (Component) =>
       isAuth: !!store.auth.id && !!store.auth.role,
       basket: store.basket,
       shipping: store.checkout.shipping,
+      miscCharges: store.checkout.miscCharges,
       payment: store.checkout.payment,
       profile: store.profile,
     }));
 
     const subtotal = calculateTotal(
-      state.basket.map(
-        (product) => product.price[product.period.days - 1] * product.quantity
-      )
+      state.basket.map((product) => {
+        const [original, discounted] = calculateProductPrice(
+          product,
+          product.period.days
+        );
+        if (product.disount) return discounted;
+        return original;
+      })
     );
 
     if (state.isAuth) {
@@ -47,6 +54,7 @@ const withCheckout = (Component) =>
           shipping={state.shipping}
           profile={state.profile}
           subtotal={Number(subtotal)}
+          miscCharges={state.miscCharges}
         />
       );
     }

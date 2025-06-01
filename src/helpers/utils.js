@@ -43,6 +43,32 @@ export const calculateTotal = (arr) => {
   return total.toFixed(2);
 };
 
+export const calculateProductPrice = (
+  product,
+  rentalPeriod,
+  format = false
+) => {
+  if (!product || !rentalPeriod) return 0;
+
+  const price = parseInt(product.price[rentalPeriod - 1]);
+  const discount = product.discount || 0;
+
+  // Calculate the final price after discount
+  const finalPrice = price - (price * discount) / 100;
+
+  const originalPrice = price * product.quantity;
+  const discountedPrice = finalPrice * product.quantity;
+
+  if (format) {
+    return [
+      displayMoney(originalPrice.toFixed(2)),
+      displayMoney(discountedPrice.toFixed(2)),
+    ];
+  }
+
+  return [originalPrice.toFixed(2), discountedPrice.toFixed(2)];
+};
+
 export const displayActionMessage = (msg, status = "info") => {
   const div = document.createElement("div");
   const span = document.createElement("span");

@@ -9,7 +9,10 @@ import PropType from "prop-types";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setShippingDetails } from "@/redux/actions/checkoutActions";
+import {
+  setShippingDetails,
+  updateMiscCharges,
+} from "@/redux/actions/checkoutActions";
 import * as Yup from "yup";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
@@ -25,6 +28,9 @@ const FormSchema = Yup.object().shape({
     .email("Email is not valid.")
     .required("Email is required."),
   address: Yup.string().required("Shipping address is required."),
+  pinCode: Yup.string()
+    .required("Pin code is required.")
+    .matches(/^[1-9][0-9]{5}$/, "Pin code must be valid and exactly 6 digits."),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),
@@ -36,7 +42,7 @@ const FormSchema = Yup.object().shape({
   isDone: Yup.boolean(),
 });
 
-const ShippingDetails = ({ profile, shipping, subtotal }) => {
+const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
   useDocumentTitle("Check Out Step 2 | Ezys");
   useScrollTop();
   const dispatch = useDispatch();
@@ -46,9 +52,11 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
     fullname: shipping.fullname || profile.fullname || "",
     email: shipping.email || profile.email || "",
     address: shipping.address || profile.address || "",
-    mobile: shipping.mobile || profile.mobile || {},
+    mobile: profile.mobile,
     isDone: shipping.isDone || false,
     deliveryTimeSlot: shipping.deliveryTimeSlot || "11-13",
+    pinCode: shipping.pinCode || "",
+    shippingCharges: miscCharges.shippingCharges || null,
   };
 
   const onSubmitForm = (form) => {
@@ -59,7 +67,13 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
         address: form.address,
         mobile: form.mobile,
         deliveryTimeSlot: form.deliveryTimeSlot,
+        pinCode: form.pinCode,
         isDone: true,
+      })
+    );
+    dispatch(
+      updateMiscCharges({
+        shippingCharges: form.shippingCharges,
       })
     );
     history.push(CHECKOUT_STEP_3, {
@@ -79,7 +93,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
             validationSchema={FormSchema}
             onSubmit={onSubmitForm}
           >
-            {() => (
+            {({ values }) => (
               <Form>
                 <ShippingForm />
                 <br />
@@ -109,6 +123,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
                   <button
                     className="button button-icon button-small"
                     type="submit"
+                    disabled={values.shippingCharges === null}
                   >
                     Next Step &nbsp;
                     <ArrowRightOutlined />
