@@ -74,7 +74,7 @@ const Payment = ({
           })`,
           email: shipping.email,
           deliveryTimeSlot: shipping.deliveryTimeSlot,
-          amount: subtotal,
+          amount: subtotal + miscCharges.shippingCharges || 0,
           shippingCharges: miscCharges.shippingCharges,
           payment: values.type,
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),

@@ -33,6 +33,7 @@ const withCheckout = (Component) =>
       profile: store.profile,
     }));
 
+    // Subtotal calculation does not include any discounts or offers or shipping charges
     const subtotal = calculateTotal(state?.basket);
 
     if (state.isAuth) {
