@@ -27,7 +27,7 @@ function* rootSaga() {
     ],
     productSaga
   );
-  yield takeLatest([ACTION.UPDATE_EMAIL, ACTION.UPDATE_PROFILE], profileSaga);
+  yield takeLatest([ACTION.UPDATE_PROFILE], profileSaga);
 }
 
 export default rootSaga;

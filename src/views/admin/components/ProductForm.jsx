@@ -89,7 +89,8 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     included: product?.included || "",
     configuration: product?.configuration || "",
     features: product?.features || "",
-    tags: product?.tags || "",
+    tags: product?.tags || [],
+    discount: product?.discount || 0,
   };
 
   const { imageFile, isFileLoading, onFileChange, removeImage } =
@@ -209,6 +210,16 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     type="number"
                     id="maxQuantity"
                     label="* Max Quantity"
+                    component={CustomInput}
+                  />
+                </div>
+                <div className="product-form-field">
+                  <Field
+                    disabled={isLoading}
+                    name="discount"
+                    type="number"
+                    id="discount"
+                    label="Discount %"
                     component={CustomInput}
                   />
                 </div>

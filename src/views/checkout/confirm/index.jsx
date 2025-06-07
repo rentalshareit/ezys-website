@@ -62,11 +62,10 @@ const Confirm = ({ orderId, isOpen, email }) => {
             Please note that your order is <b>not confirmed</b> yet. It will be
             confirmed once your KYC is submitted and verified. Please complete
             the KYC to confirm your order by visitng <b>"Orders"</b> tab under{" "}
-            <b>"My Account"</b> section . <br />
+            <b>"My Account"</b> section . Your KYC must be submitted{" "}
+            <b>within 8 hours</b> to avoid order cancellation. <br />
           </span>
           <br />
-          You can check the status of your order at any time by going to{" "}
-          <b>"My Account"</b>.
         </div>
         <div
           style={{

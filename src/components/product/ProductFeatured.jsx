@@ -23,31 +23,35 @@ const ProductFeatured = ({ product }) => {
   return (
     <div style={{ marginTop: "10px" }}>
       <Badge
-        color="rgb(13,148,136)"
+        color="rgb(228, 165, 31)"
+        style={{ fontSize: "1.2rem", fontWeight: 800 }}
         count={product.discount ? `${product.discount}% off` : 0}
       >
         <Card
           hoverable
+          variant="borderless"
           loading={!product?.image}
           onClick={onClickItem}
           style={{
             width: 240,
             height: 420,
             display: "flex",
+            padding: "5px",
             flexDirection: "column",
             justifyContent: "space-between",
           }}
           size="small"
           actions={[
-            <Button
-              type="primary"
-              className="button-view-price"
-              onClick={onViewPriceClick}
-            >
+            <Button className="button-view-price" onClick={onViewPriceClick}>
               View Price
             </Button>,
           ]}
-          cover={<img src={product.image} />}
+          cover={
+            <img
+              src={product.image}
+              style={{ width: "100%", height: "280px", objectFit: "contain" }}
+            />
+          }
         >
           <Card.Meta title={product.name} description={product.brand} />
         </Card>

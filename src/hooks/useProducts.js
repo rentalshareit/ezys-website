@@ -30,7 +30,10 @@ const useProducts = (category) => {
             items[category] = items[category] || [];
             items[category].push({
               ...data,
-              price: data.price.split(",").map((a) => parseInt(a.trim())),
+              price: data.price
+                .replace(/\[|\]/g, "")
+                .split(",")
+                .map((a) => parseInt(a.trim())),
             });
           });
 

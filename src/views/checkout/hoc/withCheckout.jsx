@@ -33,16 +33,7 @@ const withCheckout = (Component) =>
       profile: store.profile,
     }));
 
-    const subtotal = calculateTotal(
-      state.basket.map((product) => {
-        const [original, discounted] = calculateProductPrice(
-          product,
-          product.period.days
-        );
-        if (product.disount) return discounted;
-        return original;
-      })
-    );
+    const subtotal = calculateTotal(state?.basket);
 
     if (state.isAuth) {
       return (

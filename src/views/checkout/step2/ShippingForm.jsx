@@ -49,7 +49,7 @@ const ShippingForm = () => {
             <Field
               name="address"
               label="* Shipping Address"
-              placeholder="Enter full shipping address"
+              placeholder="Enter full shipping address (e.g., Flat No. 101, House No. 12, Street Name, Area)"
               component={CustomTextarea}
             />
           </div>

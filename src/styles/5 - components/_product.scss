@@ -59,8 +59,24 @@
   }
 }
 
+.product-showcase-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 100px;
+  width:100%;
+  
+  @include mobile {
+    flex-direction: column;
+    align-items: center;
+  }
+  @include tablet {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+
 .product-card {
-  max-width: 180px;
+  max-width: 280px;
   height: 230px;
   border: 1px solid $border-color;
   text-align: center;
@@ -580,4 +596,8 @@
   p {
     margin-top: 0;
   }
+}
+
+.product-price-table-row {
+  color: $off-black;
 }

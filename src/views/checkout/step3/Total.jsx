@@ -8,14 +8,16 @@ import { displayMoney } from "@/helpers/utils";
 import PropType from "prop-types";
 import React from "react";
 
-const Total = ({ subtotal, loading, onClickBack, valid }) => {
+const Total = ({ subtotal, loading, onClickBack, valid, miscCharges }) => {
   const { values, submitForm } = useFormikContext();
 
   return (
     <>
       <div className="basket-total text-right">
         <p className="basket-total-title">Total:</p>
-        <h4 className="basket-total-amount">{displayMoney(subtotal)}</h4>
+        <h4 className="basket-total-amount">
+          {displayMoney(Number(subtotal + (miscCharges?.shippingCharges || 0)))}
+        </h4>
       </div>
       <div className="checkout-note-wrapper">
         <b>Note:</b>{" "}
@@ -53,6 +55,9 @@ Total.propTypes = {
   onClickBack: PropType.func.isRequired,
   subtotal: PropType.number.isRequired,
   loading: PropType.bool.isRequired,
+  miscCharges: PropType.shape({
+    shippingCharges: PropType.number,
+  }),
 };
 
 export default Total;

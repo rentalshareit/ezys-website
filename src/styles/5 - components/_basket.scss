@@ -86,6 +86,15 @@
   }
 }
 
+.basket-item-discount {
+  display: flex;
+  flex-direction: column;
+
+  strike {
+    color: $red
+  }
+}
+
 .basket-empty {
   flex-grow: 1;
   display: flex;

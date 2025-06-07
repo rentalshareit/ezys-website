@@ -35,14 +35,6 @@ export const displayMoney = (n) => {
   return format.format(n);
 };
 
-export const calculateTotal = (arr) => {
-  if (!arr || arr?.length === 0) return 0;
-
-  const total = arr.reduce((acc, val) => acc + val, 0);
-
-  return total.toFixed(2);
-};
-
 export const calculateProductPrice = (
   product,
   rentalPeriod,
@@ -66,39 +58,27 @@ export const calculateProductPrice = (
     ];
   }
 
-  return [originalPrice.toFixed(2), discountedPrice.toFixed(2)];
+  return [Number(originalPrice.toFixed(2)), Number(discountedPrice.toFixed(2))];
 };
 
-export const displayActionMessage = (msg, status = "info") => {
-  const div = document.createElement("div");
-  const span = document.createElement("span");
+export const calculateTotal = (basket, format = false) => {
+  if (!basket || basket?.length === 0) return format ? displayMoney(0) : 0;
 
-  div.className = `toast ${
-    status === "info"
-      ? "toast-info"
-      : status === "success"
-      ? "toast-success"
-      : "toast-error"
-    // eslint-disable-next-line indent
-  }`;
-  span.className = "toast-msg";
-  span.textContent = msg;
-  div.appendChild(span);
+  const prices = basket.map((product) => {
+    const [original, discounted] = calculateProductPrice(
+      product,
+      product.period.days
+    );
+    if (product.discount) return discounted;
+    return original;
+  });
 
-  if (document.querySelector(".toast")) {
-    document.body.removeChild(document.querySelector(".toast"));
-    document.body.appendChild(div);
-  } else {
-    document.body.appendChild(div);
+  const total = prices.reduce((acc, val) => acc + val, 0);
+
+  if (format) {
+    return displayMoney(total.toFixed(2));
   }
-
-  setTimeout(() => {
-    try {
-      document.body.removeChild(div);
-    } catch (e) {
-      console.log(e);
-    }
-  }, 3000);
+  return Number(total.toFixed(2));
 };
 
 export function waitForGlobal(name, timeout = 300) {

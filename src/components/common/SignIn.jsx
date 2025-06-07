@@ -1,7 +1,7 @@
 import { ArrowRightOutlined, LoadingOutlined } from "@ant-design/icons";
+import { App } from "antd";
 import firebase from "firebase";
 import { CustomInput, CustomMobileInput } from "@/components/formik";
-import { displayActionMessage } from "@/helpers/utils";
 import { Field, Form, Formik } from "formik";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
@@ -29,6 +29,7 @@ const SignInSchema = Yup.object().shape({
 });
 
 const SignIn = ({ onClose }) => {
+  const { notification } = App.useApp();
   const [showOtp, setShowOtp] = useState(false);
   const { authStatus, isAuthenticating, loading } = useSelector((state) => ({
     authStatus: state.app.authStatus,
@@ -58,7 +59,9 @@ const SignIn = ({ onClose }) => {
 
   useEffect(() => {
     if (!authStatus?.success && authStatus?.message) {
-      displayActionMessage(authStatus?.message, "error");
+      notification.error({
+        message: authStatus?.message,
+      });
     }
   }, [authStatus]);
 

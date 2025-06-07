@@ -8,7 +8,9 @@ import { useShippingCharges } from "@/hooks";
 
 const ShippingTotal = ({ subtotal }) => {
   const { values, setFieldValue } = useFormikContext();
-  const shippingCharges = useShippingCharges(values.pinCode);
+  const [shippingCharges, isDistanceLoading] = useShippingCharges(
+    values.pinCode
+  );
 
   useEffect(() => {
     setFieldValue("shippingCharges", shippingCharges);
@@ -35,12 +37,14 @@ const ShippingTotal = ({ subtotal }) => {
                 }}
               >
                 <h4 className="basket-total-amount text-subtle text-right margin-0 ">
-                  {!inProgress
+                  {shippingCharges !== null && !isDistanceLoading
                     ? displayMoney(shippingCharges)
-                    : "will be calculated once you enter address details"}
+                    : isDistanceLoading
+                    ? "Calculating..."
+                    : "Not available"}
                 </h4>
                 <Tooltip
-                  title="Shipping charges are calculated based on the delivery address"
+                  title="Shipping charges depend on your delivery address"
                   placement="top"
                 >
                   <InfoCircleFilled
@@ -70,11 +74,13 @@ const ShippingTotal = ({ subtotal }) => {
               </span>
             </td>
             <td>
-              <h4 className="basket-total-amount text-right">
-                {!inProgress
+              <h6 className="basket-total-amount text-right">
+                {shippingCharges !== null && !isDistanceLoading
                   ? displayMoney(Number(subtotal + shippingCharges))
-                  : "will be calculated once you enter address details"}
-              </h4>
+                  : isDistanceLoading
+                  ? "Calculating..."
+                  : "Not available"}
+              </h6>
             </td>
           </tr>
         </tbody>

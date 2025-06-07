@@ -50,6 +50,7 @@ const AddProduct = () => {
             configuration: "",
             features: "",
             imageCollection: [],
+            tags: [],
           }}
         />
       </Suspense>

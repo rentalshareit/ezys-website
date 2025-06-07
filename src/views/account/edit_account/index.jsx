@@ -9,7 +9,7 @@ import {
 } from "@/hooks";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Spin } from "antd";
+import { Spin, App } from "antd";
 import { setLoading } from "@/redux/actions/miscActions";
 import { updateProfile } from "@/redux/actions/profileActions";
 import * as Yup from "yup";
@@ -33,6 +33,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const EditProfile = () => {
+  const { notification } = App.useApp();
   useDocumentTitle("Edit Account | Ezys");
   useScrollTop();
 
@@ -66,20 +67,23 @@ const EditProfile = () => {
 
   const update = (form) => {
     dispatch(
-      updateProfile({
-        updates: {
-          fullname: form.fullname,
-          email: form.email,
-          address: form.address,
-          mobile: form.mobile,
-          avatar: profile.avatar,
-          banner: profile.banner,
+      updateProfile(
+        {
+          updates: {
+            fullname: form.fullname,
+            email: form.email,
+            address: form.address,
+            mobile: form.mobile,
+            avatar: profile.avatar,
+            banner: profile.banner,
+          },
+          files: {
+            bannerFile: imageFile.banner.file,
+            avatarFile: imageFile.avatar.file,
+          },
         },
-        files: {
-          bannerFile: imageFile.banner.file,
-          avatarFile: imageFile.avatar.file,
-        },
-      })
+        notification
+      )
     );
   };
 

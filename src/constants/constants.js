@@ -38,7 +38,6 @@ export const ON_AUTHSTATE_FAIL = "ON_AUTHSTATE_FAIL";
 export const SEND_OTP = "SEND_OTP";
 export const VERIFY_OTP = "VERIFY_OTP";
 
-export const UPDATE_EMAIL = "UPDATE_EMAIL";
 export const SET_PROFILE = "SET_PROFILE";
 export const UPDATE_PROFILE = "UPDATE_PROFILE";
 export const UPDATE_PROFILE_SUCCESS = "UPDATE_PROFILE_SUCCESS";

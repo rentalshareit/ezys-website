@@ -6,20 +6,20 @@ import PropType from "prop-types";
 import React from "react";
 
 const ProductShowcase = ({ products, skeletonCount, showAll }) => (
-  <div className={classNames({ "show-less": !showAll })}>
-    <Flex wrap gap="large" justify="space-around">
-      {products.length === 0
-        ? new Array(skeletonCount).fill({}).map((product, index) => (
-            <FeaturedProduct
-              // eslint-disable-next-line react/no-array-index-key
-              key={`product-skeleton ${index}`}
-              product={product}
-            />
-          ))
-        : products.map((product) => (
-            <FeaturedProduct key={product.id} product={product} />
-          ))}
-    </Flex>
+  <div
+    className={classNames("product-showcase-grid", { "show-less": !showAll })}
+  >
+    {products.length === 0
+      ? new Array(skeletonCount).fill({}).map((product, index) => (
+          <FeaturedProduct
+            // eslint-disable-next-line react/no-array-index-key
+            key={`product-skeleton ${index}`}
+            product={product}
+          />
+        ))
+      : products.map((product) => (
+          <FeaturedProduct key={product.id} product={product} />
+        ))}
   </div>
 );
 

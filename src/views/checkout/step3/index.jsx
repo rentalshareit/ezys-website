@@ -6,7 +6,6 @@ import {
   CANCELLATION,
 } from "@/constants/routes";
 import { Form, Formik } from "formik";
-import { displayActionMessage } from "@/helpers/utils";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
 import React, { useState, useEffect } from "react";
@@ -156,6 +155,7 @@ const Payment = ({
             <Total
               valid={props.isValid}
               subtotal={subtotal}
+              miscCharges={miscCharges}
               loading={loading}
               onClickBack={onClickBack}
             />

@@ -93,7 +93,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
             validationSchema={FormSchema}
             onSubmit={onSubmitForm}
           >
-            {({ values }) => (
+            {({ values, isValid }) => (
               <Form>
                 <ShippingForm />
                 <br />
@@ -123,7 +123,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
                   <button
                     className="button button-icon button-small"
                     type="submit"
-                    disabled={values.shippingCharges === null}
+                    disabled={!isValid || values.shippingCharges === null}
                   >
                     Next Step &nbsp;
                     <ArrowRightOutlined />

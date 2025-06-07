@@ -349,15 +349,7 @@ const Basket = () => {
             <div className="basket-total">
               <span className="basket-total-title">Subtotal Amout:</span>
               <h4 className="basket-total-amount">
-                {displayMoney(
-                  calculateTotal(
-                    basket.map(
-                      (product) =>
-                        parseInt(product.price[getRentalPeriod() - 1]) *
-                        product.quantity
-                    )
-                  )
-                )}
+                {calculateTotal(basket, true)}
               </h4>
             </div>
             <button

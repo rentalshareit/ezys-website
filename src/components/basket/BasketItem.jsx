@@ -80,10 +80,10 @@ const BasketItem = ({
           <div className="basket-item-price">
             <p className="my-0">
               {product.discount ? (
-                <>
+                <div className="basket-item-discount">
                   <strike>{originalPrice}</strike>
                   <span>{discountedPrice}</span>
-                </>
+                </div>
               ) : (
                 originalPrice
               )}

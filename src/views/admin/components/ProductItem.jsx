@@ -1,18 +1,16 @@
 import { ImageLoader } from "@/components/common";
 import { EDIT_PRODUCT } from "@/constants/routes";
-import {
-  displayActionMessage,
-  displayDate,
-  displayMoney,
-} from "@/helpers/utils";
+import { displayDate, displayMoney } from "@/helpers/utils";
 import PropType from "prop-types";
 import React, { useRef } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { useDispatch } from "react-redux";
+import { App } from "antd";
 import { useHistory, withRouter } from "react-router-dom";
 import { removeProduct } from "@/redux/actions/productActions";
 
 const ProductItem = ({ product }) => {
+  const { notification } = App.useApp();
   const dispatch = useDispatch();
   const history = useHistory();
   const productRef = useRef(null);
@@ -27,7 +25,9 @@ const ProductItem = ({ product }) => {
 
   const onConfirmDelete = () => {
     dispatch(removeProduct(product.id));
-    displayActionMessage("Item successfully deleted");
+    notification.info({
+      message: "Item successfully deleted",
+    });
     productRef.current.classList.remove("item-active");
   };
 

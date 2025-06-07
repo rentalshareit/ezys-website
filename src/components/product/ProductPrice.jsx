@@ -29,11 +29,11 @@ const ProductPrice = ({ product, onClose, showPrice }) => {
   const columns = [
     { title: "Days", key: "days", dataIndex: "days" },
     {
-      title: "Original Price",
+      title: product?.discount ? "Original Price" : "Price",
       key: "original",
       dataIndex: "original",
     },
-    product.discount
+    product?.discount
       ? {
           title: "Discounted Price",
           key: "discounted",
@@ -51,18 +51,23 @@ const ProductPrice = ({ product, onClose, showPrice }) => {
       onRequestClose={onClose}
     >
       <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "15px",
-          }}
-        >
-          <h6>Price Table</h6>
-        </div>
         <Table
           columns={columns}
+          title={() => (
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                fontSize: "1.2rem",
+                width: "100%",
+                color: "#303030",
+              }}
+            >
+              Price chart for {product.name}
+            </div>
+          )}
           dataSource={data}
+          rowClassName="product-price-table-row"
           size="small"
           pagination={{ defaultPageSize: 5 }}
         />
@@ -71,7 +76,6 @@ const ProductPrice = ({ product, onClose, showPrice }) => {
           style={{
             display: "flex",
             justifyContent: "flex-end",
-            marginTop: 10,
           }}
         >
           <button

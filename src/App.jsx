@@ -3,7 +3,7 @@ import { Preloader } from "@/components/common";
 import PropType from "prop-types";
 import React, { StrictMode, useEffect } from "react";
 import { Provider } from "react-redux";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, App as AntApp } from "antd";
 import { Helmet } from "react-helmet";
 import { PersistGate } from "redux-persist/integration/react";
 import AppRouter from "@/routers/AppRouter";
@@ -35,28 +35,53 @@ const App = ({ store, persistor }) => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "rgb(13, 148, 136)",
-            fontSize: 10,
-            colorText: "#0d9488",
+            colorError: "rgba(247, 45, 45, 0.986)",
+            colorWarning: "rgb(228, 165, 31)",
+            colorSuccess: "rgb(13, 148, 136)",
+            colorInfo: "rgb(13, 148, 136)",
+            fontSize: 12,
           },
           components: {
             Button: {
               colorTextLightSolid: "#FFF",
+              colorPrimary: "rgb(13, 148, 136)",
+              defaultBg: "rgb(13, 148, 136)",
+              defaultBorder: "rgb(13, 148, 136)",
+              defaultHoverBg: "rgb(9,103,95)",
+              defaultActiveColor: "rgb(9,103,95)",
+              defaultHoverColor: "rgb(9,103,95)",
+              defaultActiveBorderColor: "rgb(9,103,95)",
+              defaultHoverBorderColor: "rgb(9,103,95)",
+            },
+            Input: {
+              hoverBorderColor: "rgb(9,103,95)",
+            },
+            Table: {
+              headerBg: "rgb(13, 148, 136)",
+              headerColor: "#FFF",
             },
           },
         }}
       >
-        <Provider store={store}>
-          <Helmet>
-            <script
-              async
-              src="https://d2mpatx37cqexb.cloudfront.net/delightchat-whatsapp-widget/embeds/embed.min.js"
-            ></script>
-          </Helmet>
-          <PersistGate loading={<Preloader />} persistor={persistor}>
-            <AppRouter />
-          </PersistGate>
-        </Provider>
+        <AntApp
+          notification={{
+            showProgress: true,
+            pauseOnHover: true,
+            placement: "topRight",
+          }}
+        >
+          <Provider store={store}>
+            <Helmet>
+              <script
+                async
+                src="https://d2mpatx37cqexb.cloudfront.net/delightchat-whatsapp-widget/embeds/embed.min.js"
+              ></script>
+            </Helmet>
+            <PersistGate loading={<Preloader />} persistor={persistor}>
+              <AppRouter />
+            </PersistGate>
+          </Provider>
+        </AntApp>
       </ConfigProvider>
     </StrictMode>
   );

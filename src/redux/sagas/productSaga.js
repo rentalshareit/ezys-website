@@ -7,7 +7,6 @@ import {
   SEARCH_PRODUCT,
 } from "@/constants/constants";
 import { ADMIN_PRODUCTS } from "@/constants/routes";
-import { displayActionMessage } from "@/helpers/utils";
 import { all, call, put, select } from "redux-saga/effects";
 import { setLoading, setRequestStatus } from "@/redux/actions/miscActions";
 import { history } from "@/routers/AppRouter";
@@ -32,9 +31,9 @@ function* handleError(e) {
   console.log("ERROR: ", e);
 }
 
-function* handleAction(location, message, status) {
+function* handleAction(location, message) {
   if (location) yield call(history.push, location);
-  yield call(displayActionMessage, message, status);
+  yield call(alert, message);
 }
 
 function* productSaga({ type, payload }) {
@@ -107,15 +106,11 @@ function* productSaga({ type, payload }) {
             ...product,
           })
         );
-        yield handleAction(ADMIN_PRODUCTS, "Item succesfully added", "success");
+        yield handleAction(ADMIN_PRODUCTS, "Item succesfully added");
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(
-          undefined,
-          `Item failed to add: ${e?.message}`,
-          "error"
-        );
+        yield handleAction(undefined, `Item failed to add: ${e?.message}`);
       }
       break;
     }
@@ -188,19 +183,11 @@ function* productSaga({ type, payload }) {
             updates: newUpdates,
           })
         );
-        yield handleAction(
-          ADMIN_PRODUCTS,
-          "Item succesfully edited",
-          "success"
-        );
+        yield handleAction(ADMIN_PRODUCTS, "Item succesfully edited");
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(
-          undefined,
-          `Item failed to edit: ${e.message}`,
-          "error"
-        );
+        yield handleAction(undefined, `Item failed to edit: ${e.message}`);
       }
       break;
     }
@@ -210,18 +197,10 @@ function* productSaga({ type, payload }) {
         yield call(firebase.removeProduct, payload);
         yield put(removeProductSuccess(payload));
         yield put(setLoading(false));
-        yield handleAction(
-          ADMIN_PRODUCTS,
-          "Item succesfully removed",
-          "success"
-        );
+        yield handleAction(ADMIN_PRODUCTS, "Item succesfully removed");
       } catch (e) {
         yield handleError(e);
-        yield handleAction(
-          undefined,
-          `Item failed to remove: ${e.message}`,
-          "error"
-        );
+        yield handleAction(undefined, `Item failed to remove: ${e.message}`);
       }
       break;
     }
