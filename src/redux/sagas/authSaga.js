@@ -95,7 +95,9 @@ function* authSaga({ type, payload }) {
         const user = snapshot.data();
 
         yield put(setProfile(user));
-        yield put(setBasketItems(user.basket));
+
+        // TODO: Always setting basket to empty when user signs in. We have to fix this.
+        // yield put(setBasketItems([]));
         yield put(
           signInSuccess({
             id: payload.uid,

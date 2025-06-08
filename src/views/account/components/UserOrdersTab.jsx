@@ -182,9 +182,10 @@ const UserOrdersTab = () => {
                       {displayMoney(
                         d.items.reduce(
                           (acc, i) => acc + i.price * i.quantity,
-                          d.shippingCharges || 0
+                          0
                         ) *
-                          d.rentalDays -
+                          d.rentalDays +
+                          (d.shippingCharges || 0) -
                           d.totalPrice
                       )}
                     </span>
