@@ -20,6 +20,7 @@ import coverImg from "@/images/gaming_banner.jpeg";
 import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+// TODO: Uncomment this as it flickers on mobile devices
 const steps = [
   {
     title: "See All",
@@ -36,11 +37,11 @@ const steps = [
     description: "Click to view product details.",
     target: () => document.querySelector("[id^=card-view-product-details]"),
   },
-  {
-    title: "Go To Basket",
-    description: "Click here to check your basket and proceed to checkout.",
-    target: () => document.querySelector("[id^=btn-basket-toggle]"),
-  },
+  // {
+  //   title: "Go To Basket",
+  //   description: "Click here to check your basket and proceed to checkout.",
+  //   target: () => document.querySelector("[id^=btn-basket-toggle]"),
+  // },
 ];
 
 const Home = () => {
