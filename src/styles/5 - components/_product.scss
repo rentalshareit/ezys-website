@@ -62,11 +62,12 @@
 .product-showcase-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 100px;
+  gap: 80px;
   width:100%;
   
   @include mobile {
     flex-direction: column;
+    gap: 30px;
     align-items: center;
   }
   @include tablet {

@@ -51,31 +51,27 @@ const Confirm = ({ orderId, isOpen, email }) => {
             fontSize: "1.1rem",
           }}
         >
-          Your order now has been placed. You will receive details over email
+          Your order has been placed. You will receive details over email
           shortly. <br />
           <br />
-          <span
+          <div
             style={{
               color: "rgb(13, 148, 136)",
             }}
           >
-            Please note that your order is <b>not confirmed</b> yet. It will be
-            confirmed once your KYC is submitted and verified. Please complete
-            the KYC to confirm your order by visitng <b>"Orders"</b> tab under{" "}
-            <b>"My Account"</b> section . Your KYC must be submitted{" "}
-            <b>within 8 hours</b> to avoid order cancellation. <br />
-          </span>
-          <br />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            marginTop: "1rem",
-            justifyContent: "center",
-            color: "rgb(228, 165, 31)",
-          }}
-        >
-          Redirecting to order page in {timer} seconds ...
+            To confirm your order, please complete your KYC on the order page
+            within <b>8 hours</b>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginTop: "10px",
+              justifyContent: "center",
+              color: "rgb(9,103,95)",
+            }}
+          >
+            Redirecting to order page in {timer} seconds ...
+          </div>
         </div>
       </Modal>
     </Boundary>
