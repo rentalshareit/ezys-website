@@ -129,6 +129,7 @@ const Navigation = () => {
           <BasketToggle>
             {({ onClickToggle }) => (
               <button
+                id="btn-basket-toggle"
                 className="button-link navigation-menu-link basket-toggle"
                 disabled={basketDisabledpathnames.includes(pathname)}
                 onClick={onClickToggle}

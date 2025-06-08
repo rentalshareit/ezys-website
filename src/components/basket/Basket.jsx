@@ -297,6 +297,7 @@ const Basket = () => {
             {basket.length > 0 && (
               <>
                 <DateRangePicker
+                  id="drpicker-rental-period"
                   value={date.map((d) => d.toDate())}
                   onChange={onDateChange}
                   label="Select Rental Period"

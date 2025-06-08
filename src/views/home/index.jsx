@@ -1,5 +1,5 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Spin, Tour } from "antd";
 import { MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
 import GoogleReviews from "@/components/misc/GoogleReviews";
@@ -14,12 +14,37 @@ import {
   useRecommendedProducts,
   useScrollTop,
   useProducts,
+  useTour,
 } from "@/hooks";
 import coverImg from "@/images/gaming_banner.jpeg";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
+const steps = [
+  {
+    title: "See All",
+    description: "Click to see all products in this category.",
+    target: () => document.querySelector("[id^=btn-see-all-]"),
+  },
+  {
+    title: "View Price",
+    description: "Click to view the price of the product.",
+    target: () => document.querySelector("[id^=btn-view-price-]"),
+  },
+  {
+    title: "Product Details",
+    description: "Click to view product details.",
+    target: () => document.querySelector("[id^=card-view-product-details]"),
+  },
+  {
+    title: "Go To Basket",
+    description: "Click here to check your basket and proceed to checkout.",
+    target: () => document.querySelector("[id^=btn-basket-toggle]"),
+  },
+];
+
 const Home = () => {
+  const tourProps = useTour(steps);
   const history = useHistory();
   useDocumentTitle("Ezys | Home");
   useScrollTop();
@@ -28,6 +53,7 @@ const Home = () => {
 
   return (
     <main className="content" style={{ flexDirection: "column" }}>
+      <Tour {...tourProps} />
       <div className="home">
         <div className="banner">
           <div className="banner-desc">
@@ -59,6 +85,7 @@ const Home = () => {
             <div className="display-header">
               <h3>{category}</h3>
               <button
+                id={`btn-see-all-${category}`}
                 className="button button-border button-border-primary button-small"
                 type="button"
                 onClick={() => history.push(`/products/${category}`)}

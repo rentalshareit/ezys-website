@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Spin, Tour, Badge } from "antd";
 import { ImageLoader, MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
 import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
@@ -10,10 +10,19 @@ import {
   useProduct,
   useRecommendedProducts,
   useScrollTop,
+  useTour,
 } from "@/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import Select from "react-select";
+
+const steps = [
+  {
+    title: "Add to Basket",
+    description: "Click this to add the product to your basket.",
+    target: () => document.querySelector("[id^=btn-add-basket-]"),
+  },
+];
 
 const styles = {
   view: {
@@ -41,6 +50,7 @@ const styles = {
 };
 
 const ViewProduct = () => {
+  const tourProps = useTour(steps, () => true, [], 2000);
   const [showPrice, setShowPrice] = useState(false);
   const { id } = useParams();
   const history = useHistory();
@@ -77,6 +87,7 @@ const ViewProduct = () => {
 
   return (
     <main className="content">
+      <Tour {...tourProps} />
       {isLoading && (
         <div className="loader">
           <h3>Loading Product...</h3>
@@ -93,11 +104,17 @@ const ViewProduct = () => {
         <div style={styles.view} className="product-view">
           <div className="product-modal">
             <div className="product-modal-image-wrapper">
-              <ImageLoader
-                alt={product.name}
-                className="product-modal-image"
-                src={selectedImage}
-              />
+              <Badge
+                color="rgb(228, 165, 31)"
+                style={{ fontSize: "1.2rem", fontWeight: 800 }}
+                count={product.discount ? `${product.discount}% off` : 0}
+              >
+                <ImageLoader
+                  alt={product.name}
+                  className="product-modal-image"
+                  src={selectedImage}
+                />
+              </Badge>
               {product.imageCollection.length !== 0 && (
                 <div className="product-modal-image-collection">
                   {product.imageCollection.map((image) => (
@@ -189,6 +206,7 @@ const ViewProduct = () => {
 
               <div className="product-modal-action">
                 <button
+                  id={`btn-add-basket-${product.id}`}
                   className={`button button-small ${
                     isItemOnBasket(product.id)
                       ? "button-border button-border-gray"

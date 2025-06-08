@@ -12,3 +12,5 @@ export { default as useRefreshOnISTDateChangeMoment } from "./useRefreshOnISTDat
 export { default as useIdleRouteRedirect } from "./useIdleRouteRedirect";
 export { default as useShippingCharges } from "./useShippingCharges";
 export { default as useShippingDistance } from "./useShippingDistance";
+export { default as useTour } from "./useTour";
+export { default as useIsFirstVisit } from "./useIsFirstVisit";

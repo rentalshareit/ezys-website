@@ -103,3 +103,55 @@ export function waitForGlobal(name, timeout = 300) {
     wait(30);
   });
 }
+
+export function calculateElementsThatFit(
+  elementWidth,
+  elementPaddingLeft = 0,
+  elementPaddingRight = 0,
+  elementMarginLeft = 0,
+  elementMarginRight = 0,
+  gapBetweenElements = 0 // New parameter for the gap
+) {
+  const viewportWidth = window.innerWidth;
+
+  // 1. Calculate the total occupied width of a single element (excluding the gap)
+  // This is the content width + left padding + right padding + left margin + right margin
+  const individualElementVisualWidth =
+    elementWidth +
+    elementPaddingLeft +
+    elementPaddingRight +
+    elementMarginLeft +
+    elementMarginRight;
+
+  // If there's no gap, or if the individual element already includes all spacing,
+  // we might want to handle it slightly differently.
+  // For this function, `gapBetweenElements` is distinct from individual margins.
+
+  let numberOfElements = 0;
+
+  // Edge case: If an element is wider than the viewport, 0 or 1 element can fit
+  if (individualElementVisualWidth > viewportWidth) {
+    return individualElementVisualWidth <= viewportWidth ? 1 : 0;
+  }
+
+  // Calculate based on the idea that each element takes its width + a gap,
+  // except for the last one.
+  // Let 'N' be the number of elements.
+  // Total space = N * individualElementVisualWidth + (N - 1) * gapBetweenElements
+  // Total space = N * individualElementVisualWidth + N * gapBetweenElements - gapBetweenElements
+  // Total space = N * (individualElementVisualWidth + gapBetweenElements) - gapBetweenElements
+
+  // We want to find N such that:
+  // N * (individualElementVisualWidth + gapBetweenElements) - gapBetweenElements <= viewportWidth
+  // N * (individualElementVisualWidth + gapBetweenElements) <= viewportWidth + gapBetweenElements
+  // N <= (viewportWidth + gapBetweenElements) / (individualElementVisualWidth + gapBetweenElements)
+
+  // This formula accounts for the fact that the last element doesn't have a gap *after* it.
+  numberOfElements = Math.floor(
+    (viewportWidth + gapBetweenElements) /
+      (individualElementVisualWidth + gapBetweenElements)
+  );
+
+  // One final check: Ensure we don't return a negative number if viewport is tiny or elements are huge.
+  return Math.max(0, numberOfElements);
+}

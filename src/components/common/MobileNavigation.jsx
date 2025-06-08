@@ -42,6 +42,7 @@ const Navigation = (props) => {
         <BasketToggle>
           {({ onClickToggle }) => (
             <button
+              id="btn-basket-toggle"
               className="button-link navigation-menu-link basket-toggle"
               onClick={onClickToggle}
               disabled={disabledPaths.includes(pathname)}

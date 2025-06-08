@@ -52,6 +52,7 @@ const App = ({ store, persistor }) => {
               defaultHoverColor: "rgb(9,103,95)",
               defaultActiveBorderColor: "rgb(9,103,95)",
               defaultHoverBorderColor: "rgb(9,103,95)",
+              defaultActiveBg: "rgb(9,103,95)",
             },
             Input: {
               hoverBorderColor: "rgb(9,103,95)",
