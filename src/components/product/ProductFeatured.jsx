@@ -28,7 +28,7 @@ const ProductFeatured = ({ product }) => {
         count={product.discount ? `${product.discount}% off` : 0}
       >
         <Card
-          id={`card-view-product-details-${product.id}`}
+          id={`card-view-product-details-${product.category}-${product.id}`}
           hoverable
           variant="borderless"
           loading={!product?.image}
@@ -44,7 +44,7 @@ const ProductFeatured = ({ product }) => {
           size="small"
           actions={[
             <Button
-              id={`btn-view-price-${product.id}`}
+              id={`btn-view-price-${product.category}-${product.id}`}
               className="button-view-price"
               onClick={onViewPriceClick}
             >

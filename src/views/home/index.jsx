@@ -23,19 +23,24 @@ import { Link, useHistory } from "react-router-dom";
 // TODO: Uncomment this as it flickers on mobile devices
 const steps = [
   {
-    title: "See All",
-    description: "Click to see all products in this category.",
-    target: () => document.querySelector("[id^=btn-see-all-]"),
+    title: "Console Category",
+    description: "Click this to see all types of consoles like PS4, PS5.",
+    target: () => document.querySelector("[id='btn-see-all-Gaming Consoles']"),
   },
   {
-    title: "View Price",
-    description: "Click to view the price of the product.",
-    target: () => document.querySelector("[id^=btn-view-price-]"),
+    title: "Product Price",
+    description:
+      "Click here to view the price of the product for 1-30 days rental.",
+    target: () =>
+      document.querySelector("[id^='btn-view-price-Gaming Consoles-']"),
   },
   {
     title: "Product Details",
-    description: "Click to view product details.",
-    target: () => document.querySelector("[id^=card-view-product-details]"),
+    description: "Click this to view product details.",
+    target: () =>
+      document.querySelector(
+        "[id^='card-view-product-details-Gaming Consoles-']"
+      ),
   },
   // {
   //   title: "Go To Basket",
@@ -45,12 +50,17 @@ const steps = [
 ];
 
 const Home = () => {
-  const tourProps = useTour(steps);
   const history = useHistory();
   useDocumentTitle("Ezys | Home");
   useScrollTop();
 
   const { products, fetchProducts, isLoading, error } = useProducts();
+  const tourProps = useTour(
+    steps,
+    () => !!Object.keys(products || {}).length,
+    [products],
+    200
+  );
 
   return (
     <main className="content" style={{ flexDirection: "column" }}>

@@ -19,8 +19,15 @@ import Select from "react-select";
 const steps = [
   {
     title: "Add to Basket",
-    description: "Click this to add the product to your basket.",
+    description:
+      "Click here to add the product to your basket. You can change rental period in the basket.",
     target: () => document.querySelector("[id^=btn-add-basket-]"),
+  },
+  {
+    title: "Product Price",
+    description:
+      "Click here to view the price of the product for 1-30 days rental.",
+    target: () => document.querySelector("[id^='btn-view-price-']"),
   },
 ];
 
@@ -50,11 +57,11 @@ const styles = {
 };
 
 const ViewProduct = () => {
-  const tourProps = useTour(steps, () => true, [], 2000);
   const [showPrice, setShowPrice] = useState(false);
   const { id } = useParams();
   const history = useHistory();
   const { product, isLoading, error } = useProduct(id);
+  const tourProps = useTour(steps, () => !!product?.name, [product], 200);
   const { addToBasket, isItemOnBasket } = useBasket(id);
   useScrollTop();
   useDocumentTitle(`View ${product?.name || "Item"}`);
@@ -220,6 +227,7 @@ const ViewProduct = () => {
                     : "Add To Basket"}
                 </button>
                 <button
+                  id={`btn-view-price-${product.id}`}
                   className="button button-small"
                   onClick={handlePriceView}
                   type="button"
