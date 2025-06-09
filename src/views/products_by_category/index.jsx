@@ -41,10 +41,11 @@ const ProductsByCategory = () => {
   const { products, getProducts, isLoading, error } = useProducts(category);
 
   const tourProps = useTour(
+    "productCategory",
     steps,
     () => !!Object.keys(products).length && category === "Gaming Consoles",
     [products, category],
-    200
+    500
   );
 
   const banner = category

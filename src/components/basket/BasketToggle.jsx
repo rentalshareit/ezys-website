@@ -18,12 +18,13 @@ const BasketToggle = ({ children }) => {
     basket: state.basket,
   }));
   const [basketVisible, setBasketVisible] = React.useState(false);
-  const tourProps = useTour(
-    steps,
-    () => document.body.classList.contains("is-basket-open") && basket?.length,
-    [basketVisible],
-    500
-  );
+  // const tourProps = useTour(
+  //   "basket",
+  //   steps,
+  //   () => document.body.classList.contains("is-basket-open") && basket?.length,
+  //   [basketVisible],
+  //   500
+  // );
   const onClickToggle = () => {
     if (document.body.classList.contains("is-basket-open")) {
       setBasketVisible(false);
@@ -60,7 +61,7 @@ const BasketToggle = ({ children }) => {
   // TODO: Fix the tour not showing up when the basket is already open
   return (
     <>
-      <Tour {...tourProps} open={false} />
+      {/* <Tour {...tourProps} open={false} /> */}
       {children({ onClickToggle })}
     </>
   );

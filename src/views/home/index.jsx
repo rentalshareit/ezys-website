@@ -56,6 +56,7 @@ const Home = () => {
 
   const { products, fetchProducts, isLoading, error } = useProducts();
   const tourProps = useTour(
+    "home",
     steps,
     () => !!Object.keys(products || {}).length,
     [products],
