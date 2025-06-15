@@ -5,6 +5,7 @@ import PropType from "prop-types";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import UserNav from "@/views/account/components/UserAvatar";
+import logo from "@/images/ezys-logo.png";
 import Badge from "./Badge";
 import SearchBar from "./SearchBar";
 import Signin from "./SignIn";
@@ -34,8 +35,8 @@ const Navigation = (props) => {
     <nav className="mobile-navigation">
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
-          <Link onClick={onClickLink} to={HOME}>
-            <h2>Ezys</h2>
+          <Link to="/">
+            <img alt="Logo" src={logo} />
           </Link>
         </div>
 

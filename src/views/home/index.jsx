@@ -16,9 +16,9 @@ import {
   useProducts,
   useTour,
 } from "@/hooks";
-import coverImg from "@/images/gaming_banner.jpeg";
 import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import HomeCarousel from "@/components/misc/HomeCarousel";
 
 // TODO: Uncomment this as it flickers on mobile devices
 const steps = [
@@ -80,8 +80,8 @@ const Home = () => {
             </p>
             <br />
           </div>
-          <div className="banner-img">
-            <img src={coverImg} alt="" />
+          <div className="banner-img-container">
+            <HomeCarousel />
           </div>
         </div>
         {isLoading && (

@@ -3,6 +3,7 @@
   position: fixed;
   top: 0;
   left: 0;
+  padding: 0 $l-size;
   // background: $background-color;
   background: #fff;
   z-index: map-get($z-index, 'navigation');
@@ -12,7 +13,6 @@
 .mobile-navigation-main {
   width: 100%;
   height: 50px;
-  padding: 0 $s-size;
   display: flex;
   align-items: center;
   position: relative;
@@ -22,7 +22,7 @@
 .mobile-navigation-sec {
   display: flex;
   align-items: center;
-  padding: 5px $s-size;
+  padding: 5px 0px;
 }
 
 .mobile-navigation-menu {
@@ -54,9 +54,13 @@
 }
 
 .mobile-navigation-logo {
-  flex-grow: 1;
-  padding-left: .5rem;
-  margin-right: $xl-size;
+  flex: 1;
+  height: 100%;
+
+  img {
+    height: 100%;
+    object-fit: contain;
+  }
 }
 
 .mobile-navigation-search {
