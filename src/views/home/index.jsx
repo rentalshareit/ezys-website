@@ -28,9 +28,14 @@ const steps = [
     target: () => document.querySelector("[id='btn-see-all-Gaming Consoles']"),
   },
   {
+    title: "Add To Basket",
+    description: "Add item to your basket",
+    target: () =>
+      document.querySelector("[id^='btn-add-basket-Gaming Consoles-']"),
+  },
+  {
     title: "Product Price",
-    description:
-      "Click here to view the price of the product for 1-30 days rental.",
+    description: "View the price of the product for 1-30 days rental.",
     target: () =>
       document.querySelector("[id^='btn-view-price-Gaming Consoles-']"),
   },
@@ -42,11 +47,6 @@ const steps = [
         "[id^='card-view-product-details-Gaming Consoles-']"
       ),
   },
-  // {
-  //   title: "Go To Basket",
-  //   description: "Click here to check your basket and proceed to checkout.",
-  //   target: () => document.querySelector("[id^=btn-basket-toggle]"),
-  // },
 ];
 
 const Home = () => {

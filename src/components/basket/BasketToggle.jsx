@@ -17,7 +17,9 @@ const BasketToggle = ({ children }) => {
   const { basket } = useSelector((state) => ({
     basket: state.basket,
   }));
-  const [basketVisible, setBasketVisible] = React.useState(false);
+  const [basketVisible, setBasketVisible] = React.useState(() =>
+    document.body.classList.contains("is-basket-open")
+  );
   const tourProps = useTour(
     "basket",
     steps,
@@ -27,14 +29,14 @@ const BasketToggle = ({ children }) => {
   );
   const onClickToggle = useCallback(() => {
     if (document.body.classList.contains("is-basket-open")) {
-      setBasketVisible(false);
+      document.body.classList.remove("is-basket-open");
     } else {
-      setBasketVisible(true);
+      document.body.classList.add("is-basket-open");
     }
   }, []);
 
   useEffect(() => {
-    document.addEventListener("click", (e) => {
+    const handleClick = (e) => {
       const closest = e.target.closest(".basket");
       const datePicker = e.target.closest(".rs-picker-popup");
       const antTour = e.target.closest(".ant-tour");
@@ -53,18 +55,27 @@ const BasketToggle = ({ children }) => {
         !toggle &&
         !closeToggle
       ) {
-        setBasketVisible(false);
+        document.body.classList.remove("is-basket-open");
       }
-    });
-  }, []);
+    };
 
-  useEffect(() => {
-    if (basketVisible) {
-      document.body.classList.add("is-basket-open");
-    } else {
-      document.body.classList.remove("is-basket-open");
-    }
-  }, [basketVisible]);
+    document.addEventListener("click", handleClick);
+
+    // Sync basketVisible with body class on mount and when class changes
+    const observer = new MutationObserver(() => {
+      const isOpen = document.body.classList.contains("is-basket-open");
+      setBasketVisible(isOpen);
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <>

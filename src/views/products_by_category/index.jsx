@@ -16,6 +16,12 @@ const images = {
 
 const steps = [
   {
+    title: "Add To Basket",
+    description: "Add item to your basket",
+    target: () =>
+      document.querySelector("[id^='btn-add-basket-Gaming Consoles-']"),
+  },
+  {
     title: "Product Price",
     description:
       "Click here to view the price of the product for 1-30 days rental.",

@@ -48,16 +48,18 @@
   }
 }
 
-.button-view-price {
-  span {
+// Temporary styles for button
+.ant-btn:not(.ant-btn-default) {
+  & > span {
     color: #FFF
   }
 }
 
+
 .product-showcase-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 80px;
+  gap: 50px;
   width:100%;
   
   @include mobile {

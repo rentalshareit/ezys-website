@@ -61,14 +61,14 @@ const ViewProduct = () => {
   const { id } = useParams();
   const history = useHistory();
   const { product, isLoading, error } = useProduct(id);
-  // const tourProps = useTour(
-  //   "productDetails"
-  //   steps,
-  //   () => !!product?.name && !isLoading,
-  //   [product, isLoading],
-  //   5000
-  // );
-  const { addToBasket, isItemOnBasket } = useBasket(id);
+  const tourProps = useTour(
+    "productDetails",
+    steps,
+    () => !!product?.name && !isLoading,
+    [product, isLoading],
+    100
+  );
+  const { addToBasket, isItemOnBasket } = useBasket();
   useScrollTop();
   useDocumentTitle(`View ${product?.name || "Item"}`);
 
@@ -100,7 +100,7 @@ const ViewProduct = () => {
 
   return (
     <main className="content">
-      {/* <Tour {...tourProps} /> */}
+      <Tour {...tourProps} />
       {isLoading && (
         <div className="loader">
           <h3>Loading Product...</h3>

@@ -41,6 +41,16 @@ export default (state = initState, action) => {
         authStatus: action.payload,
       };
     case UPDATE_TOUR_STATUS:
+      // If action.payload is defined but does not have a page, reset the tour state if status is false
+      if (action.payload && !action.payload.page) {
+        if (action.payload.status === false) {
+          return {
+            ...state,
+            tour: {},
+          };
+        }
+        return state;
+      }
       return {
         ...state,
         tour: {

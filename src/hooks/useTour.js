@@ -12,7 +12,7 @@ const useTour = (
 ) => {
   const dispatch = useDispatch();
   const tourCompleted = useSelector((state) => state.app.tour[pageName]);
-  const isFirstVisit = useIsFirstVisit();
+  const [isFirstVisit] = useIsFirstVisit();
   const ref = useRef({}).current;
   const [tourVisible, setTourVisible] = useState(false);
 
@@ -40,7 +40,7 @@ const useTour = (
     onClose,
     steps: steps.map((step) => ({
       ...step,
-      nextButtonProps: { type: "default" },
+      nextButtonProps: { type: "primary" },
     })),
   };
 };
