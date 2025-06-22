@@ -16,7 +16,7 @@
 }
 
 .rs-picker-popup {
-  z-index: 61;
+  z-index: map-get($z-index, 'date');
 }
 
 .rs-picker-toggle-wrapper {

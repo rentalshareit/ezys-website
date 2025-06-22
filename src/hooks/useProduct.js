@@ -2,6 +2,7 @@ import { useDidMount } from "@/hooks";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import firebase from "@/services/firebase";
+import { formatProductPrice } from "@/helpers/utils";
 
 const useProduct = (id) => {
   // get and check if product exists in store
@@ -27,10 +28,7 @@ const useProduct = (id) => {
             if (didMount) {
               setProduct({
                 ...data,
-                price: data.price
-                  .replace(/[\[\]']+/g, "")
-                  .split(",")
-                  .map((a) => parseInt(a.trim())),
+                price: formatProductPrice(data.price),
               });
               setLoading(false);
             }

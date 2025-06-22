@@ -1,6 +1,7 @@
 import { useDidMount } from "@/hooks";
 import { useEffect, useState } from "react";
 import firebase from "@/services/firebase";
+import { formatProductPrice } from "@/helpers/utils";
 
 const useProducts = (category) => {
   const [products, setProducts] = useState({});
@@ -30,10 +31,7 @@ const useProducts = (category) => {
             items[category] = items[category] || [];
             items[category].push({
               ...data,
-              price: data.price
-                .replace(/\[|\]/g, "")
-                .split(",")
-                .map((a) => parseInt(a.trim())),
+              price: formatProductPrice(data.price),
             });
           });
 

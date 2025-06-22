@@ -155,3 +155,10 @@ export function calculateElementsThatFit(
   // One final check: Ensure we don't return a negative number if viewport is tiny or elements are huge.
   return Math.max(0, numberOfElements);
 }
+
+export function formatProductPrice(price) {
+  return price
+    .replace(/\[|\]/g, "")
+    .split(",")
+    .map((a) => parseInt(a.trim()));
+}

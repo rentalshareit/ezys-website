@@ -11,6 +11,7 @@ import { all, call, put, select } from "redux-saga/effects";
 import { setLoading, setRequestStatus } from "@/redux/actions/miscActions";
 import { history } from "@/routers/AppRouter";
 import firebase from "@/services/firebase";
+import { formatProductPrice } from "@/helpers/utils";
 import {
   addProductSuccess,
   clearSearchState,
@@ -219,7 +220,10 @@ function* productSaga({ type, payload }) {
         } else {
           yield put(
             searchProductSuccess({
-              products: result.products,
+              products: result.products.map((p) => ({
+                ...p,
+                price: formatProductPrice(p.price),
+              })),
               lastKey: result.lastKey
                 ? result.lastKey
                 : state.products.searchedProducts.lastRefKey,

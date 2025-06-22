@@ -1,6 +1,7 @@
 import { useDidMount } from "@/hooks";
 import { useEffect, useState } from "react";
 import firebase from "@/services/firebase";
+import { formatProductPrice } from "@/helpers/utils";
 
 const useFeaturedProducts = (itemsCount) => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -28,7 +29,7 @@ const useFeaturedProducts = (itemsCount) => {
           items.push({
             id: snap.ref.id,
             ...data,
-            price: data.price.split(",").map((a) => parseInt(a.trim())),
+            price: formatProductPrice(data.price),
           });
         });
 
