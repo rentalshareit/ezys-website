@@ -172,7 +172,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 <CustomSelect
                   defaultValue={(values.tags || []).map((tag) => ({
                     value: tag,
-                    label: tag,
+                    label: tagOptions.find((t) => t.value === tag).label,
                   }))}
                   name="tags"
                   id="tags"
