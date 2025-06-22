@@ -164,59 +164,59 @@ export function formatProductPrice(price) {
 }
 
 /**
- * Checks if a product name contains at least two characters from a search text,
- * maintaining their relative order (subsequence match).
- * The comparison is case-insensitive.
+ * Checks if a product name contains at least three consecutive characters from a search text,
+ * maintaining their relative order. The comparison is case-insensitive.
  *
  * @param {string} productName The name of the product.
- * @param {string} searchText The text whose characters are sought as a subsequence within productName.
- * @returns {boolean} True if two or more characters from searchText are found in productName
- * as a subsequence (in their relative order), false otherwise.
+ * @param {string} searchText The text to search for within the product name.
+ * @returns {boolean} True if at least three consecutive characters from the search text
+ * are found in order within the product name, false otherwise.
  */
-export function hasTwoOrMoreCharsAsSubsequence(productName, searchText) {
-  // Input validation: Ensure both are strings, productName is not empty,
-  // and searchText has at least 2 characters (otherwise, impossible to find 2+ matches).
-  if (
-    typeof productName !== "string" ||
-    typeof searchText !== "string" ||
-    productName.length === 0 ||
-    searchText.length < 3
-  ) {
+export function containsThreeConsecutiveOrderedChars(productName, searchText) {
+  // Convert both strings to lowercase for case-insensitive comparison
+  const productLower = productName.toLowerCase();
+  const searchLower = searchText.toLowerCase();
+
+  // If the search text itself is shorter than 3 characters, it's impossible to find 3 consecutive matches.
+  if (searchLower.length < 3) {
     return false;
   }
 
-  // Convert both strings to lowercase for case-insensitive comparison
-  const lowerProductName = productName.toLowerCase();
-  const lowerSearchText = searchText.toLowerCase();
+  let consecutiveMatchCount = 0;
+  let searchIndex = 0;
 
-  let productNameLastFoundIndex = -1; // Stores the index of the last character found in productName
-  let matchesFoundCount = 0; // Counts how many characters from searchText have been found in order
+  // Iterate through each character of the product name
+  for (let i = 0; i < productLower.length; i++) {
+    const pChar = productLower[i];
 
-  // Iterate through each character of the searchText
-  for (let i = 0; i < lowerSearchText.length; i++) {
-    const charToFind = lowerSearchText[i];
+    // Check if the current product character matches the character we're looking for
+    // in the search text's current position.
+    if (
+      searchIndex < searchLower.length &&
+      pChar === searchLower[searchIndex]
+    ) {
+      consecutiveMatchCount++;
+      searchIndex++;
+    } else {
+      // If the match breaks, reset the consecutive count and search index.
+      // Then, immediately check if the current product character can start a new sequence
+      consecutiveMatchCount = 0;
+      searchIndex = 0;
 
-    // Search for the current character from searchText in productName.
-    // Start the search from `productNameLastFoundIndex + 1` to ensure characters are found
-    // in the correct relative order (as a subsequence).
-    const foundIndex = lowerProductName.indexOf(
-      charToFind,
-      productNameLastFoundIndex + 1
-    );
-
-    if (foundIndex !== -1) {
-      // If the character is found, update the `productNameLastFoundIndex`
-      // to ensure the next search starts *after* this character's position.
-      productNameLastFoundIndex = foundIndex;
-      matchesFoundCount++;
-
-      // If we've found 2 or more characters in sequence, we can return true early.
-      if (matchesFoundCount >= 3) {
-        return true;
+      // If the current product character matches the first character of the search text,
+      // start a new consecutive count.
+      if (pChar === searchLower[0]) {
+        consecutiveMatchCount = 1;
+        searchIndex = 1;
       }
+    }
+
+    // If we've found 3 or more consecutive matching characters, return true
+    if (consecutiveMatchCount >= 3) {
+      return true;
     }
   }
 
-  // If the loop completes and we haven't found at least two characters in order, return false.
+  // If the loop finishes and we haven't found at least 3 consecutive matches, return false
   return false;
 }

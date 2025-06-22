@@ -3,7 +3,7 @@ import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
-import { hasTwoOrMoreCharsAsSubsequence } from "@/helpers/utils";
+import { containsThreeConsecutiveOrderedChars } from "@/helpers/utils";
 import firebaseConfig from "./config";
 
 class Firebase {
@@ -145,13 +145,13 @@ class Firebase {
         try {
           const searchResults = products.filter((p) =>
             searchKeys.some((s) => {
-              const doesNameMatch = hasTwoOrMoreCharsAsSubsequence(
+              const doesNameMatch = containsThreeConsecutiveOrderedChars(
                 p.name_lower,
                 s
               );
               if (doesNameMatch) return true;
               return p.keywords.some((k) =>
-                hasTwoOrMoreCharsAsSubsequence(k, s)
+                containsThreeConsecutiveOrderedChars(k, s)
               );
             })
           );
