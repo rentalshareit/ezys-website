@@ -2,7 +2,7 @@
 import { useField } from "formik";
 import PropType from "prop-types";
 import React from "react";
-import { Select } from "antd";
+import CreatableSelect from "react-select/creatable";
 
 const CustomCreatableSelect = (props) => {
   const [field, meta, helpers] = useField(props);
@@ -14,13 +14,28 @@ const CustomCreatableSelect = (props) => {
     isMulti,
     type,
     iid,
+    styles = { menu: {}, control: {}, container: {} },
     ...rest
   } = props;
   const { touched, error } = meta;
   const { setValue } = helpers;
 
   const handleChange = (newValue) => {
-    setValue(newValue);
+    if (Array.isArray(newValue)) {
+      const arr = newValue.map((fieldKey) => fieldKey.value);
+      setValue(arr);
+    } else {
+      setValue(newValue.value);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (type === "number") {
+      const { key } = e.nativeEvent;
+      if (/\D/.test(key) && key !== "Backspace") {
+        e.preventDefault();
+      }
+    }
   };
 
   return (
@@ -32,15 +47,33 @@ const CustomCreatableSelect = (props) => {
           {label}
         </label>
       )}
-      <Select
-        mode={isMulti ? "multiple" : "default"}
+      <CreatableSelect
+        isMulti={isMulti}
         placeholder={placeholder}
         name={field.name}
-        id="{iid || field.name}"
-        defaultValue={defaultValue}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        defaultValue={defaultValue}
         options={options}
+        instanceId={iid}
         {...rest}
+        styles={{
+          menu: (provided) => ({
+            ...provided,
+            zIndex: 10,
+            ...styles.menu,
+          }),
+          container: (provided) => ({
+            ...provided,
+            marginBottom: "1.2rem",
+            ...styles.container,
+          }),
+          control: (provided) => ({
+            ...provided,
+            border: touched && error ? "1px solid red" : "1px solid #cacaca",
+            ...styles.control,
+          }),
+        }}
       />
     </div>
   );

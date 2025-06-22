@@ -2,9 +2,10 @@
 import { CheckOutlined, LoadingOutlined } from "@ant-design/icons";
 import { ImageLoader } from "@/components/common";
 import {
-  CustomCreatableSelect,
+  CustomSelect,
   CustomInput,
   CustomTextarea,
+  CustomCreatableSelect,
 } from "@/components/formik";
 import { Field, FieldArray, Form, Formik } from "formik";
 import { useFileHandler } from "@/hooks";
@@ -29,6 +30,7 @@ const tagOptions = [
   { value: "wwe", label: "WWE 2K18" },
   { value: "t", label: "Tekken 7" },
   { value: "gta5", label: "GTA 5" },
+  { value: "gta5digital", label: "GTA 5 Digital" },
   { value: "screen", label: "Screen" },
   { value: "projector", label: "Projector" },
 ];
@@ -141,7 +143,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 </div>
                 &nbsp;
                 <div className="product-form-field">
-                  <CustomCreatableSelect
+                  <CustomSelect
                     defaultValue={{ label: values.brand, value: values.brand }}
                     name="brand"
                     id="brand"
@@ -153,7 +155,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 </div>
               </div>
               <div className="product-form-field">
-                <CustomCreatableSelect
+                <CustomSelect
                   defaultValue={{
                     label: values.category,
                     value: values.category,
@@ -167,7 +169,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 />
               </div>
               <div className="product-form-field">
-                <CustomCreatableSelect
+                <CustomSelect
                   defaultValue={(values.tags || []).map((tag) => ({
                     value: tag,
                     label: tag,

@@ -162,3 +162,61 @@ export function formatProductPrice(price) {
     .split(",")
     .map((a) => parseInt(a.trim()));
 }
+
+/**
+ * Checks if a product name contains at least two characters from a search text,
+ * maintaining their relative order (subsequence match).
+ * The comparison is case-insensitive.
+ *
+ * @param {string} productName The name of the product.
+ * @param {string} searchText The text whose characters are sought as a subsequence within productName.
+ * @returns {boolean} True if two or more characters from searchText are found in productName
+ * as a subsequence (in their relative order), false otherwise.
+ */
+export function hasTwoOrMoreCharsAsSubsequence(productName, searchText) {
+  // Input validation: Ensure both are strings, productName is not empty,
+  // and searchText has at least 2 characters (otherwise, impossible to find 2+ matches).
+  if (
+    typeof productName !== "string" ||
+    typeof searchText !== "string" ||
+    productName.length === 0 ||
+    searchText.length < 3
+  ) {
+    return false;
+  }
+
+  // Convert both strings to lowercase for case-insensitive comparison
+  const lowerProductName = productName.toLowerCase();
+  const lowerSearchText = searchText.toLowerCase();
+
+  let productNameLastFoundIndex = -1; // Stores the index of the last character found in productName
+  let matchesFoundCount = 0; // Counts how many characters from searchText have been found in order
+
+  // Iterate through each character of the searchText
+  for (let i = 0; i < lowerSearchText.length; i++) {
+    const charToFind = lowerSearchText[i];
+
+    // Search for the current character from searchText in productName.
+    // Start the search from `productNameLastFoundIndex + 1` to ensure characters are found
+    // in the correct relative order (as a subsequence).
+    const foundIndex = lowerProductName.indexOf(
+      charToFind,
+      productNameLastFoundIndex + 1
+    );
+
+    if (foundIndex !== -1) {
+      // If the character is found, update the `productNameLastFoundIndex`
+      // to ensure the next search starts *after* this character's position.
+      productNameLastFoundIndex = foundIndex;
+      matchesFoundCount++;
+
+      // If we've found 2 or more characters in sequence, we can return true early.
+      if (matchesFoundCount >= 3) {
+        return true;
+      }
+    }
+  }
+
+  // If the loop completes and we haven't found at least two characters in order, return false.
+  return false;
+}

@@ -43,7 +43,7 @@ function* productSaga({ type, payload }) {
       try {
         yield initRequest();
         const state = yield select();
-        const result = yield call(firebase.getProducts, payload);
+        const result = yield call(firebase.getProducts);
 
         if (result.length === 0) {
           handleError("No items found.");
@@ -56,7 +56,6 @@ function* productSaga({ type, payload }) {
           );
           yield put(setRequestStatus(""));
         }
-        // yield put({ type: SET_LAST_REF_KEY, payload: result.lastKey });
         yield put(setLoading(false));
       } catch (e) {
         console.log(e);
@@ -224,9 +223,6 @@ function* productSaga({ type, payload }) {
                 ...p,
                 price: formatProductPrice(p.price),
               })),
-              lastKey: result.lastKey
-                ? result.lastKey
-                : state.products.searchedProducts.lastRefKey,
               total: result.total
                 ? result.total
                 : state.products.searchedProducts.total,

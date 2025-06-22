@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import firebase from "@/services/firebase";
 import { formatProductPrice } from "@/helpers/utils";
 
-const useFeaturedProducts = (itemsCount) => {
+const useFeaturedProducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -14,7 +14,7 @@ const useFeaturedProducts = (itemsCount) => {
       setLoading(true);
       setError("");
 
-      const docs = await firebase.getFeaturedProducts(itemsCount);
+      const docs = await firebase.getFeaturedProducts();
 
       if (docs.empty) {
         if (didMount) {

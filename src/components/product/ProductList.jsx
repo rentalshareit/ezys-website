@@ -1,25 +1,24 @@
 /* eslint-disable react/forbid-prop-types */
-import { Boundary, MessageDisplay } from '@/components/common';
-import PropType from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setLoading } from '@/redux/actions/miscActions';
-import { getProducts } from '@/redux/actions/productActions';
+import { Boundary, MessageDisplay } from "@/components/common";
+import PropType from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setLoading } from "@/redux/actions/miscActions";
+import { getProducts } from "@/redux/actions/productActions";
 
 const ProductList = (props) => {
-  const {
-    products, filteredProducts, isLoading, requestStatus, children
-  } = props;
+  const { products, filteredProducts, isLoading, requestStatus, children } =
+    props;
   const [isFetching, setFetching] = useState(false);
   const dispatch = useDispatch();
 
   const fetchProducts = () => {
     setFetching(true);
-    dispatch(getProducts(products.lastRefKey));
+    dispatch(getProducts());
   };
 
   useEffect(() => {
-    if (products.items.length === 0 || !products.lastRefKey) {
+    if (products.items.length === 0) {
       fetchProducts();
     }
 
@@ -28,17 +27,20 @@ const ProductList = (props) => {
   }, []);
 
   useEffect(() => {
-    setFetching(false);
-  }, [products.lastRefKey]);
+    if (products.items.length) setFetching(false);
+  }, [products]);
 
   if (filteredProducts.length === 0 && !isLoading) {
     return (
-      <MessageDisplay message={requestStatus?.message || 'No products found.'} />
+      <MessageDisplay
+        message={requestStatus?.message || "No products found."}
+      />
     );
-  } if (filteredProducts.length === 0 && requestStatus) {
+  }
+  if (filteredProducts.length === 0 && requestStatus) {
     return (
       <MessageDisplay
-        message={requestStatus?.message || 'Something went wrong :('}
+        message={requestStatus?.message || "Something went wrong :("}
         action={fetchProducts}
         buttonLabel="Try Again"
       />
@@ -56,7 +58,7 @@ const ProductList = (props) => {
             onClick={fetchProducts}
             type="button"
           >
-            {isFetching ? 'Fetching Items...' : 'Show More Items'}
+            {isFetching ? "Fetching Items..." : "Show More Items"}
           </button>
         </div>
       )}
@@ -65,7 +67,7 @@ const ProductList = (props) => {
 };
 
 ProductList.defaultProps = {
-  requestStatus: null
+  requestStatus: null,
 };
 
 ProductList.propTypes = {
@@ -73,10 +75,8 @@ ProductList.propTypes = {
   filteredProducts: PropType.array.isRequired,
   isLoading: PropType.bool.isRequired,
   requestStatus: PropType.string,
-  children: PropType.oneOfType([
-    PropType.arrayOf(PropType.node),
-    PropType.node
-  ]).isRequired
+  children: PropType.oneOfType([PropType.arrayOf(PropType.node), PropType.node])
+    .isRequired,
 };
 
 export default ProductList;

@@ -14,7 +14,6 @@ import {
 } from "@/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
-import Select from "react-select";
 
 const steps = [
   {

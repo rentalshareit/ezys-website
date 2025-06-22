@@ -8,14 +8,12 @@ import {
 } from "@/constants/constants";
 
 const initState = {
-  lastRefKey: null,
   total: 0,
   items: [],
 };
 
 export default (
   state = {
-    lastRefKey: null,
     total: 0,
     items: [],
     searchedProducts: initState,
@@ -26,7 +24,6 @@ export default (
     case GET_PRODUCTS_SUCCESS:
       return {
         ...state,
-        lastRefKey: action.payload.lastKey,
         total: action.payload.total,
         items: [...action.payload.products],
       };
@@ -39,7 +36,6 @@ export default (
       return {
         ...state,
         searchedProducts: {
-          lastRefKey: action.payload.lastKey,
           total: action.payload.total,
           items: [...state.searchedProducts.items, ...action.payload.products],
         },

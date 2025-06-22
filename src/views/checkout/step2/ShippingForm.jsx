@@ -1,9 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import {
-  CustomInput,
-  CustomTextarea,
-  CustomCreatableSelect,
-} from "@/components/formik";
+import { CustomInput, CustomTextarea, CustomSelect } from "@/components/formik";
 import { Field, useFormikContext } from "formik";
 import React, { useEffect } from "react";
 import { updateMiscCharges } from "@/redux/actions/checkoutActions";
@@ -65,7 +61,7 @@ const ShippingForm = () => {
         </div>
         <div className="checkout-fieldset">
           <div className="checkout-field">
-            <CustomCreatableSelect
+            <CustomSelect
               name="deliveryTimeSlot"
               id="deliveryTimeSlot"
               options={deliveryTimeSlots}
