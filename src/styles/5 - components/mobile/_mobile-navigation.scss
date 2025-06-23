@@ -3,7 +3,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  padding: 0 $l-size;
+  padding: 0 $xs-size;
   // background: $background-color;
   background: #fff;
   z-index: map-get($z-index, 'navigation');
