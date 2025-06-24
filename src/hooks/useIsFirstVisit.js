@@ -8,7 +8,12 @@ const useIsFirstVisit = () => {
     const hasVisited = localStorage.getItem("hasVisited");
     if (!hasVisited) {
       // If 'hasVisited' key doesn't exist, it's the first visit
-      setIsFirstVisit({});
+
+      // TODO: Uncomment below line. First visit tour was creating noise because of loading time across devices.
+      // Disabling that for time being.
+
+      // setIsFirstVisit({});
+
       // Set the flag in localStorage for future visits
       localStorage.setItem("hasVisited", "true");
     } else {
