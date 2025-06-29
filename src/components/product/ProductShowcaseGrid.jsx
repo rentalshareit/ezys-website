@@ -5,28 +5,31 @@ import { Flex } from "antd";
 import PropType from "prop-types";
 import React from "react";
 import { calculateElementsThatFit } from "@/helpers/utils";
+import ProductSlider from "./ProductSlider";
 
-const ProductShowcase = ({ products, skeletonCount, showAll }) => {
-  let productsToShow = products;
-  if (products.length) {
-    if (!showAll) {
-      const elementsThatFit = calculateElementsThatFit(240, 5, 5, 0, 0, 80);
-      productsToShow = products.slice(0, elementsThatFit);
-    }
+const ProductShowcase = ({ products, category, skeletonCount, showAll }) => {
+  if (!products || !products.length) {
+    return new Array(skeletonCount).fill({}).map((product, index) => (
+      <FeaturedProduct
+        // eslint-disable-next-line react/no-array-index-key
+        key={`product-skeleton ${index}`}
+        product={product}
+      />
+    ));
   }
-  return (
+
+  return showAll ? (
     <div className={classNames("product-showcase-grid")}>
-      {productsToShow.length === 0
-        ? new Array(skeletonCount).fill({}).map((product, index) => (
-            <FeaturedProduct
-              // eslint-disable-next-line react/no-array-index-key
-              key={`product-skeleton ${index}`}
-              product={product}
-            />
-          ))
-        : productsToShow.map((product) => (
-            <FeaturedProduct key={product.id} product={product} />
-          ))}
+      {products.map((product) => (
+        <FeaturedProduct key={product.id} product={product} />
+      ))}
+    </div>
+  ) : (
+    <div>
+      <ProductSlider
+        products={products}
+        itemsToShow={calculateElementsThatFit(280, 30, category)}
+      />
     </div>
   );
 };

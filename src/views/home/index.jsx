@@ -16,6 +16,7 @@ import {
   useProducts,
   useTour,
 } from "@/hooks";
+import { formatCategory } from "@/helpers/utils";
 import React, { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import HomeCarousel from "@/components/misc/HomeCarousel";
@@ -93,7 +94,7 @@ const Home = () => {
           </div>
         )}
         {Object.keys(products).map((category) => (
-          <div className="display">
+          <div id={`${formatCategory(category)}_display`} className="display">
             <div className="display-header">
               <h3>{category}</h3>
               <button
@@ -106,6 +107,7 @@ const Home = () => {
               </button>
             </div>
             <ProductShowcaseGrid
+              category={category}
               products={products[category]}
               skeletonCount={4}
               showAll={false}

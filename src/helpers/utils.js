@@ -104,24 +104,45 @@ export function waitForGlobal(name, timeout = 300) {
   });
 }
 
+export function formatCategory(category) {
+  // 1. Convert to lowercase
+  let normalized = category.toLowerCase();
+
+  // 2. Replace spaces with underscores
+  normalized = normalized.replace(/ /g, "_");
+
+  // 3. Remove any characters that are NOT lowercase letters (a-z), digits (0-9), or underscores (_)
+  //    This step also takes care of converting non-alphanumeric special characters
+  //    that might become underscores (like multiple hyphens becoming multiple underscores)
+  //    into a single underscore after the next step.
+  normalized = normalized.replace(/[^a-z0-9_]/g, "");
+
+  // 4. Reduce multiple consecutive underscores to a single underscore
+  //    The regex /__+/g means:
+  //    - __: Matches two underscores literally
+  //    - +: Matches one or more of the preceding character (so, two or more underscores)
+  //    - g: Global flag (replace all occurrences)
+  normalized = normalized.replace(/__+/g, "_");
+
+  // Optional: Remove leading/trailing underscores if you don't want them
+  // This is often desired for clean "slugs"
+  // normalized = normalized.replace(/^_|_$/g, '');
+
+  return normalized;
+}
+
 export function calculateElementsThatFit(
   elementWidth,
-  elementPaddingLeft = 0,
-  elementPaddingRight = 0,
-  elementMarginLeft = 0,
-  elementMarginRight = 0,
-  gapBetweenElements = 0 // New parameter for the gap
+  gapBetweenElements = 0, // New parameter for the gap
+  category
 ) {
-  const viewportWidth = window.innerWidth;
+  const viewportWidth = document.querySelector(
+    `#${formatCategory(category)}_display`
+  )?.clientWidth;
 
   // 1. Calculate the total occupied width of a single element (excluding the gap)
   // This is the content width + left padding + right padding + left margin + right margin
-  const individualElementVisualWidth =
-    elementWidth +
-    elementPaddingLeft +
-    elementPaddingRight +
-    elementMarginLeft +
-    elementMarginRight;
+  const individualElementVisualWidth = elementWidth;
 
   // If there's no gap, or if the individual element already includes all spacing,
   // we might want to handle it slightly differently.
