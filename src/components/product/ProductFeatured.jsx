@@ -4,17 +4,18 @@ import { PlusSquareOutlined } from "@ant-design/icons";
 import PropType from "prop-types";
 import { useBasket } from "@/hooks";
 import React, { useCallback, useState } from "react";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import { useHistory } from "react-router-dom";
 import ProductPrice from "./ProductPrice";
 
 const ProductFeatured = ({ product }) => {
+  const { skeleton = false } = product;
   const [showPrice, setShowPrice] = useState(false);
   const { addToBasket, isItemOnBasket } = useBasket();
   const history = useHistory();
 
   const onClickItem = useCallback(() => {
-    if (!product) return;
+    if (!product || skeleton) return;
     history.push(`/product/${product.id}`);
   }, []);
 
@@ -44,7 +45,6 @@ const ProductFeatured = ({ product }) => {
           id={`card-view-product-details-${product.category}-${product.id}`}
           hoverable
           variant="borderless"
-          loading={!product?.image}
           onClick={onClickItem}
           style={{
             width: 280,
@@ -56,29 +56,46 @@ const ProductFeatured = ({ product }) => {
           }}
           size="small"
           actions={[
-            <Button
-              id={`btn-add-basket-${product.category}-${product.id}`}
-              type={isItemAlreadyInBasket ? "default" : "primary"}
-              onClick={onAddToBasket}
-            >
-              {isItemAlreadyInBasket ? "Remove From Basket" : "Add To Basket"}
-            </Button>,
-            <Button
-              id={`btn-view-price-${product.category}-${product.id}`}
-              type="primary"
-              onClick={onViewPriceClick}
-            >
-              View Price
-            </Button>,
+            skeleton ? (
+              <Skeleton style={{ width: "100px", lineHeight: "30px" }} />
+            ) : (
+              <Button
+                id={`btn-add-basket-${product.category}-${product.id}`}
+                type={isItemAlreadyInBasket ? "default" : "primary"}
+                onClick={onAddToBasket}
+              >
+                {isItemAlreadyInBasket ? "Remove From Basket" : "Add To Basket"}
+              </Button>
+            ),
+            skeleton ? (
+              <Skeleton style={{ width: "100px", lineHeight: "30px" }} />
+            ) : (
+              <Button
+                id={`btn-view-price-${product.category}-${product.id}`}
+                type="primary"
+                onClick={onViewPriceClick}
+              >
+                View Price
+              </Button>
+            ),
           ]}
           cover={
-            <img
-              src={product.image}
-              style={{ width: "100%", height: "280px", objectFit: "contain" }}
-            />
+            skeleton ? (
+              <Skeleton style={{ width: "100%", height: "280px" }} />
+            ) : (
+              <img
+                src={product.image}
+                style={{ width: "100%", height: "280px", objectFit: "contain" }}
+              />
+            )
           }
         >
-          <Card.Meta title={product.name} description={product.brand} />
+          <Card.Meta
+            title={skeleton ? <Skeleton /> : product.name}
+            description={
+              skeleton ? <Skeleton style={{ width: "20%" }} /> : product.brand
+            }
+          />
         </Card>
       </Badge>
       <ProductPrice

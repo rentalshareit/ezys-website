@@ -2,6 +2,7 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Spin, Tour } from "antd";
 import { MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
+import Skeleton from "react-loading-skeleton";
 import GoogleReviews from "@/components/misc/GoogleReviews";
 import {
   FEATURED_PRODUCTS,
@@ -55,7 +56,7 @@ const Home = () => {
   useDocumentTitle("Ezys | Home");
   useScrollTop();
 
-  const { products, fetchProducts, isLoading, error } = useProducts();
+  const { products, isLoading, error } = useProducts();
   const tourProps = useTour(
     "home",
     steps,
@@ -63,6 +64,8 @@ const Home = () => {
     [products],
     200
   );
+
+  const isSkeleton = products[Object.keys(products)[0]].some((p) => p.skeleton);
 
   return (
     <main className="content" style={{ flexDirection: "column" }}>
@@ -85,31 +88,35 @@ const Home = () => {
             <HomeCarousel />
           </div>
         </div>
-        {isLoading && (
-          <div
-            className="ezys-spinner"
-            style={{ height: "unset", marginTop: "5rem" }}
-          >
-            <Spin size="large" />
-          </div>
-        )}
+
         {Object.keys(products).map((category) => (
           <div id={`${formatCategory(category)}_display`} className="display">
             <div className="display-header">
-              <h3>{category}</h3>
+              <h3>
+                {isSkeleton ? (
+                  <Skeleton style={{ width: "200px" }} />
+                ) : (
+                  category
+                )}
+              </h3>
               <button
                 id={`btn-see-all-${category}`}
                 className="button button-border button-border-primary button-small"
                 type="button"
-                onClick={() => history.push(`/products/${category}`)}
+                onClick={() => {
+                  if (!isSkeleton) history.push(`/products/${category}`);
+                }}
               >
-                See All
+                {isSkeleton ? (
+                  <Skeleton style={{ width: "50px" }} />
+                ) : (
+                  "See All"
+                )}
               </button>
             </div>
             <ProductShowcaseGrid
               category={category}
               products={products[category]}
-              skeletonCount={4}
               showAll={false}
             />
           </div>

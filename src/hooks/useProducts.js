@@ -2,9 +2,10 @@ import { useDidMount } from "@/hooks";
 import { useEffect, useState } from "react";
 import firebase from "@/services/firebase";
 import { formatProductPrice } from "@/helpers/utils";
+import { productsSkeleton } from "@/constants";
 
 const useProducts = (category) => {
-  const [products, setProducts] = useState({});
+  const [products, setProducts] = useState(productsSkeleton);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const didMount = useDidMount(true);
@@ -49,7 +50,10 @@ const useProducts = (category) => {
   };
 
   useEffect(() => {
-    if (Object.keys(products).length === 0 && didMount) {
+    if (
+      products[Object.keys(products)[0]].some((p) => p.skeleton) &&
+      didMount
+    ) {
       getProducts();
     }
   }, []);

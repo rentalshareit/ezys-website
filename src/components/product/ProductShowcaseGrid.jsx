@@ -7,17 +7,7 @@ import React from "react";
 import { calculateElementsThatFit } from "@/helpers/utils";
 import ProductSlider from "./ProductSlider";
 
-const ProductShowcase = ({ products, category, skeletonCount, showAll }) => {
-  if (!products || !products.length) {
-    return new Array(skeletonCount).fill({}).map((product, index) => (
-      <FeaturedProduct
-        // eslint-disable-next-line react/no-array-index-key
-        key={`product-skeleton ${index}`}
-        product={product}
-      />
-    ));
-  }
-
+const ProductShowcase = ({ products, category, showAll }) => {
   return showAll ? (
     <div className={classNames("product-showcase-grid")}>
       {products.map((product) => (
@@ -35,13 +25,13 @@ const ProductShowcase = ({ products, category, skeletonCount, showAll }) => {
 };
 
 ProductShowcase.defaultProps = {
-  skeletonCount: 4,
   showAll: true,
 };
 
 ProductShowcase.propTypes = {
   products: PropType.array.isRequired,
-  skeletonCount: PropType.number,
+  category: PropType.string.isRequired,
+  showAll: PropType.bool,
 };
 
 export default ProductShowcase;

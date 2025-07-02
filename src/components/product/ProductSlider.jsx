@@ -4,6 +4,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css"; // Import the default styles
 
 const ProductSlider = ({ products, itemsToShow }) => {
+  const isSkeleton = products.some((product) => product.skeleton);
   // Define a single, default responsive configuration
   const responsive = {
     allDevices: {
@@ -18,7 +19,7 @@ const ProductSlider = ({ products, itemsToShow }) => {
       arrows={false}
       responsive={responsive}
       infinite={true} // Enable infinite loop
-      autoPlay={true} // Auto-scroll
+      autoPlay={!isSkeleton} // Auto-scroll
       autoPlaySpeed={3000} // Speed of auto-scroll in ms
       keyBoardControl={true} // Allow keyboard navigation
       transitionDuration={1000} // Duration of the slide animation in ms
