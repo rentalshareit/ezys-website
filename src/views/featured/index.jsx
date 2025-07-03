@@ -32,7 +32,7 @@ const FeaturedProducts = () => {
           ) : (
             <ProductShowcaseGrid
               products={featuredProducts}
-              skeletonCount={6}
+              
             />
           )}
         </div>

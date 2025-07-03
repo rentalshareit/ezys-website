@@ -80,8 +80,9 @@ const ProductsByCategory = () => {
             />
           ) : (
             <ProductShowcaseGrid
-              products={products[category] || []}
-              skeletonCount={6}
+              products={
+                products[category] || products[Object.keys(products)[0]]
+              }
             />
           )}
         </div>

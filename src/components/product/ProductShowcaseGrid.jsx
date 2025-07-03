@@ -26,11 +26,12 @@ const ProductShowcase = ({ products, category, showAll }) => {
 
 ProductShowcase.defaultProps = {
   showAll: true,
+  category: "",
 };
 
 ProductShowcase.propTypes = {
   products: PropType.array.isRequired,
-  category: PropType.string.isRequired,
+  category: PropType.string,
   showAll: PropType.bool,
 };
 

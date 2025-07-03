@@ -18,11 +18,11 @@ const ProductSlider = ({ products, itemsToShow }) => {
     <Carousel
       arrows={false}
       responsive={responsive}
-      infinite={true} // Enable infinite loop
+      infinite={!isSkeleton} // Enable infinite loop
       autoPlay={!isSkeleton} // Auto-scroll
-      autoPlaySpeed={3000} // Speed of auto-scroll in ms
+      autoPlaySpeed={isSkeleton ? 0 : 3000} // Speed of auto-scroll in ms
       keyBoardControl={true} // Allow keyboard navigation
-      transitionDuration={1000} // Duration of the slide animation in ms
+      transitionDuration={isSkeleton ? 0 : 1000} // Duration of the slide animation in ms
       showDots={false} // Show navigation dots
       itemClass="product-slider-item"
       swipeable={false}

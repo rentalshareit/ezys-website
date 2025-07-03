@@ -2,9 +2,12 @@ import { useDidMount } from "@/hooks";
 import { useEffect, useState } from "react";
 import firebase from "@/services/firebase";
 import { formatProductPrice } from "@/helpers/utils";
+import { productsSkeleton } from "@/constants";
 
 const useRecommendedProducts = () => {
-  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [recommendedProducts, setRecommendedProducts] = useState(
+    productsSkeleton[Object.keys(productsSkeleton)[0]]
+  );
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const didMount = useDidMount(true);
@@ -47,7 +50,11 @@ const useRecommendedProducts = () => {
   };
 
   useEffect(() => {
-    if (recommendedProducts.length === 0 && didMount) {
+    if (
+      (recommendedProducts.length === 0 ||
+        recommendedProducts.some((p) => p.skeleton)) &&
+      didMount
+    ) {
       fetchRecommendedProducts();
     }
   }, []);
