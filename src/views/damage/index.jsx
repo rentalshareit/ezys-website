@@ -1,145 +1,340 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function Damage() {
+const Damage = () => {
   return (
     <main className="content">
-      <div style={{ padding: "7rem 0 0 5rem" }}>
-        <h3>
-          <strong style={{ color: "rgb(13,148,136)" }}>Damage Policy</strong>
-        </h3>
-        <p>
-          <br />
-        </p>
-        <p>
-          <span style={{ color: "#818181" }}>
-            At Ezys, we prioritize the security and confidentiality of your
-            personal information. This Privacy Policy outlines how we collect,
-            use, and safeguard your data when you use our services.
-          </span>
-        </p>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            1. Collection of Personal Information:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          When you sign up or use our services, we may collect personal
-          information such as your email address, name, phone number, and
-          address. This information is used for verification, compliance, and to
-          send you relevant offers based on your preferences. We retain your
-          personal information for as long as necessary to fulfill the purposes
-          outlined in this Privacy Policy or as required by law.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>2. Cookies:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          We use cookies to enhance your browsing experience on our website and
-          mobile app. These cookies may store information about your browsing
-          behavior, but do not store personally identifiable information unless
-          you have consented. You may control cookie preferences through your
-          browser settings or opt out where applicable.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            3. Sharing of Information:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          We do not sell or rent your personal information to third parties.
-          However, we may share anonymized or aggregated data with trusted
-          partners to provide you with better services, such as personalized
-          offers. In some cases, third-party service providers may process data
-          on our behalf for payment processing, analytics, or other operational
-          needs.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            4. Data Retention and User Rights:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          You have the right to access, modify, or delete your personal
-          information at any time by contacting us. We retain your information
-          for as long as necessary to fulfill the purpose for which it was
-          collected or as required by applicable laws.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            5. International Data Transfers:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          In certain instances, your personal information may be transferred to
-          or processed in other countries. We take steps to ensure that your
-          data is protected in accordance with applicable data protection laws.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            6. Security Measures:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          All transactions on our platform are secured with 128-Bit Encryption
-          using SSL certificates. Our payment partners, including Razorpay,
-          ensure the security of your transactions. Ezys does not store any
-          payment details on our servers.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            7. Payment Gateway:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Our payment gateway partners handle all transaction-related
-          information securely. We do not have access to your payment details
-          and are not liable for any issues related to their services.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            8. Consent and Updates:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          By using our services, you consent to the terms outlined in this
-          Privacy Policy. We may update this policy from time to time, and users
-          will be notified via email for any significant changes.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>9. Contact Us:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          If you have any questions or concerns about our Privacy Policy, please
-          contact us at contact@ezyshare.in.
-        </span>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "2rem", // Consistent padding for all screen sizes
+          width: "100%", // Ensure the root div takes full width
+        }}
+      >
+        {/* Header Section */}
+        <header
+          style={{
+            width: "100%",
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // shadow-md
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "1.5rem", // p-6
+            marginBottom: "2rem", // mb-8
+            textAlign: "left", // Changed from 'center' to 'left'
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "2rem", // Adjusted for consistent sizing
+              fontWeight: "700", // font-bold
+              color: "rgb(13,148,136)", // Changed primary color
+              marginBottom: "0.5rem", // mb-2
+            }}
+          >
+            Damage Policy
+          </h1>
+          <p
+            style={{
+              fontSize: "1.125rem", // text-lg
+            }}
+          >
+            At Ezys, we understand that accidents can happen. This policy
+            outlines how we handle damaged rental items to ensure fairness and
+            clarity for everyone.
+          </p>
+        </header>
+
+        {/* Main Content Area */}
+        <main
+          style={{
+            width: "100%",
+
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // shadow-lg
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "2.5rem", // Consistent padding for all screen sizes (lg:p-10 equivalent)
+            marginBottom: "2rem", // mb-8
+          }}
+        >
+          {/* Section 1: Free Cancellations – Before Shipping */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem", // Adjusted for consistent sizing
+                fontWeight: "600", // font-semibold
+                color: "rgb(13,148,136)", // Changed primary color
+                marginBottom: "1rem", // mb-4
+                borderBottom: "1px solid #e5e7eb", // border-b
+                paddingBottom: "0.5rem", // pb-2
+                textAlign: "left", // Added for left alignment
+              }}
+            >
+              1. If You Receive a Damaged Item
+            </h2>
+            <p
+              style={{
+                marginBottom: "1rem", // mb-4
+                lineHeight: "1.625", // leading-relaxed
+              }}
+            >
+              Please inspect your rented item immediately upon delivery. If you
+              notice any damage, report it within 4 hours of receiving the item.
+              You can reach us via WhatsApp, email, or phone.
+            </p>
+          </section>
+          {/* Section 2: Damage Assessment */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🛠️ Damage Assessment
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Once we receive your report, our team will assess the issue based
+              on:
+            </p>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>The type of damage (external vs internal)</li>
+              <li>The timing of the report</li>
+              <li>Any safety or usage guidelines followed</li>
+            </ul>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              We'll be transparent throughout the process and may request
+              photos, videos, or additional details.
+            </p>
+          </section>
+
+          {/* Section 3: External Damage */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🔹 External Damage
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              You are responsible for any physical damage caused during the
+              rental period—like dents, scratches, broken buttons, or parts.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Please handle all items with care and follow basic safety
+              instructions.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              If external damage is found, repair or replacement costs will
+              apply, and we’ll inform you before proceeding.
+            </p>
+          </section>
+
+          {/* Section 4: Internal Damage */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🔸 Internal Damage
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              If the item stops working due to regular usage, we’ll take full
+              responsibility.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              However, if there is evidence of tampering or misuse, the customer
+              will be liable for the damage.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Internal issues not caused by the user will be repaired or
+              replaced by Ezys at no cost to you.
+            </p>
+          </section>
+
+          {/* Section 5: What We Expect From You */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🧾 What We Expect From You
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              To avoid damages, please:
+            </p>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>Follow usage instructions provided at the time of rental</li>
+              <li>Store and operate items in a safe environment</li>
+              <li>
+                Avoid opening, tampering with, or attempting to repair the
+                equipment yourself
+              </li>
+            </ul>
+          </section>
+
+          {/* Section 6: Charges for Damage */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              💰 Charges for Damage
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>
+                <strong>External Damage:</strong> Charges apply if the product
+                is returned with visible damage beyond normal wear and tear.
+              </li>
+              <li>
+                <strong>Internal Damage:</strong> Charges apply only if misuse
+                or neglect is confirmed.
+              </li>
+            </ul>
+          </section>
+
+          {/* Section 7: How We Resolve It */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              ✅ How We Resolve It
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Depending on the situation, Ezys will offer one of the following:
+            </p>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>
+                Replacement – If the item is severely damaged and unusable.
+              </li>
+              <li>Repair – For minor damage, we’ll restore the item.</li>
+              <li>
+                Compensation – In select cases, we may offer partial refunds or
+                discounts based on the issue.
+              </li>
+            </ul>
+          </section>
+
+          {/* Section 8: Disputes & Clarifications */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🤝 Disputes & Clarifications
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Not happy with our damage assessment? No problem. You can raise a
+              concern with our support team. We’re here to listen and resolve
+              things fairly.
+            </p>
+          </section>
+
+          {/* Section 9: Our Commitment to Quality */}
+          <section>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              🛡️ Our Commitment to Quality
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              We check every item thoroughly before and after each rental. Your
+              feedback helps us improve and continue delivering the best
+              experience.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              We appreciate your support in maintaining our rental items and
+              reporting issues promptly. Our aim is to resolve concerns smoothly
+              so you can enjoy the Ezys experience stress-free.
+            </p>
+          </section>
+        </main>
       </div>
     </main>
   );
-}
+};
+
+export default Damage;

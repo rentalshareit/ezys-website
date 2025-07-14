@@ -1,144 +1,647 @@
-import React, { useEffect, useState } from "react";
-import Faq from "react-faq-component";
+import React from "react";
 
-const data = {
-  title: "Frequently Asked Questions",
-  rows: [
-    {
-      title: "How can I rent from Ezys.",
-      content: `Renting from Ezys is a seamless process. Just explore our diverse product range, pick your preferred dates, add items to your cart, and proceed to checkout
-                                                                    OR
-                You can connect to our Chat agents to place the order.`,
-    },
-    {
-      title: "What is the minimum and maximum rental period.",
-      content: "The rental period duration can be 1 day to 30 days.",
-    },
-    {
-      title: "How is the rental calculated.",
-      content: `Our rental rates are designed to be attractive for both short-term and long-term users.
-      The longer you rent, the lower the effective per-day cost.`,
-    },
-    {
-      title: "Can I pay upon delivery.",
-      content: `Yes, pay on delivery is available for all orders`,
-    },
-    {
-      title: "What are the payment options.",
-      content: `You can make payments using UPI, credit/debit cards, net banking, and digital wallets. We don't accept cash payments.`,
-    },
-    {
-      title: "How much time does it take to refund the deposit.",
-      content:
-        "In case of eligible refunds, we aim to process and credit the amount to the customer's bank account within 5-7 working days.",
-    },
-    {
-      title:
-        "When will I get the products and how the return time is calculated.",
-      content: `The system processes the next day's orders based on stock availability. Your order will be delivered on your scheduled delivery date by 12 PM. The return time is calculated based on the delivery time, with a full 24-hour period considered as one rental day. For example, if you receive the product at 11:00 AM, the pickup will always be scheduled after that time on your return date unless a specific request is made by you.`,
-    },
-    {
-      title: "Are there any cancellation charges",
-      content: `If you cancel before the product is shipped, no charges will apply. However, if you cancel after the product has been shipped, shipping charges and rental fees for the applicable duration will be applied. For example, if you cancel after receiving the product, a one-day rental charge may be applied.`,
-    },
-    {
-      title: "Are there any damage charges.",
-      content: `Charges may apply for damages. Refer to our damage policy.`,
-    },
-    {
-      title: "How do you calculate the damage charges.",
-      content: "Refer to our damage policy.",
-    },
-    {
-      title: "What about service and maintenance.",
-      content: `Ezys provides service and maintenance support. If you experience any malfunctioning after product delivery, you can raise a ticket anytime at https://ezyshare.raiseaticket.com/support. Our team will assist you promptly.`,
-    },
-    {
-      title:
-        "What happens if any items don’t arrive as mentioned at the time of placing order.",
-      content: `Notify us within 24 hours, and we'll address the issue promptly.`,
-    },
-    {
-      title: "If my rental never arrives or arrives late, what should I do.",
-      content: `Contact us immediately to report the issue, and we'll ensure prompt resolution.`,
-    },
-    {
-      title: "Can I extend my rental.",
-      content:
-        "Yes, customers have the option to extend their rental once per order. After that, it will be treated as a new order, and the customer must return the existing product. Extensions are subject to availability. Please contact us to request an extension.",
-    },
-    {
-      title: "Will I be charged if I am late to return my rental.",
-      content: `Additional fees may apply for late returns. Contact us to make arrangements for a late return.`,
-    },
-    {
-      title: "Do I need to be present at home for delivery.",
-      content: `Yes, you or a designated representative should be present to receive and sign for the delivery.`,
-    },
-    {
-      title: "How do I avoid being charged for item damages.",
-      content: `Notify us immediately if you receive a damaged item.`,
-    },
-    {
-      title: "How does Ezys ensure the safety and quality of items.",
-      content:
-        "We have a thorough vetting process and a review system for all listed items.",
-    },
-    {
-      title: "How does Ezys protect my personal information.",
-      content: `We use encryption and other security measures to safeguard your information.`,
-    },
-    {
-      title: "Can I increase or decrease the rental period.",
-      content: `We do allow date changes after delivery. The amount will be calculated based on the rates mentioned on our website for the corresponding number of days.`,
-    },
-    {
-      title: "What documents and proof I need to submit for order.",
-      content: `You need to submit a picture of your identity and current address proof.
-                Note: Aadhaar is accepted as both proof of identity and proof of address.`,
-    },
-    {
-      title: "Do I need to deposit any security deposit.",
-      content: "Ezys don't take any security deposit.",
-    },
-    {
-      title: "Is shipping charges applicable.",
-      content: `Shipping Charges are applicable based on location`,
-    },
-    {
-      title:
-        "I am a total beginner and don't have any idea about gaming consoles and VR.",
-      content: `You can refer our Quick Guide to know about the usage do's and dont's here`,
-    },
-  ],
-};
-
-const styles = {
-  bgColor: "white",
-  titleTextColor: "rgb(23 23 23)",
-  arrowColor: "rgb(13, 148, 136)",
-  rowContentTextSize: "12px",
-  rowContentColor: "#818181",
-  rowTitleColor: "rgb(13, 148, 136)",
-  rowTitleTextSize: "14px",
-  rowContentPaddingTop: "5px",
-  rowContentPaddingBottom: "8px",
-};
-
-const config = {
-  animate: true,
-  arrowIcon: "V",
-  openOnload: 0,
-  expandIcon: "+",
-  collapseIcon: "-",
-};
-
-export default function FAQ() {
+const FAQ = () => {
   return (
     <main className="content">
-      <div className="faq">
-        <Faq data={data} styles={styles} config={config} />
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "2rem", // Consistent padding for all screen sizes
+          width: "100%", // Ensure the root div takes full width
+        }}
+      >
+        {/* Header Section */}
+        <header
+          style={{
+            width: "100%",
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // shadow-md
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "1.5rem", // p-6
+            marginBottom: "2rem", // mb-8
+            textAlign: "left", // Changed from 'center' to 'left'
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "2rem", // Adjusted for consistent sizing
+              fontWeight: "700", // font-bold
+              color: "rgb(13,148,136)", // Changed primary color
+              marginBottom: "0.5rem", // mb-2
+            }}
+          >
+            ❓ Frequently Asked Questions
+          </h1>
+        </header>
+
+        {/* Main Content Area */}
+        <main
+          style={{
+            width: "100%",
+
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // shadow-lg
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "2.5rem", // Consistent padding for all screen sizes (lg:p-10 equivalent)
+            marginBottom: "2rem", // mb-8
+          }}
+        >
+          {/* Section 1: Free Cancellations – Before Shipping */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem", // Adjusted for consistent sizing
+                fontWeight: "600", // font-semibold
+                color: "rgb(13,148,136)", // Changed primary color
+                marginBottom: "1rem", // mb-4
+                borderBottom: "1px solid #e5e7eb", // border-b
+                paddingBottom: "0.5rem", // pb-2
+                textAlign: "left", // Added for left alignment
+              }}
+            >
+              1. How can I rent from Ezys?
+            </h2>
+            <p
+              style={{
+                marginBottom: "1rem", // mb-4
+                lineHeight: "1.625", // leading-relaxed
+              }}
+            >
+              Renting is easy!
+            </p>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>Browse our product collection</li>
+              <li>Select your rental dates</li>
+              <li>Add items to your cart and proceed to checkout</li>
+              <li>Complete your KYC to confirm your order</li>
+            </ul>
+          </section>
+          {/* Section 2 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              2. What is the minimum and maximum rental duration?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              You can rent any product for a minimum of 1 day and up to 30 days.
+              Only one extension is allowed per rental.
+            </p>
+          </section>
+
+          {/* Section 3 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              3. How is the rental fee calculated?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Our pricing model is duration-based—the longer you rent, the lower
+              the per-day price.
+            </p>
+          </section>
+
+          {/* Section 4 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              4. Can I pay upon delivery?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, Pay on Delivery is available. KYC must be completed before
+              delivery.
+            </p>
+          </section>
+
+          {/* Section 5 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              5. What are the available payment options?
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>UPI</li>
+              <li>Credit/Debit Cards</li>
+              <li>Net Banking</li>
+              <li>Digital Wallets</li>
+            </ul>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Note: We do not accept cash.
+            </p>
+          </section>
+
+          {/* Section 6 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              6. Is there any security deposit?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              No. Ezys follows a zero-security deposit model.
+            </p>
+          </section>
+
+          {/* Section 7 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              7. What are the shipping charges?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Shipping charges range from ₹99 to ₹299, based on your location.
+            </p>
+          </section>
+
+          {/* Section 8 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              8. When will my product be delivered?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              You can choose both the delivery date and a preferred time slot
+              while placing the order. Once your KYC is verified (within 6
+              hours), your order will be confirmed and scheduled accordingly.
+            </p>
+          </section>
+
+          {/* Section 9 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              9. How is the return time calculated?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Rental duration is based on 24-hour cycles from delivery. For
+              example, if your product is delivered at 11 AM, return pickup will
+              be scheduled after 11 AM on your last rental day.
+            </p>
+          </section>
+
+          {/* Section 10 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              10. What documents are required to place an order?
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>A valid government ID</li>
+              <li>Proof of address (Aadhaar works for both)</li>
+            </ul>
+          </section>
+
+          {/* Section 11 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              11. Can I cancel my order?
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>Free cancellation before shipping</li>
+              <li>After shipping: shipping fees + 1-day rental may apply</li>
+              <li>No refunds once the item is delivered</li>
+            </ul>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              View full Cancellation Policy
+            </p>
+          </section>
+
+          {/* Section 12 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              12. How long does it take to process refunds?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Refunds (if applicable) are processed within 5–7 working days
+              after the product is returned and inspected.
+            </p>
+          </section>
+
+          {/* Section 13 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              13. Can I extend my rental?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, you can extend once per rental, depending on availability.
+              Further use will require a new order.
+            </p>
+          </section>
+
+          {/* Section 14 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              14. Will I be charged for late returns?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, late return fees apply. Please contact us if you need more
+              time.
+            </p>
+          </section>
+
+          {/* Section 15 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              15. Can I modify my rental period after delivery?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, you can change dates after delivery. Charges will be adjusted
+              based on the updated rental duration.
+            </p>
+          </section>
+
+          {/* Section 16 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              16. Do I need to be present at the time of delivery?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, either you or a trusted representative must be available to
+              receive and sign for the product.
+            </p>
+          </section>
+
+          {/* Section 17 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              17. What if the product is damaged or incorrect on arrival?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Report any issue within 24 hours of delivery. We’ll inspect and
+              arrange for a replacement or refund as needed.
+            </p>
+          </section>
+
+          {/* Section 18 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              18. What if my order is delayed or never arrives?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Contact our support team immediately. We’ll ensure swift
+              resolution.
+            </p>
+          </section>
+
+          {/* Section 19 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              19. Will I be charged for damage?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes, if external damage or tampering is found. Internal issues are
+              handled as per our Damage Policy.
+            </p>
+          </section>
+
+          {/* Section 20 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              20. How is damage assessed?
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>Our team inspects returned products:</li>
+              <li>Genuine issues = rental recalculated based on usage</li>
+              <li>Invalid issues = full rental charges apply</li>
+            </ul>
+          </section>
+
+          {/* Section 21 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              21. What if I face issues during my rental period?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Raise a service ticket at: <br />
+              <a
+                href="https://ezyshare.raiseaticket.com/support"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "rgb(13,148,136)" }}
+              >
+                🔗 https://ezyshare.raiseaticket.com/support
+              </a>
+            </p>
+          </section>
+
+          {/* Section 22 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              22. How do I avoid damage charges?
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                paddingLeft: "1.5rem",
+                lineHeight: "1.625",
+              }}
+            >
+              <li>Follow the setup guide carefully</li>
+              <li>Don’t force any connections or ports</li>
+              <li>Report any issue before attempting fixes</li>
+            </ul>
+          </section>
+
+          {/* Section 23 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              23. How does Ezys ensure product quality?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              All products go through thorough testing and cleaning before every
+              rental.
+            </p>
+          </section>
+
+          {/* Section 24 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              24. Is my personal data secure?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Yes. We use SSL encryption, and your payment data is handled by
+              secure gateways like Razorpay.
+            </p>
+          </section>
+
+          {/* Section 25 */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              25. I’m new to gaming/VR. Can I still rent?
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Absolutely! You’ll receive a Quick Start Guide with your product
+              to help you get started.
+            </p>
+          </section>
+        </main>
       </div>
     </main>
   );
-}
+};
+
+export default FAQ;

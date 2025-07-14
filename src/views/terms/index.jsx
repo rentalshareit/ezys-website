@@ -1,292 +1,497 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function Terms() {
+const Terms = () => {
   return (
     <main className="content">
-      <div style={{ padding: "7rem 0 0 5rem" }}>
-        <h3>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Terms and Conditions
-          </strong>
-        </h3>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Acceptance of Terms:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          By accessing or using the Ezys website ("Site"), you agree to be bound
-          by these Terms and Conditions ("Terms"). If you do not agree to these
-          Terms, please do not use the Site.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Use of Site:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          The Site is intended for personal, non-commercial use only. You may
-          not use the Site for any unlawful purpose or in violation of these
-          Terms.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Intellectual Property:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          All content on the Site, including text, graphics, logos, images, and
-          software, is the property of Ezys or its licensors and is protected by
-          copyright and other intellectual property laws.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>User Content:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          By submitting content to the Site, you grant Ezys a non-exclusive,
-          royalty-free, perpetual, irrevocable, and fully sublicensable right to
-          use, reproduce, modify, adapt, publish, translate, create derivative
-          works from, distribute, and display such content.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Privacy Policy:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Your use of the Site is subject to Ezys' Privacy Policy, which is
-          incorporated into these Terms by reference. Please review the Privacy
-          Policy carefully to understand how we collect, use, and disclose
-          information about you.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Disclaimer of Warranties:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          The Site is provided "as is" and "as available" without any
-          representations or warranties of any kind, express or implied. Ezys
-          does not warrant that the Site will be uninterrupted or error-free, or
-          that defects will be corrected.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Limitation of Liability:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          In no event shall Ezys be liable for any indirect, incidental,
-          special, or consequential damages arising out of or in connection with
-          your use of the Site or these Terms, even if advised of the
-          possibility of such damages.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Minimum Age Requirement:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          To rent products from Ezys, you must be at least 21 years of age.
-          Orders will only be fulfilled after validating a government-issued ID
-          proof to confirm your age.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Rental Duration:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Our rental duration ranges from 1 to 30 days. No extensions will be
-          granted beyond 30 days under any circumstances.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Governing Law and Jurisdiction:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          These Terms shall be governed by and construed by the laws of
-          Hyderabad, India, without regard to its conflict of law provisions.
-          Any disputes arising out of or in connection with these Terms shall be
-          subject to the exclusive jurisdiction of the courts in Hyderabad,
-          India.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Changes to Terms:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Ezys reserves the right to modify or revise these Terms at any time
-          without prior notice. Your continued use of the Site after any changes
-          to these Terms will constitute your acceptance of such changes.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Return Obligations:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          All rented items must be returned by the agreed-upon return date as
-          stated in the mail communication shared. Failure to return the rented
-          items within the stipulated time, without communication or
-          justification, will be considered a breach of this contract.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Consequences of Non-Response:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          If you fail to respond to our requests regarding overdue items, Ezys
-          reserves the right to escalate the matter, including but not limited
-          to sending formal notices. In case of continued non-compliance, Ezys
-          will pursue legal action.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Legal Action:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Failure to return the items or respond within a reasonable timeframe
-          may result in legal proceedings, including but not limited to filing
-          an FIR (First Information Report) under applicable sections of fraud,
-          cheating, and recovery of the rented goods. Any financial losses,
-          damages, or legal costs incurred as a result of such actions will be
-          borne by the customer.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Recovery of Costs:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Ezys reserves the right to recover any additional costs arising due to
-          the non-return or damage to the items, including transportation and
-          legal fees.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Reporting a Problem:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          If a customer reports an issue with the rented product during the
-          rental period, Ezys will inspect the product upon its return to verify
-          the issue.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Genuine Issues:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          If the reported issue is found to be genuine after inspection, the
-          rental fee will be recalculated based on the per-day price. Since Ezys
-          operates a rental model where the per-day cost decreases with longer
-          rental durations, the customer will be charged according to the
-          reduced per-day rate for the days the product was in use until the
-          issue was reported. Example: If an item was rented for 10 days at
-          ₹2,000 and a genuine issue is reported on Day 6, the rental fee will
-          be recalculated based on the per-day rate for the 5-day duration
-          (e.g., ₹200/day), resulting in a charge of ₹1,000 for 5 days, with the
-          remaining amount refunded.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Invalid Issues:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          If no issue is found after inspection, the customer will be charged
-          for the full rental duration as per the rates mentioned on the Ezys
-          website for that rental period. Example: If the same item was rented
-          for 10 days at ₹2,000, and the issue is reported on the 6th day but
-          found to be invalid, the rental will be charged at the full 5-day rate
-          (e.g., ₹1,500), as mentioned on the website.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>Refund Policy:</strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Refunds will be processed based on the recalculated rental amount,
-          considering the validity of the reported issue and the applicable
-          per-day rental rate. Refunds will be processed within 3 business days
-          after the product has been inspected.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <strong style={{ color: "rgb(13,148,136)" }}>
-            Limitation of Liability:
-          </strong>
-        </p>
-        <span style={{ color: "#818181" }}>
-          Ezys is not liable for any indirect or consequential damages arising
-          from reported product issues. Any refunds or adjustments to the rental
-          fees are limited to the rental fees paid by the customer for the
-          period in question.
-        </span>
-        <p>
-          <br />
-        </p>
-        <p>
-          <span style={{ color: "#818181" }}>
-            We appreciate your understanding and cooperation in adhering to our
-            terms and conditions. If you have any questions or concerns, please
-            don't hesitate to reach out to our customer service team for
-            assistance.
-          </span>
-        </p>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "2rem", // Consistent padding for all screen sizes
+          width: "100%", // Ensure the root div takes full width
+        }}
+      >
+        {/* Header Section */}
+        <header
+          style={{
+            width: "100%",
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // shadow-md
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "1.5rem", // p-6
+            marginBottom: "2rem", // mb-8
+            textAlign: "left", // Changed from 'center' to 'left'
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "2rem", // Adjusted for consistent sizing
+              fontWeight: "700", // font-bold
+              color: "rgb(13,148,136)", // Changed primary color
+              marginBottom: "0.5rem", // mb-2
+            }}
+          >
+            📄 Terms & Conditions
+          </h1>
+          <p
+            style={{
+              fontSize: "1.125rem", // text-lg
+            }}
+          >
+            Welcome to Ezys. By accessing or using our website and rental
+            services, you agree to the following Terms & Conditions. Please read
+            them carefully before placing an order or browsing the platform.
+          </p>
+        </header>
+
+        {/* Main Content Area */}
+        <main
+          style={{
+            width: "100%",
+
+            backgroundColor: "#ffffff", // bg-white
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // shadow-lg
+            borderRadius: "0.5rem", // rounded-lg
+            padding: "2.5rem", // Consistent padding for all screen sizes (lg:p-10 equivalent)
+            marginBottom: "2rem", // mb-8
+          }}
+        >
+          {/* Section 1: Free Cancellations – Before Shipping */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem", // Adjusted for consistent sizing
+                fontWeight: "600", // font-semibold
+                color: "rgb(13,148,136)", // Changed primary color
+                marginBottom: "1rem", // mb-4
+                borderBottom: "1px solid #e5e7eb", // border-b
+                paddingBottom: "0.5rem", // pb-2
+                textAlign: "left", // Added for left alignment
+              }}
+            >
+              1. Acceptance of Terms
+            </h2>
+            <p
+              style={{
+                marginBottom: "1rem", // mb-4
+                lineHeight: "1.625", // leading-relaxed
+              }}
+            >
+              By using the Ezys website ("Site"), you agree to comply with these
+              Terms & Conditions. If you do not agree, please do not use the
+              Site or our services.
+            </p>
+          </section>
+
+          {/* Section 2: Use of the Site */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              2. Use of the Site
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              The Site is intended for personal, non-commercial use. You agree
+              not to use the platform for any unlawful purposes or in violation
+              of these Terms.
+            </p>
+          </section>
+
+          {/* Section 3: Website Content */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              3. Website Content
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              All content displayed on this website—text, visuals, layout,
+              etc.—is intended solely for informative and functional use by Ezys
+              customers. Unauthorized reproduction, misuse, or scraping of
+              content is discouraged.
+            </p>
+          </section>
+
+          {/* Section 4: User Content */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              4. User Content
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              By submitting reviews, feedback, or any content to the Site, you
+              grant Ezys the right to use and display such content for
+              marketing, support, and operational purposes.
+            </p>
+          </section>
+
+          {/* Section 5: Privacy Policy */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              5. Privacy Policy
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Use of the Site is also governed by our Privacy Policy, which
+              details how we collect, store, and use your personal data.
+            </p>
+          </section>
+
+          {/* Section 6: Minimum Age Requirement */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              6. Minimum Age Requirement
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              You must be 21 years or older to rent from Ezys. All rentals
+              require KYC verification using a valid government-issued ID.
+            </p>
+          </section>
+
+          {/* Section 7: Rental Duration & Extensions */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              7. Rental Duration & Extensions
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Rental durations range from 1 to 30 days.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Only one extension is permitted per order and must be requested
+              before the rental period ends.
+            </p>
+          </section>
+
+          {/* Section 8: Return Obligations */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              8. Return Obligations
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              All rented items must be returned on or before the agreed return
+              date shared in your confirmation message. Failure to return items
+              without communication will be treated as a breach of contract.
+            </p>
+          </section>
+
+          {/* Section 9: Consequences of Non-Response */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              9. Consequences of Non-Response
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                lineHeight: "1.625",
+                paddingLeft: "1.5rem",
+              }}
+            >
+              <li>Ezys may issue formal notices</li>
+              <li>
+                Legal action may be initiated, including filing a police
+                complaint or FIR
+              </li>
+            </ul>
+          </section>
+
+          {/* Section 10: Legal Action & Cost Recovery */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              10. Legal Action & Cost Recovery
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                lineHeight: "1.625",
+                paddingLeft: "1.5rem",
+              }}
+            >
+              <li>Pursue legal recovery of items or compensation</li>
+              <li>
+                Claim damages, operational losses, transportation fees, and
+                legal expenses
+              </li>
+            </ul>
+          </section>
+
+          {/* Section 11: Issue Reporting & Inspection */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              11. Issue Reporting & Inspection
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              If you face any issues during the rental period:
+            </p>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                lineHeight: "1.625",
+                paddingLeft: "1.5rem",
+              }}
+            >
+              <li>
+                <strong>Genuine Issues:</strong> If validated upon inspection,
+                the rental fee will be recalculated based on the number of days
+                the item was used.
+                <br />
+                <em>Example:</em> If an issue is reported on Day 6 of a 10-day
+                rental, you’ll be charged the 5-day per-day rate, and the
+                balance refunded.
+              </li>
+              <li>
+                <strong>Invalid Issues:</strong> If no issue is found, the
+                original rental charges apply based on the full duration.
+              </li>
+            </ul>
+          </section>
+          {/* Section 12: Refund Policy */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              12. Refund Policy
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Approved refunds will be processed within 5–7 working days after
+              the item has been returned and inspected.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Refunds are limited to the amount paid for that rental and do not
+              cover indirect losses.
+            </p>
+          </section>
+
+          {/* Section 13: Disclaimer of Warranties */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              13. Disclaimer of Warranties
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              The Ezys platform is provided “as is.” We do not guarantee
+              uninterrupted service or freedom from errors.
+            </p>
+          </section>
+
+          {/* Section 14: Limitation of Liability */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              14. Limitation of Liability
+            </h2>
+            <ul
+              style={{
+                marginBottom: "1rem",
+                lineHeight: "1.625",
+                paddingLeft: "1.5rem",
+              }}
+            >
+              <li>Indirect, incidental, or consequential damages</li>
+              <li>Any claims beyond the value of the rental fee paid</li>
+            </ul>
+          </section>
+
+          {/* Section 15: Governing Law & Jurisdiction */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              15. Governing Law & Jurisdiction
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              These Terms shall be governed by the laws of Hyderabad, India. All
+              disputes are subject to the exclusive jurisdiction of the courts
+              in Hyderabad.
+            </p>
+          </section>
+
+          {/* Section 16: Changes to Terms */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              16. Changes to Terms
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Ezys may update these Terms without prior notice. Continued use of
+              the Site after such changes indicates your acceptance of the
+              updated Terms.
+            </p>
+          </section>
+
+          {/* Contact Us */}
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                color: "rgb(13,148,136)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid #e5e7eb",
+                paddingBottom: "0.5rem",
+                textAlign: "left",
+              }}
+            >
+              📬 Contact Us
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
+              Have questions? Reach out anytime at{" "}
+              <a
+                href="mailto:contact@ezyshare.in"
+                style={{
+                  color: "rgb(13,148,136)",
+                  textDecoration: "underline",
+                }}
+              >
+                contact@ezyshare.in
+              </a>{" "}
+              — we're here to help.
+            </p>
+          </section>
+        </main>
       </div>
     </main>
   );
-}
+};
+
+export default Terms;
