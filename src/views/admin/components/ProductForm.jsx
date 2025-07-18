@@ -33,6 +33,11 @@ const tagOptions = [
   { value: "gta5digital", label: "GTA 5 Digital" },
   { value: "screen", label: "Screen" },
   { value: "projector", label: "Projector" },
+  { value: "mea", label: "Mass Effect Andromeda" },
+  { value: "bf2", label: "Battlefront II" },
+  { value: "bm", label: "Batman Arkham Knight" },
+  { value: "fcnd", label: "Far Cry New Dawn" },
+  { value: "mkxl", label: "Mortal Kombat XL" },
 ];
 
 // Default brand names that I used. You can use what you want
