@@ -38,6 +38,9 @@ const tagOptions = [
   { value: "bm", label: "Batman Arkham Knight" },
   { value: "fcnd", label: "Far Cry New Dawn" },
   { value: "mkxl", label: "Mortal Kombat XL" },
+  { value: "rdr2", label: "Red Dead Redemption 2" },
+  { value: "w3wh", label: "Witcher 3" },
+  { value: "eaplay", label: "EA Play Subscription" },
 ];
 
 // Default brand names that I used. You can use what you want
