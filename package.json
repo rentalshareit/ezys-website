@@ -1,8 +1,8 @@
 {
-  "name": "ezys-website",
+  "name": "ecommerce-react",
   "version": "1.2.0",
   "main": "index.js",
-  "author": "BMSA Technologies Pvt Ltd",
+  "author": "Julius Guevarra",
   "keywords": [
     "react-webpack",
     "boilerplate",
@@ -64,7 +64,7 @@
     "formik": "^2.2.6",
     "history": "^4.10.0",
     "less": "^4.2.1",
-    "moment-timezone": "^0.6.0",
+    "moment": "^2.29.1",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",

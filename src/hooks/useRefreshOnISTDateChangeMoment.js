@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import moment from "moment-timezone";
+import moment from "moment";
 
 function useRefreshOnISTDateChange() {
   const getISTDate = () => {
