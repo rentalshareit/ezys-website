@@ -100,21 +100,19 @@ const BasketItem = ({
       </div>
       {availableTagItems?.some((item) => !item) && (
         <Collapse
+          defaultActiveKey={["1"]}
+          style={{ width: "100%" }}
           items={[
             {
               key: "1",
               label: (
                 <p className="basket-item-error">
-                  This item is not available for the selected rental period.
-                  Click here to see available slots.
+                  This item is out of stock for the selected dates.
                 </p>
               ),
               children: (
                 <>
-                  <span>
-                    Please select a date that fits within one of the available
-                    slots below.
-                  </span>
+                  <span>Available slots are:</span>
                   <p className="basket-item-availability">{availableSlots}</p>
                 </>
               ),

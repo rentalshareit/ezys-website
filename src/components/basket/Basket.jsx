@@ -5,7 +5,7 @@ import { CHECKOUT_STEP_1 } from "@/constants/routes";
 import firebase from "@/services/firebase";
 import "rsuite/styles/index.less";
 import { DateRangePicker } from "rsuite";
-import moment from "moment";
+import moment from "moment-timezone";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
@@ -19,14 +19,14 @@ const datesAreOnSameDay = (first, second) =>
   first.getMonth() === second.getMonth() &&
   first.getDate() === second.getDate();
 
+const getISTDate = () => {
+  return moment().tz("Asia/Kolkata");
+};
+
 const Basket = () => {
   const [date, setDate] = useState([
-    moment(
-      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-    ).add("days", 1),
-    moment(
-      new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-    ).add("days", 31),
+    getISTDate().add(1, "days").startOf("day"),
+    getISTDate().add(31, "days").startOf("day"),
   ]);
 
   const [itemsAvailable, setItemsAvailable] = useState([]);
@@ -49,14 +49,24 @@ const Basket = () => {
   );
 
   const onDateChange = (arg) => {
-    if (!datesAreOnSameDay(arg[0], arg[1])) {
-      setDate(
-        arg.map((a) =>
-          moment(
-            new Date(a).toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
-          )
-        )
-      );
+    if (!arg || !Array.isArray(arg) || arg.length !== 2) return;
+
+    const [startDate, endDate] = arg;
+    const today = getISTDate().startOf("day");
+    const tomorrow = today.clone().add(1, "days");
+
+    // Validate start date is not before tomorrow
+    if (moment(startDate).isBefore(tomorrow)) {
+      return;
+    }
+
+    // Ensure dates are in IST
+    const newStartDate = moment(startDate).tz("Asia/Kolkata").startOf("day");
+    const newEndDate = moment(endDate).tz("Asia/Kolkata").startOf("day");
+
+    // Only update if dates are different
+    if (!datesAreOnSameDay(newStartDate.toDate(), newEndDate.toDate())) {
+      setDate([newStartDate, newEndDate]);
     }
   };
 
@@ -296,37 +306,24 @@ const Basket = () => {
             )}
             {basket.length > 0 && (
               <>
+                <p>Select Rental Period</p>
                 <DateRangePicker
                   id="drpicker-rental-period"
                   value={date.map((d) => d.toDate())}
                   onChange={onDateChange}
-                  label="Select Rental Period"
                   showOneCalendar
                   showHeader={false}
                   ranges={[]}
                   editable={false}
+                  format="dd-MM-yyyy" // Enforce DD-MM-YYYY format
                   shouldDisableDate={combine(
                     combine(
                       allowedMaxDays(30),
                       before(
-                        moment(
-                          new Date().toLocaleString("en-US", {
-                            timeZone: "Asia/Kolkata",
-                          })
-                        )
-                          .add("days", 1)
-                          .toDate()
+                        getISTDate().add(1, "days").startOf("day").toDate()
                       )
                     ),
-                    after(
-                      moment(
-                        new Date().toLocaleString("en-US", {
-                          timeZone: "Asia/Kolkata",
-                        })
-                      )
-                        .add("days", 61)
-                        .toDate()
-                    )
+                    after(getISTDate().add(61, "days").startOf("day").toDate())
                   )}
                 />
                 <span className="rental-duration">
