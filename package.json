@@ -17,7 +17,7 @@
     "test": "cross-env NODE_ENV=test jest --config=jest.config.json"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^2.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "copy-webpack-plugin": "^8.1.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
@@ -45,13 +45,8 @@
     "sass-loader": "^11.0.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^4.1.1",
-    "vite": "^3.0.2",
-    "vite-plugin-mkcert": "^1.17.8",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^5.7.3",
-    "workbox-webpack-plugin": "^6.1.5"
+    "vite": "^5.0.12",
+    "vite-plugin-mkcert": "^1.17.8"
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
