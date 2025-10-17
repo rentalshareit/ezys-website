@@ -15,6 +15,7 @@ import { clearBasket } from "@/redux/actions/basketActions";
 import { CHECKOUT_STEP_2 } from "@/constants/routes";
 import { setPaymentDetails } from "@/redux/actions/checkoutActions";
 import * as Yup from "yup";
+import useProductAvailability from "@/hooks/useProductAvailability";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
 import PayOnDelivery from "./PayOnDelivery";
@@ -37,6 +38,7 @@ const Payment = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const { getAvailableProductCode } = useProductAvailability();
   const dispatch = useDispatch();
   const history = useHistory();
   const email = shipping.email || profile.email;
@@ -84,7 +86,7 @@ const Payment = ({
           coupon: "",
           tags: basket
             .map((b) =>
-              b.availableTagItems.map((a) => a.productCode).join("\n")
+              getAvailableProductCode(b, ...rentalPeriod.dates).join("\n")
             )
             .join("\n"),
         }),

@@ -102,11 +102,45 @@ const useProductAvailability = () => {
     [availabilityByTag]
   );
 
+  // Get available product code for the given dates and tags
+  const getAvailableProductCode = useCallback(
+    (product, startDate, endDate) => {
+      if (!product?.tags || !startDate || !endDate) return null;
+
+      // Parse input dates and normalize to start of day
+      const startIST = parseDate(startDate).startOf("day");
+      const endIST = parseDate(endDate).startOf("day");
+
+      // For each tag, find first item (product codes) that is available
+      const availableItemByTag = product.tags
+        .map((tag) => {
+          const tagItems = availabilityByTag[tag] || [];
+          return tagItems.find((item) =>
+            item.availability.some(([availStart, availEnd]) => {
+              const availStartDate = parseDate(availStart).startOf("day");
+              const availEndDate = parseDate(availEnd).startOf("day");
+              return (
+                availStartDate.isSameOrBefore(startIST) &&
+                availEndDate.isSameOrAfter(endIST)
+              );
+            })
+          );
+        })
+        .filter((_) => _);
+
+      return product.tags.length === availableItemByTag.length
+        ? availableItemByTag.map((item) => item.productCode)
+        : null;
+    },
+    [availabilityByTag]
+  );
+
   return {
     isLoading,
     error,
     isProductAvailable,
     getAvailableSlots,
+    getAvailableProductCode,
     availabilityData: itemsAvailable,
   };
 };
