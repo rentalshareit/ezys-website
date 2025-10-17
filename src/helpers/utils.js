@@ -40,7 +40,7 @@ export const calculateProductPrice = (
   rentalPeriod,
   format = false
 ) => {
-  if (!product || !rentalPeriod) return 0;
+  if (!product || !product.price || !rentalPeriod) return [0, 0];
 
   const price = parseInt(product.price[rentalPeriod - 1]);
   const discount = product.discount || 0;
@@ -61,14 +61,11 @@ export const calculateProductPrice = (
   return [Number(originalPrice.toFixed(2)), Number(discountedPrice.toFixed(2))];
 };
 
-export const calculateTotal = (basket, format = false) => {
+export const calculateTotal = (basket, rentalPeriod, format = false) => {
   if (!basket || basket?.length === 0) return format ? displayMoney(0) : 0;
 
   const prices = basket.map((product) => {
-    const [original, discounted] = calculateProductPrice(
-      product,
-      product.period.days
-    );
+    const [original, discounted] = calculateProductPrice(product, rentalPeriod);
     if (product.discount) return discounted;
     return original;
   });

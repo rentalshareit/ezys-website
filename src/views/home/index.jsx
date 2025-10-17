@@ -30,8 +30,8 @@ const steps = [
     target: () => document.querySelector("[id='btn-see-all-Gaming Consoles']"),
   },
   {
-    title: "Add To Basket",
-    description: "Add item to your basket",
+    title: "Add To Cart",
+    description: "Add item to your cart",
     target: () =>
       document.querySelector("[id^='btn-add-basket-Gaming Consoles-']"),
   },
@@ -89,8 +89,13 @@ const Home = () => {
           </div>
         </div>
 
-        {Object.keys(products).map((category) => (
-          <div id={`${formatCategory(category)}_display`} className="display">
+        {Object.keys(products).map((category, index) => (
+          <div
+            id={`${formatCategory(category)}_display`}
+            className="display"
+            style={{ order: index === 0 ? 1 : index === 1 ? 0 : index }}
+            key={category}
+          >
             <div className="display-header">
               <h3>
                 {isSkeleton ? (
@@ -101,7 +106,7 @@ const Home = () => {
               </h3>
               <button
                 id={`btn-see-all-${category}`}
-                className="button button-border button-border-primary button-small"
+                className="button button-border button-small"
                 type="button"
                 onClick={() => {
                   if (!isSkeleton) history.push(`/products/${category}`);

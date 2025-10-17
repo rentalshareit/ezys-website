@@ -36,10 +36,6 @@
     display: block;
     height: 100%;
   }
-
-  .searchbar {
-    width: 300px;
-  }
 }
 
 .navigation-admin {
@@ -106,4 +102,8 @@
 .navigation-menu-active {
   font-weight: bold;
   color: $button-hover;
+}
+
+.ant-picker-prefix {
+  color: $paragraph-color-primary
 }

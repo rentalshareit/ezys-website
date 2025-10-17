@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useRefreshOnISTDateChangeMoment } from "@/hooks";
+import useRefreshOnISTDateChange from "@/hooks/useRefreshOnISTDateChange";
 
 const PageRefreshOnDateChange = () => {
-  useRefreshOnISTDateChangeMoment();
+  useRefreshOnISTDateChange();
   return null;
 };
 

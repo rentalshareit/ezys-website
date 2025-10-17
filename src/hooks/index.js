@@ -8,7 +8,7 @@ export { default as useModal } from "./useModal";
 export { default as useProduct } from "./useProduct";
 export { default as useRecommendedProducts } from "./useRecommendedProducts";
 export { default as useScrollTop } from "./useScrollTop";
-export { default as useRefreshOnISTDateChangeMoment } from "./useRefreshOnISTDateChangeMoment";
+export { default as useRefreshOnISTDateChange } from "./useRefreshOnISTDateChange";
 export { default as useIdleRouteRedirect } from "./useIdleRouteRedirect";
 export { default as useShippingCharges } from "./useShippingCharges";
 export { default as useShippingDistance } from "./useShippingDistance";

@@ -1,5 +1,5 @@
 .searchbar {
-  width: 400px;
+  width: 500px;
   display: flex;
   position: relative;
 }
@@ -78,4 +78,22 @@
   margin: auto;
   color: #7a7a7a;
   font-size: 1.6rem;
+}
+
+/* Stack the calendar panels vertically */
+.responsive-range-picker .ant-picker-panels {
+  flex-direction: column;
+}
+
+  /* Hide the second panel */
+.responsive-range-picker .ant-picker-panel:last-child {
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+}
+
+  /* Make the "next month" and "next year" buttons visible on the first panel */
+.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-next-btn,
+.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-super-next-btn {
+  visibility: visible!important;
 }

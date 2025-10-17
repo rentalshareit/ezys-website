@@ -15,6 +15,9 @@ const withCheckout = (Component) =>
   withRouter((props) => {
     const location = useLocation();
     const history = useHistory();
+    const { rentalPeriod } = useSelector((state) => ({
+      rentalPeriod: state.app.rentalPeriod,
+    }));
     // Redirect to home if the user is idle for a certain period
     // and not coming from a basket checkout click
     useIdleRouteRedirect();
@@ -34,7 +37,7 @@ const withCheckout = (Component) =>
     }));
 
     // Subtotal calculation does not include any discounts or offers or shipping charges
-    const subtotal = calculateTotal(state?.basket);
+    const subtotal = calculateTotal(state?.basket, rentalPeriod.days);
 
     if (state.isAuth) {
       return (

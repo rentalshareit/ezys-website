@@ -1,10 +1,17 @@
+import dayjs, { formatDate } from "@/helpers/dayjs";
 import {
   IS_AUTHENTICATING,
   LOADING,
   SET_AUTH_STATUS,
   SET_REQUEST_STATUS,
   UPDATE_TOUR_STATUS,
+  UPDATE_RENTAL_PERIOD,
 } from "@/constants/constants";
+
+const getDefaultRangeDate = () => [
+  formatDate(dayjs().add(1, "day")),
+  formatDate(dayjs().add(8, "day")),
+];
 
 const initState = {
   loading: false,
@@ -15,6 +22,10 @@ const initState = {
   tour: {
     home: false,
     productCategory: false,
+  },
+  rentalPeriod: {
+    dates: getDefaultRangeDate(),
+    days: 7,
   },
 };
 
@@ -56,6 +67,14 @@ export default (state = initState, action) => {
         tour: {
           ...state.tour,
           [action.payload.page]: action.payload.status,
+        },
+      };
+    case UPDATE_RENTAL_PERIOD:
+      return {
+        ...state,
+        rentalPeriod: {
+          dates: action.payload.dates,
+          days: action.payload.days,
         },
       };
     default:

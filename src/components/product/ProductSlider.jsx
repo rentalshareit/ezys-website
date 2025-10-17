@@ -20,7 +20,7 @@ const ProductSlider = ({ products, itemsToShow }) => {
       responsive={responsive}
       infinite={!isSkeleton} // Enable infinite loop
       autoPlay={!isSkeleton} // Auto-scroll
-      autoPlaySpeed={isSkeleton ? 0 : 3000} // Speed of auto-scroll in ms
+      autoPlaySpeed={isSkeleton ? 0 : 5000} // Speed of auto-scroll in ms
       keyBoardControl={true} // Allow keyboard navigation
       transitionDuration={isSkeleton ? 0 : 1000} // Duration of the slide animation in ms
       showDots={false} // Show navigation dots

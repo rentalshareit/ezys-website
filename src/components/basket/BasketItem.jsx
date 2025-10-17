@@ -4,53 +4,25 @@ import { ImageLoader } from "@/components/common";
 import { displayMoney } from "@/helpers/utils";
 import PropType from "prop-types";
 import React, { useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Collapse } from "antd";
+import { Alert } from "antd";
 import {
   removeFromBasket,
   updateAvailableTagItems,
 } from "@/redux/actions/basketActions";
 import { calculateProductPrice } from "@/helpers/utils";
 
-const BasketItem = ({
-  product,
-  rentalPeriod,
-  getTagItemsForProducts,
-  getAvailableSlots,
-}) => {
+const BasketItem = ({ product, isItemOutOfStock }) => {
   const dispatch = useDispatch();
+  const { rentalPeriod } = useSelector((state) => ({
+    rentalPeriod: state.app.rentalPeriod,
+  }));
   const onRemoveFromBasket = () => dispatch(removeFromBasket(product.id));
-
-  const availableTagItems = useMemo(
-    () => getTagItemsForProducts(product),
-    [getTagItemsForProducts, product]
-  );
-
-  useEffect(() => {
-    // This null is the case when you are on checkout page and same component is used.
-    // If you are on checkout page, you don't want to update the available tag item as item is already selected.
-    if (availableTagItems === null) return;
-
-    const availableTagItemsProductCode = availableTagItems
-      .map((item) => item?.productCode)
-      .join(",");
-
-    if (
-      availableTagItemsProductCode !==
-      product?.availableTagItems?.map((item) => item?.productCode).join(",")
-    )
-      dispatch(updateAvailableTagItems(product.id, availableTagItems));
-  }, [availableTagItems, dispatch, product.id]);
-
-  const availableSlots = useMemo(
-    () => getAvailableSlots(product),
-    [getAvailableSlots, product]
-  );
 
   const [originalPrice, discountedPrice] = calculateProductPrice(
     product,
-    rentalPeriod,
+    rentalPeriod.days,
     true
   );
 
@@ -98,26 +70,11 @@ const BasketItem = ({
           </button>
         </div>
       </div>
-      {availableTagItems?.some((item) => !item) && (
-        <Collapse
-          defaultActiveKey={["1"]}
-          style={{ width: "100%" }}
-          items={[
-            {
-              key: "1",
-              label: (
-                <p className="basket-item-error">
-                  This item is out of stock for the selected dates.
-                </p>
-              ),
-              children: (
-                <>
-                  <span>Available slots are:</span>
-                  <p className="basket-item-availability">{availableSlots}</p>
-                </>
-              ),
-            },
-          ]}
+      {isItemOutOfStock(product) && (
+        <Alert
+          message="Out of stock for selected dates"
+          type="error"
+          showIcon
         />
       )}
     </div>
@@ -144,13 +101,7 @@ BasketItem.propTypes = {
     availableColors: PropType.arrayOf(PropType.string),
   }).isRequired,
   rentalPeriod: PropType.number,
-  availableTagItems: PropType.arrayOf(PropType.any),
-  getAvailableSlots: PropType.func,
-};
-
-BasketItem.DefaultProps = {
-  getTagItemsForProducts: () => null,
-  getAvailableSlots: () => {},
+  isItemOutOfStock: PropType.func.isRequired,
 };
 
 export default BasketItem;

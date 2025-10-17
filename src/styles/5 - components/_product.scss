@@ -55,6 +55,12 @@
   }
 }
 
+.ant-btn.ant-btn-variant-link {
+  & > span {
+    color: $border-color-primary-dark
+  }
+}
+
 
 .product-showcase-grid {
   display: flex;
@@ -71,6 +77,11 @@
     flex-direction: row;
     justify-content: space-around;
   }
+}
+
+.ant-card-actions {
+  display: flex;
+  align-items: center;
 }
 
 .product-card {
@@ -215,7 +226,7 @@
 
 // PRODUCT MODAL -------------------------------------------------
 .product-view {
-  margin: 0 5rem;
+  margin: 5rem;
 
   @include tablet {
     width: 100%;
@@ -238,11 +249,7 @@
 }
 
 .product-modal-image-wrapper {
-  width: 60rem;
-  // height: 40rem;
-  height: inherit;
-  flex-grow: 1;
-  position: relative;
+  flex: 2;
 
   @include mobile {
     width: 100%;
@@ -322,7 +329,7 @@
 }
 
 .product-modal-details {
-  width: 740px;
+  flex: 3;
   padding: 0 $xl-size;
 
   @include tablet {
@@ -532,7 +539,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: $xs-size;
+  margin-bottom: $l-size;
 
   a {
     text-decoration: underline;
@@ -604,4 +611,8 @@
   padding-top: 10px;
   text-align: center;
   padding-bottom: 5px;
+}
+
+.react-multiple-carousel__arrow {
+  background-color: $border-color-primary-dark;
 }

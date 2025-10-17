@@ -4,6 +4,7 @@ import {
   SET_AUTH_STATUS,
   SET_REQUEST_STATUS,
   UPDATE_TOUR_STATUS,
+  UPDATE_RENTAL_PERIOD,
 } from "@/constants/constants";
 
 export const setLoading = (bool = true) => ({
@@ -28,5 +29,10 @@ export const setAuthStatus = (status = null) => ({
 
 export const updateTourStatus = (payload) => ({
   type: UPDATE_TOUR_STATUS,
+  payload,
+});
+
+export const updateRentalPeriod = (payload) => ({
+  type: UPDATE_RENTAL_PERIOD,
   payload,
 });

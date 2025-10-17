@@ -1,23 +1,151 @@
-import { ImageLoader } from "@/components/common";
-import { Badge, Button, Card } from "antd";
-import { PlusSquareOutlined } from "@ant-design/icons";
+import React, { useCallback, useMemo } from "react";
 import PropType from "prop-types";
-import { useBasket } from "@/hooks";
-import React, { useCallback, useState } from "react";
-import Skeleton from "react-loading-skeleton";
+import { Badge, Button, Card } from "antd";
+import ProductAvailability from "./ProductAvailability";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import ProductPrice from "./ProductPrice";
+import { useBasket } from "@/hooks";
+import useProductAvailability from "@/hooks/useProductAvailability";
+import { calculateProductPrice } from "@/helpers/utils";
+import ProductSkeleton from "./ProductSkeleton";
+import {
+  priceContainerStyles,
+  priceStyles,
+  daysTextStyles,
+} from "./ProductFeatured.styles";
+
+const ProductActionButton = ({
+  isOutOfStock,
+  isInBasket,
+  onClick,
+  productId,
+  category,
+}) => {
+  const getButtonType = () => {
+    if (isOutOfStock || isInBasket) {
+      return "default";
+    }
+    return "primary";
+  };
+
+  const getButtonText = () => {
+    if (isOutOfStock) {
+      return "Out Of Stock";
+    }
+    if (isInBasket) {
+      return "Remove From Cart";
+    }
+    return "Add To Cart";
+  };
+
+  return (
+    <Button
+      id={`btn-add-basket-${category}-${productId}`}
+      disabled={isOutOfStock}
+      type={getButtonType()}
+      onClick={onClick}
+    >
+      {getButtonText()}
+    </Button>
+  );
+};
+
+const ProductPrice = ({ original, days, discounted }) => (
+  <div style={priceContainerStyles}>
+    {original !== discounted ? (
+      <>
+        <span
+          style={{
+            ...priceStyles,
+            textDecoration: "line-through",
+            color: "#999",
+          }}
+        >
+          {original}
+        </span>
+        <span style={{ ...priceStyles, paddingLeft: "0.5rem" }}>
+          {discounted}
+        </span>
+      </>
+    ) : (
+      <span style={priceStyles}>{original}</span>
+    )}
+    <br />
+    <span style={daysTextStyles}>{`for ${days} days`}</span>
+  </div>
+);
+
+const ProductCardContent = ({
+  product,
+  isOutOfStock,
+  isLoading,
+  rentalPeriod,
+}) => (
+  <img
+    src={product.image}
+    style={{ width: "100%", height: "280px", objectFit: "contain" }}
+    alt={product.name}
+  />
+);
+
+const getDiscountBadgeText = (discount) => {
+  if (!discount) return 0;
+  return `${discount}% off`;
+};
+
+const getCardActions = ({
+  isOutOfStock,
+  isInBasket,
+  onAddToBasket,
+  product,
+  original,
+  rentalPeriod,
+  discounted,
+}) => {
+  return [
+    <ProductActionButton
+      key="action"
+      isOutOfStock={isOutOfStock}
+      isInBasket={isInBasket}
+      onClick={onAddToBasket}
+      productId={product.id}
+      category={product.category}
+    />,
+    isOutOfStock ? (
+      <ProductAvailability key="availability" product={product} />
+    ) : (
+      <ProductPrice
+        key="price"
+        original={original}
+        discounted={discounted}
+        days={rentalPeriod.days}
+      />
+    ),
+  ];
+};
 
 const ProductFeatured = ({ product }) => {
   const { skeleton = false } = product;
-  const [showPrice, setShowPrice] = useState(false);
   const { addToBasket, isItemOnBasket } = useBasket();
+  const { isProductAvailable, isLoading } = useProductAvailability();
   const history = useHistory();
+  const { rentalPeriod } = useSelector((state) => ({
+    rentalPeriod: state.app.rentalPeriod,
+  }));
 
   const onClickItem = useCallback(() => {
     if (!product || skeleton) return;
     history.push(`/product/${product.id}`);
-  }, []);
+  }, [product, skeleton, history]);
+
+  const isItemAlreadyInBasket = isItemOnBasket(product.id);
+
+  const isItemOutOfStock = useMemo(() => {
+    if (product.skeleton) {
+      return false;
+    }
+    return !isProductAvailable(product, ...rentalPeriod.dates);
+  }, [isProductAvailable, product, rentalPeriod]);
 
   const onAddToBasket = useCallback(
     (e) => {
@@ -27,12 +155,15 @@ const ProductFeatured = ({ product }) => {
     [product, addToBasket]
   );
 
-  const onViewPriceClick = useCallback((e) => {
-    e.stopPropagation();
-    setShowPrice(true);
-  }, []);
+  const [original, discounted] = calculateProductPrice(
+    product,
+    rentalPeriod.days,
+    true
+  );
 
-  const isItemAlreadyInBasket = isItemOnBasket(product.id);
+  if (skeleton || isLoading) {
+    return <ProductSkeleton />;
+  }
 
   return (
     <div>
@@ -55,54 +186,27 @@ const ProductFeatured = ({ product }) => {
             justifyContent: "space-between",
           }}
           size="small"
-          actions={[
-            skeleton ? (
-              <Skeleton style={{ width: "100px", lineHeight: "30px" }} />
-            ) : (
-              <Button
-                id={`btn-add-basket-${product.category}-${product.id}`}
-                type={isItemAlreadyInBasket ? "default" : "primary"}
-                onClick={onAddToBasket}
-              >
-                {isItemAlreadyInBasket ? "Remove From Basket" : "Add To Basket"}
-              </Button>
-            ),
-            skeleton ? (
-              <Skeleton style={{ width: "100px", lineHeight: "30px" }} />
-            ) : (
-              <Button
-                id={`btn-view-price-${product.category}-${product.id}`}
-                type="primary"
-                onClick={onViewPriceClick}
-              >
-                View Price
-              </Button>
-            ),
-          ]}
+          actions={getCardActions({
+            isOutOfStock: isItemOutOfStock,
+            isInBasket: isItemAlreadyInBasket,
+            onAddToBasket: onAddToBasket,
+            product,
+            original,
+            rentalPeriod,
+            discounted,
+          })}
           cover={
-            skeleton ? (
-              <Skeleton style={{ width: "100%", height: "280px" }} />
-            ) : (
-              <img
-                src={product.image}
-                style={{ width: "100%", height: "280px", objectFit: "contain" }}
-              />
-            )
+            <ProductCardContent
+              product={product}
+              isOutOfStock={isItemOutOfStock}
+              isLoading={isLoading}
+              rentalPeriod={rentalPeriod}
+            />
           }
         >
-          <Card.Meta
-            title={skeleton ? <Skeleton /> : product.name}
-            description={
-              skeleton ? <Skeleton style={{ width: "20%" }} /> : product.brand
-            }
-          />
+          <Card.Meta title={product.name} description={product.brand} />
         </Card>
       </Badge>
-      <ProductPrice
-        product={product}
-        onClose={() => setShowPrice(false)}
-        showPrice={showPrice}
-      />
     </div>
   );
 };
@@ -113,6 +217,9 @@ ProductFeatured.propTypes = {
     name: PropType.string,
     id: PropType.string,
     brand: PropType.string,
+    category: PropType.string,
+    discount: PropType.number,
+    skeleton: PropType.bool,
   }).isRequired,
 };
 

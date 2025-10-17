@@ -31,10 +31,8 @@ const OrderSummary = ({ basket, subtotal }) => {
           {basket.map((product) => (
             <BasketItem
               key={product.id}
-              rentalPeriod={product.period.days}
               product={product}
-              getTagItemsForProducts={() => null}
-              getAvailableSlots={() => null}
+              isItemOutOfStock={() => null}
             />
           ))}
         </div>

@@ -2,15 +2,17 @@
 import { FilterOutlined, ShoppingOutlined } from "@ant-design/icons";
 import * as ROUTE from "@/constants/routes";
 import logo from "@/images/ezys-logo.png";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { Select, Button } from "antd";
 import UserAvatar from "@/views/account/components/UserAvatar";
 import BasketToggle from "../basket/BasketToggle";
 import Badge from "./Badge";
 import MobileNavigation from "./MobileNavigation";
 import SearchBar from "./SearchBar";
 import Signin from "./SignIn";
+import LocationDisplay from "./LocationDisplay";
 
 const ADMIN_ROUTES = [
   ROUTE.ADMIN_DASHBOARD,
@@ -123,6 +125,7 @@ const Navigation = () => {
           </li>
         )}
       </ul>
+
       <SearchBar />
       <ul className="navigation-menu">
         <li className="navigation-menu-item">
@@ -148,14 +151,14 @@ const Navigation = () => {
           </li>
         ) : (
           <li className="navigation-action">
-            <Link
-              className="button button-small button-muted margin-left-s"
-              onClick={onSignInClick}
-            >
+            <Button type="primary" onClick={onSignInClick}>
               Sign In
-            </Link>
+            </Button>
           </li>
         )}
+        <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+          <LocationDisplay />
+        </li>
       </ul>
       <Signin show={show} onClose={() => setShow(false)} />
     </nav>

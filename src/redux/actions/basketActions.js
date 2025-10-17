@@ -38,11 +38,6 @@ export const minusQtyItem = (id) => ({
   payload: id,
 });
 
-export const updateRentalPeriod = (period) => ({
-  type: UPDATE_RENTAL_PERIOD,
-  payload: period,
-});
-
 export const updateAvailableTagItems = (id, availableTagItems) => ({
   type: UPDATE_AVAILABLE_TAG_ITEMS,
   payload: { id, availableTagItems },

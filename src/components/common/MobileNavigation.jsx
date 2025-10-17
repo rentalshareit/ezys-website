@@ -9,6 +9,7 @@ import logo from "@/images/ezys-logo.png";
 import Badge from "./Badge";
 import SearchBar from "./SearchBar";
 import Signin from "./SignIn";
+import LocationDisplay from "./LocationDisplay";
 
 const Navigation = (props) => {
   const [show, setShow] = useState(false);
@@ -70,6 +71,9 @@ const Navigation = (props) => {
               </Link>
             </li>
           )}
+          <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+            <LocationDisplay />
+          </li>
         </ul>
       </div>
       <div className="mobile-navigation-sec">

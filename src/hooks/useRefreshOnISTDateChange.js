@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import moment from "moment-timezone";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+// Extend dayjs with plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// Set default timezone to IST
+dayjs.tz.setDefault("Asia/Kolkata");
 
 function useRefreshOnISTDateChange() {
   const getISTDate = () => {
-    const nowUTC = moment.utc();
-    const istOffset = 5.5 * 60; // Offset in minutes
-    return nowUTC.add(istOffset, "minutes").startOf("day");
+    return dayjs().tz("Asia/Kolkata").startOf("day");
   };
 
   const [istDate, setIstDate] = useState(getISTDate());
@@ -17,7 +24,7 @@ function useRefreshOnISTDateChange() {
         window.location.reload();
       }
       setIstDate(newISTDate);
-    }, 60 * 1000);
+    }, 60 * 1000); // Check every minute
 
     return () => clearInterval(intervalId);
   }, [istDate]);

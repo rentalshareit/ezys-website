@@ -1,9 +1,10 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Spin, Tour, Badge } from "antd";
+import { useSelector } from "react-redux";
 import { ImageLoader, MessageDisplay } from "@/components/common";
-import { ProductShowcaseGrid, ProductPrice } from "@/components/product";
+import { ProductShowcaseGrid } from "@/components/product";
 import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
-import { displayMoney } from "@/helpers/utils";
+import { displayMoney, calculateProductPrice } from "@/helpers/utils";
 import {
   useBasket,
   useDocumentTitle,
@@ -17,9 +18,9 @@ import { Link, useParams, useHistory } from "react-router-dom";
 
 const steps = [
   {
-    title: "Add to Basket",
+    title: "Add to Cart",
     description:
-      "Click here to add the product to your basket. You can change rental period in the basket.",
+      "Click here to add the product to your cart. You can change rental period in the basket.",
     target: () => document.querySelector("[id^=btn-add-basket-]"),
   },
   {
@@ -55,8 +56,45 @@ const styles = {
   },
 };
 
+const priceContainerStyles = {
+  lineHeight: "18px",
+};
+
+const priceStyles = {
+  fontSize: "small",
+  color: "rgb(13, 148, 136)",
+};
+
+const daysTextStyles = {
+  fontSize: "x-small",
+};
+
+const ProductPrice = ({ original, days, discounted }) => (
+  <div style={priceContainerStyles}>
+    {original !== discounted ? (
+      <>
+        <span
+          style={{
+            ...priceStyles,
+            textDecoration: "line-through",
+            color: "#999",
+          }}
+        >
+          {original}
+        </span>
+        <span style={{ ...priceStyles, paddingLeft: "0.5rem" }}>
+          {discounted}
+        </span>
+      </>
+    ) : (
+      <span style={priceStyles}>{original}</span>
+    )}
+    <br />
+    <span style={daysTextStyles}>{`for ${days} days`}</span>
+  </div>
+);
+
 const ViewProduct = () => {
-  const [showPrice, setShowPrice] = useState(false);
   const { id } = useParams();
   const history = useHistory();
   const { product, isLoading, error } = useProduct(id);
@@ -70,6 +108,16 @@ const ViewProduct = () => {
   const { addToBasket, isItemOnBasket } = useBasket();
   useScrollTop();
   useDocumentTitle(`View ${product?.name || "Item"}`);
+
+  const { rentalPeriod } = useSelector((state) => ({
+    rentalPeriod: state.app.rentalPeriod,
+  }));
+
+  const [original, discounted] = calculateProductPrice(
+    product,
+    rentalPeriod.days,
+    true
+  );
 
   const [selectedImage, setSelectedImage] = useState(product?.image || "");
 
@@ -87,10 +135,6 @@ const ViewProduct = () => {
 
   const onSelectedSizeChange = (newValue) => {
     setSelectedSize(newValue.value);
-  };
-
-  const handlePriceView = () => {
-    setShowPrice(true);
   };
 
   const handleAddToBasket = () => {
@@ -228,17 +272,15 @@ const ViewProduct = () => {
                   type="button"
                 >
                   {isItemOnBasket(product.id)
-                    ? "Remove From Basket"
-                    : "Add To Basket"}
+                    ? "Remove From Cart"
+                    : "Add To Cart"}
                 </button>
-                <button
-                  id={`btn-view-price-${product.id}`}
-                  className="button button-small"
-                  onClick={handlePriceView}
-                  type="button"
-                >
-                  View Price
-                </button>
+                <ProductPrice
+                  key="price"
+                  original={original}
+                  discounted={discounted}
+                  days={rentalPeriod.days}
+                />
               </div>
             </div>
           </div>
@@ -246,7 +288,7 @@ const ViewProduct = () => {
             <div className="display-header">
               <h3>Recommended</h3>
               <button
-                className="button button-border button-border-primary button-small"
+                className="button button-border button-small"
                 type="button"
                 onClick={() => history.push(RECOMMENDED_PRODUCTS)}
               >
@@ -268,11 +310,6 @@ const ViewProduct = () => {
           </div>
         </div>
       )}
-      <ProductPrice
-        product={product}
-        showPrice={showPrice}
-        onClose={() => setShowPrice(false)}
-      />
     </main>
   );
 };

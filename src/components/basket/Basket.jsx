@@ -3,80 +3,29 @@ import { BasketItem, BasketToggle } from "@/components/basket";
 import { Boundary, Modal, SignIn } from "@/components/common";
 import { CHECKOUT_STEP_1 } from "@/constants/routes";
 import firebase from "@/services/firebase";
-import "rsuite/styles/index.less";
-import { DateRangePicker } from "rsuite";
-import moment from "moment-timezone";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
+import useProductAvailability from "@/hooks/useProductAvailability";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
-import { clearBasket, updateRentalPeriod } from "@/redux/actions/basketActions";
-import { set } from "date-fns";
-
-const datesAreOnSameDay = (first, second) =>
-  first.getFullYear() === second.getFullYear() &&
-  first.getMonth() === second.getMonth() &&
-  first.getDate() === second.getDate();
-
-const getISTDate = () => {
-  return moment().tz("Asia/Kolkata");
-};
+import { clearBasket } from "@/redux/actions/basketActions";
 
 const Basket = () => {
-  const [date, setDate] = useState([
-    getISTDate().add(1, "days").startOf("day"),
-    getISTDate().add(31, "days").startOf("day"),
-  ]);
-
-  const [itemsAvailable, setItemsAvailable] = useState([]);
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
-  const { combine, allowedMaxDays, before, after } = DateRangePicker;
-  const { basket, user, authStatus } = useSelector((state) => ({
+  const { isProductAvailable, getAvailableSlots } = useProductAvailability();
+  const { basket, user, authStatus, rentalPeriod } = useSelector((state) => ({
     basket: state.basket,
     user: state.auth,
     authStatus: state.app.authStatus,
+    rentalPeriod: state.app.rentalPeriod,
   }));
+
   const history = useHistory();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const didMount = useDidMount();
-
-  const getRentalPeriod = useCallback(
-    () => Math.abs(date[1].diff(date[0], "days")),
-    [date]
-  );
-
-  const onDateChange = (arg) => {
-    if (!arg || !Array.isArray(arg) || arg.length !== 2) return;
-
-    const [startDate, endDate] = arg;
-    const today = getISTDate().startOf("day");
-    const tomorrow = today.clone().add(1, "days");
-
-    // Validate start date is not before tomorrow
-    if (moment(startDate).isBefore(tomorrow)) {
-      return;
-    }
-
-    // Ensure dates are in IST
-    const newStartDate = moment(startDate).tz("Asia/Kolkata").startOf("day");
-    const newEndDate = moment(endDate).tz("Asia/Kolkata").startOf("day");
-
-    // Only update if dates are different
-    if (!datesAreOnSameDay(newStartDate.toDate(), newEndDate.toDate())) {
-      setDate([newStartDate, newEndDate]);
-    }
-  };
-
-  useEffect(async () => {
-    const response = await fetch(
-      `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getCurrentAvailability`
-    );
-    const data = await response.json();
-    setItemsAvailable(data);
-  }, []);
 
   useEffect(() => {
     if (didMount && firebase.auth.currentUser) {
@@ -98,15 +47,6 @@ const Basket = () => {
   }, [basket.length]);
 
   useEffect(() => {
-    dispatch(
-      updateRentalPeriod({
-        dates: [date[0].format("DD/MM/YYYY"), date[1].format("DD/MM/YYYY")],
-        days: getRentalPeriod(),
-      })
-    );
-  }, [date]);
-
-  useEffect(() => {
     if (authStatus?.success && show) {
       setShow(false);
     }
@@ -123,6 +63,17 @@ const Basket = () => {
     }
   };
 
+  const isAnyItemOutOfStock = useMemo(
+    () =>
+      basket.some((item) => !isProductAvailable(item, ...rentalPeriod.dates)),
+    [basket, isProductAvailable, rentalPeriod]
+  );
+
+  const isItemOutOfStock = useCallback(
+    (item) => !isProductAvailable(item, ...rentalPeriod.dates),
+    [isProductAvailable, rentalPeriod]
+  );
+
   const onSignInClick = () => {
     onCloseModal();
     setShow(true);
@@ -133,122 +84,6 @@ const Basket = () => {
       dispatch(clearBasket());
     }
   };
-
-  const getTagItemsForProducts = useCallback(
-    (product) => {
-      const { tags } = product;
-      const tagsItems = tags.map((tag) => {
-        const tagItemsAvailable = itemsAvailable.filter(
-          (item) => item.type === tag
-        );
-        const tagItem = tagItemsAvailable.find((availableItem) => {
-          return availableItem.availability.some(([start, end]) => {
-            const rentalStart = date[0].toDate();
-            const rentalEnd = date[1].toDate();
-
-            return (
-              moment(start, "DD/MM/YYYY").toDate() <= rentalStart &&
-              moment(end, "DD/MM/YYYY").toDate() >= rentalEnd
-            );
-          });
-        });
-        return tagItem;
-      });
-
-      return tagsItems;
-    },
-    [date, itemsAvailable]
-  );
-
-  const isAnyItemOutOfStock = useMemo(() => {
-    return basket.some((product) =>
-      getTagItemsForProducts(product).some((item) => !item)
-    );
-  }, [basket, getTagItemsForProducts]);
-
-  const getAvailableSlots = useCallback(
-    (product) => {
-      const { tags } = product;
-
-      const allTagsIntervals = tags.map((tag) => {
-        const tagItemsAvailable = itemsAvailable.filter(
-          (item) => item.type === tag
-        );
-        const mergedIntervals = tagItemsAvailable
-          .flatMap((availableItem) => availableItem.availability)
-          .map(([start, end]) => ({
-            start: moment(start, "DD/MM/YYYY").toDate(),
-            end: moment(end, "DD/MM/YYYY").toDate(),
-          }))
-          .sort((a, b) => a.start - b.start)
-          .reduce((merged, current) => {
-            const last = merged[merged.length - 1];
-            if (!last || current.start > last.end) {
-              merged.push(current);
-            } else if (current.end <= last.end) {
-              // Skip the current interval as it is fully covered by the last interval
-              return merged;
-            } else {
-              merged.push(current);
-            }
-            return merged;
-          }, [])
-          .map(({ start, end }) => [
-            moment(start).format("DD/MM/YYYY"),
-            moment(end).format("DD/MM/YYYY"),
-          ]);
-
-        return mergedIntervals;
-      });
-
-      const commonIntervals = allTagsIntervals.reduce((common, intervals) => {
-        if (!common.length) return intervals;
-
-        return common
-          .map(([commonStart, commonEnd]) => {
-            return intervals
-              .map(([start, end]) => {
-                const overlapStart = moment.max(
-                  moment(commonStart, "DD/MM/YYYY"),
-                  moment(start, "DD/MM/YYYY")
-                );
-                const overlapEnd = moment.min(
-                  moment(commonEnd, "DD/MM/YYYY"),
-                  moment(end, "DD/MM/YYYY")
-                );
-
-                if (
-                  overlapStart.isBefore(overlapEnd) ||
-                  overlapStart.isSame(overlapEnd)
-                ) {
-                  return [
-                    overlapStart.format("DD/MM/YYYY"),
-                    overlapEnd.format("DD/MM/YYYY"),
-                  ];
-                }
-                return null;
-              })
-              .filter(Boolean);
-          })
-          .flat();
-      }, []);
-
-      if (!commonIntervals.length) {
-        return "No available slots for next 2 months. Please check back later.";
-      }
-
-      return commonIntervals
-        .map(
-          ([start, end]) =>
-            `${moment(start, "DD/MM/YYYY").format("DD MMM")} - ${moment(
-              end,
-              "DD/MM/YYYY"
-            ).format("DD MMM")}`
-        )
-        .join(", ");
-    },
-    [itemsAvailable]
-  );
 
   return (
     <>
@@ -277,7 +112,7 @@ const Basket = () => {
         <div className="basket">
           <div className="basket-list">
             <div className="basket-header">
-              <h3 className="basket-header-title">My Basket</h3>
+              <h3 className="basket-header-title">My Cart</h3>
               <BasketToggle>
                 {({ onClickToggle }) => (
                   <button
@@ -304,64 +139,49 @@ const Basket = () => {
                 <h5 className="basket-empty-msg">Your basket is empty</h5>
               </div>
             )}
-            {basket.length > 0 && (
-              <>
-                <p>Select Rental Period</p>
-                <DateRangePicker
-                  id="drpicker-rental-period"
-                  value={date.map((d) => d.toDate())}
-                  onChange={onDateChange}
-                  showOneCalendar
-                  showHeader={false}
-                  ranges={[]}
-                  editable={false}
-                  format="dd-MM-yyyy" // Enforce DD-MM-YYYY format
-                  shouldDisableDate={combine(
-                    combine(
-                      allowedMaxDays(30),
-                      before(
-                        getISTDate().add(1, "days").startOf("day").toDate()
-                      )
-                    ),
-                    after(getISTDate().add(61, "days").startOf("day").toDate())
-                  )}
-                />
-                <span className="rental-duration">
-                  Rental Duration: {getRentalPeriod()} Days
-                </span>
-              </>
-            )}
             {basket.map((product, i) => (
               <BasketItem
                 // eslint-disable-next-line react/no-array-index-key
                 key={`${product.id}_${i}`}
                 product={product}
-                rentalPeriod={getRentalPeriod()}
-                getTagItemsForProducts={getTagItemsForProducts}
-                getAvailableSlots={getAvailableSlots}
+                isItemOutOfStock={isItemOutOfStock}
               />
             ))}
           </div>
 
           <div className="basket-checkout">
-            <div className="basket-total">
-              <span className="basket-total-title">Subtotal Amout:</span>
-              <h4 className="basket-total-amount">
-                {calculateTotal(basket, true)}
-              </h4>
+            <div>
+              {basket.length > 0 && (
+                <div className="basket-rental-period">
+                  <span className="basket-rental-period-title">
+                    Rental Period:
+                  </span>
+                  &nbsp;
+                  {rentalPeriod.dates[0]} {" to "}
+                  {rentalPeriod.dates[1]} ({rentalPeriod.days} days)
+                </div>
+              )}
+              <div className="basket-total">
+                <span className="basket-total-title">Subtotal Amout:</span>
+                <h4 className="basket-total-amount">
+                  {calculateTotal(basket, rentalPeriod.days, true)}
+                </h4>
+              </div>
             </div>
-            <button
-              className="button-small basket-checkout-button button"
-              disabled={
-                basket.length === 0 ||
-                pathname === "/checkout" ||
-                isAnyItemOutOfStock
-              }
-              onClick={onCheckOut}
-              type="button"
-            >
-              Check Out
-            </button>
+            <div style={{ flexShrink: 0, flexGrow: 0 }}>
+              <button
+                className="button-small basket-checkout-button button"
+                disabled={
+                  basket.length === 0 ||
+                  pathname === "/checkout" ||
+                  isAnyItemOutOfStock
+                }
+                onClick={onCheckOut}
+                type="button"
+              >
+                Check Out
+              </button>
+            </div>
           </div>
         </div>
       </Boundary>

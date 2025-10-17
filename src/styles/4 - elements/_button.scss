@@ -94,7 +94,7 @@
 
   &:hover {
     border: 1px solid $border-color-primary-dark;
-    background-color: rgb(var(--color-primary) / .1);
+    background-color: $paragraph-color-primary;
   }
 }
 
