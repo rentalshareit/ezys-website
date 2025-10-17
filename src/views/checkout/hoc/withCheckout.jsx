@@ -50,6 +50,7 @@ const withCheckout = (Component) =>
           profile={state.profile}
           subtotal={Number(subtotal)}
           miscCharges={state.miscCharges}
+          rentalPeriod={rentalPeriod}
         />
       );
     }

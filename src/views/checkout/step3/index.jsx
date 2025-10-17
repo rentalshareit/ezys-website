@@ -33,6 +33,7 @@ const Payment = ({
   basket,
   subtotal,
   miscCharges,
+  rentalPeriod,
 }) => {
   const [loading, setLoading] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
@@ -69,9 +70,7 @@ const Payment = ({
           name: shipping.fullname,
           address: shipping.address,
           phone,
-          period: `${basket[0].period.dates.join(" - ")} (${
-            basket[0].period.days
-          })`,
+          period: `${rentalPeriod.dates.join(" - ")} (${rentalPeriod.days})`,
           email: shipping.email,
           deliveryTimeSlot: shipping.deliveryTimeSlot,
           amount: subtotal + miscCharges.shippingCharges || 0,
@@ -80,9 +79,7 @@ const Payment = ({
           products: basket.map((b) => `${b.quantity} x ${b.name}`).join("\n"),
           tags: basket.map((b) => b.tags.join("\n")).join("\n"),
           orderTotal: basket
-            .map(
-              (b) => b.price[basket[0].period.days - 1] / basket[0].period.days
-            )
+            .map((b) => b.price[rentalPeriod.days - 1] / rentalPeriod.days)
             .join("\n"),
           coupon: "",
           tags: basket
