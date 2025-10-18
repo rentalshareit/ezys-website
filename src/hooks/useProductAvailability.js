@@ -102,6 +102,50 @@ const useProductAvailability = () => {
     [availabilityByTag]
   );
 
+  // Validate and adjust rental period if needed
+  const validateRentalPeriod = useCallback((startDate, endDate) => {
+    if (!startDate || !endDate) return { isValid: false };
+
+    const today = dayjs().startOf("day");
+    const tomorrow = today.add(1, "day");
+    const maxAdvanceDate = today.add(2, "month");
+
+    const start = parseDate(startDate).startOf("day");
+    const end = parseDate(endDate).startOf("day");
+
+    // If start date is today or in past, shift both dates forward
+    if (start.isSameOrBefore(today)) {
+      const daysDiff = end.diff(start, "days");
+      const newStart = tomorrow;
+      const newEnd = tomorrow.add(daysDiff, "days");
+
+      // Check if new end date is within allowed range
+      if (newEnd.isAfter(maxAdvanceDate)) {
+        return { isValid: false };
+      }
+
+      return {
+        isValid: true,
+        needsUpdate: true,
+        dates: [formatDate(newStart), formatDate(newEnd)],
+        days: daysDiff,
+      };
+    }
+
+    // If dates are valid but end date exceeds max allowed
+    if (end.isAfter(maxAdvanceDate)) {
+      return { isValid: false };
+    }
+
+    // Dates are valid and don't need adjustment
+    return {
+      isValid: true,
+      needsUpdate: false,
+      dates: [startDate, endDate],
+      days: end.diff(start, "days"),
+    };
+  }, []);
+
   // Get available product code for the given dates and tags
   const getAvailableProductCode = useCallback(
     (product, startDate, endDate) => {
@@ -141,6 +185,7 @@ const useProductAvailability = () => {
     isProductAvailable,
     getAvailableSlots,
     getAvailableProductCode,
+    validateRentalPeriod,
     availabilityData: itemsAvailable,
   };
 };

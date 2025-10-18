@@ -34,10 +34,13 @@ const disabledDate = (current) => {
   );
 };
 
-const checkoutPaths = [
-  ROUTE.CHECKOUT_STEP_1,
-  ROUTE.CHECKOUT_STEP_2,
-  ROUTE.CHECKOUT_STEP_3,
+const allowedPaths = [
+  ROUTE.HOME,
+  ROUTE.PRODUCTS_BY_CATEGORY,
+  ROUTE.FEATURED_PRODUCTS,
+  ROUTE.RECOMMENDED_PRODUCTS,
+  ROUTE.SEARCH,
+  ROUTE.VIEW_PRODUCT,
 ];
 
 const SearchBar = () => {
@@ -140,11 +143,11 @@ const SearchBar = () => {
     dispatch(clearRecentSearch());
   };
 
-  if (checkoutPaths.includes(pathname)) return null;
+  if (!allowedPaths.includes(pathname)) return null;
 
   return (
     <div className="searchbar" ref={searchbarRef}>
-      <Space.Compact block>
+      <Space.Compact block style={{ zIndex: -1 }}>
         <RangePicker
           style={{ flex: 3.5 }}
           dropdownClassName="responsive-range-picker"
