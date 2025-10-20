@@ -102,9 +102,25 @@ const useProductAvailability = () => {
     [availabilityByTag]
   );
 
+  // Get default rental period (7 days starting tomorrow)
+  const getDefaultRentalPeriod = useCallback(() => {
+    const tomorrow = dayjs().startOf("day").add(1, "day");
+    const endDate = tomorrow.add(7, "days");
+
+    return {
+      dates: [formatDate(tomorrow), formatDate(endDate)],
+      days: 7,
+    };
+  }, []);
+
   // Validate and adjust rental period if needed
   const validateRentalPeriod = useCallback((startDate, endDate) => {
-    if (!startDate || !endDate) return { isValid: false };
+    if (!startDate || !endDate) {
+      return {
+        isValid: false,
+        defaultPeriod: getDefaultRentalPeriod(),
+      };
+    }
 
     const today = dayjs().startOf("day");
     const tomorrow = today.add(1, "day");
@@ -121,7 +137,10 @@ const useProductAvailability = () => {
 
       // Check if new end date is within allowed range
       if (newEnd.isAfter(maxAdvanceDate)) {
-        return { isValid: false };
+        return {
+          isValid: false,
+          defaultPeriod: getDefaultRentalPeriod(),
+        };
       }
 
       return {
@@ -134,7 +153,10 @@ const useProductAvailability = () => {
 
     // If dates are valid but end date exceeds max allowed
     if (end.isAfter(maxAdvanceDate)) {
-      return { isValid: false };
+      return {
+        isValid: false,
+        defaultPeriod: getDefaultRentalPeriod(),
+      };
     }
 
     // Dates are valid and don't need adjustment
@@ -186,6 +208,7 @@ const useProductAvailability = () => {
     getAvailableSlots,
     getAvailableProductCode,
     validateRentalPeriod,
+    getDefaultRentalPeriod,
     availabilityData: itemsAvailable,
   };
 };

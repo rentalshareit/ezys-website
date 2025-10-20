@@ -147,7 +147,7 @@ const SearchBar = () => {
 
   return (
     <div className="searchbar" ref={searchbarRef}>
-      <Space.Compact block style={{ zIndex: -1 }}>
+      <Space.Compact block style={{ zIndex: 0 }}>
         <RangePicker
           style={{ flex: 3.5 }}
           dropdownClassName="responsive-range-picker"

@@ -1,12 +1,13 @@
 /* eslint-disable react/forbid-prop-types */
 import { Preloader } from "@/components/common";
 import PropType from "prop-types";
-import React, { StrictMode, useEffect } from "react";
+import React, { StrictMode } from "react";
 import { Provider } from "react-redux";
 import { ConfigProvider, App as AntApp } from "antd";
 import { PersistGate } from "redux-persist/integration/react";
 import AppRouter from "@/routers/AppRouter";
 import PageFloaterActions from "@/components/misc/PageFloaterActions";
+import PersistDataInitializer from "@/components/common/PersistDataInitializer";
 
 const App = ({ store, persistor }) => {
   return (
@@ -38,6 +39,7 @@ const App = ({ store, persistor }) => {
         >
           <Provider store={store}>
             <PersistGate loading={<Preloader />} persistor={persistor}>
+              <PersistDataInitializer />
               <AppRouter />
             </PersistGate>
             <PageFloaterActions />
