@@ -34,14 +34,24 @@ const disabledDate = (current) => {
   );
 };
 
-const allowedPaths = [
-  ROUTE.HOME,
-  ROUTE.PRODUCTS_BY_CATEGORY,
-  ROUTE.FEATURED_PRODUCTS,
-  ROUTE.RECOMMENDED_PRODUCTS,
-  ROUTE.SEARCH,
-  ROUTE.VIEW_PRODUCT,
+const allowedPathPatterns = [
+  { path: ROUTE.HOME, exact: true },
+  { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/category\/.+/ },
+  { path: ROUTE.FEATURED_PRODUCTS, exact: true },
+  { path: ROUTE.RECOMMENDED_PRODUCTS, exact: true },
+  { path: ROUTE.SEARCH, pattern: /^\/search\/.+/ },
+  { path: ROUTE.VIEW_PRODUCT, pattern: /^\/product\/.+/ },
 ];
+
+const isPathAllowed = (currentPath) => {
+  return allowedPathPatterns.some(({ path, pattern, exact }) =>
+    exact
+      ? path === currentPath
+      : pattern
+      ? pattern.test(currentPath)
+      : path === currentPath
+  );
+};
 
 const SearchBar = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -108,12 +118,12 @@ const SearchBar = () => {
     );
 
     if (startDate) {
-      const maxRentalDate = startDate.startOf("day").add(1, "months");
+      const maxRentalDate = startDate.startOf("day").add(30, "day");
 
       setCustomDisabledDate(() => (current) => {
         return (
           disabledDate(current?.startOf("day")) || // Apply original disabled date rules
-          (current && current.startOf("day") > maxRentalDate) // Disable dates beyond 2 months from start
+          (current && current.startOf("day") > maxRentalDate)
         );
       });
     }
@@ -143,7 +153,7 @@ const SearchBar = () => {
     dispatch(clearRecentSearch());
   };
 
-  if (!allowedPaths.includes(pathname)) return null;
+  if (!isPathAllowed(pathname)) return null;
 
   return (
     <div className="searchbar" ref={searchbarRef}>

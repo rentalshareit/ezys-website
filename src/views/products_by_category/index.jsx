@@ -1,12 +1,12 @@
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Tour } from "antd";
 import { MessageDisplay } from "@/components/common";
-import { ProductShowcaseGrid } from "@/components/product";
+import { ProductShowcaseGrid, ProductFilterChips } from "@/components/product";
 import gaming_consoles from "@/images/gaming_consoles.jpeg";
 import virtual_reality from "@/images/virtual_reality.jpeg";
 import games_controllers from "@/images/games_controllers.jpeg";
 import { useDocumentTitle, useProducts, useScrollTop, useTour } from "@/hooks";
-import React from "react";
 
 const images = {
   gaming_consoles,
@@ -40,6 +40,7 @@ const steps = [
 
 const ProductsByCategory = () => {
   const params = useParams();
+  const [filterBy, setFilterBy] = useState(null);
   const { category } = params;
   useDocumentTitle("Products By Category | Ezys");
   useScrollTop();
@@ -79,11 +80,21 @@ const ProductsByCategory = () => {
               buttonLabel="Try Again"
             />
           ) : (
-            <ProductShowcaseGrid
-              products={
-                products[category] || products[Object.keys(products)[0]]
-              }
-            />
+            <>
+              {!!products[category] && (
+                <ProductFilterChips
+                  category={category}
+                  onFilterChange={setFilterBy}
+                />
+              )}
+              <ProductShowcaseGrid
+                products={
+                  products[category]?.filter(
+                    (p) => !filterBy || p.keywords.includes(filterBy)
+                  ) || products[Object.keys(products)[0]]
+                }
+              />
+            </>
           )}
         </div>
       </div>

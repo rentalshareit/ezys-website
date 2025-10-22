@@ -42,9 +42,9 @@ const Footer = () => {
 
       <footer className="footer">
         <div className="footer-col-1">
-          <h6 className="text-uppercase fw-bold">
+          <h2 className="text-uppercase fw-bold">
             Ezys, A BMSA Technologies Venture
-          </h6>
+          </h2>
           <hr className="mb-4 mt-0 d-inline-block mx-auto" />
           <p>
             offers premium gaming & VR rentals like PS4, PS5, Meta Quest VR and
