@@ -36,7 +36,7 @@ const disabledDate = (current) => {
 
 const allowedPathPatterns = [
   { path: ROUTE.HOME, exact: true },
-  { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/category\/.+/ },
+  { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/products\/.+/ },
   { path: ROUTE.FEATURED_PRODUCTS, exact: true },
   { path: ROUTE.RECOMMENDED_PRODUCTS, exact: true },
   { path: ROUTE.SEARCH, pattern: /^\/search\/.+/ },
