@@ -92,8 +92,13 @@
   width: 0;
 }
 
-  /* Make the "next month" and "next year" buttons visible on the first panel */
-.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-next-btn,
-.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-super-next-btn {
+/* Make the "next month" buttons visible on the first panel */
+.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-next-btn {
   visibility: visible!important;
 }
+
+/* Make the "next month" buttons visible on the first panel */
+.responsive-range-picker .ant-picker-panel:first-child .ant-picker-header-super-prev-btn {
+  visibility: hidden!important;
+}
+

@@ -161,6 +161,7 @@ const SearchBar = () => {
         <RangePicker
           style={{ flex: 3.5 }}
           dropdownClassName="responsive-range-picker"
+          allowClear={false}
           value={
             rentalPeriod.dates
               ? [
