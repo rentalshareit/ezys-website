@@ -54,7 +54,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
     address: shipping.address || profile.address || "",
     mobile: profile.mobile,
     isDone: shipping.isDone || false,
-    deliveryTimeSlot: shipping.deliveryTimeSlot || "11-13",
+    deliveryTimeSlot: shipping.deliveryTimeSlot || "10-13",
     pinCode: shipping.pinCode || "",
     shippingCharges: miscCharges.shippingCharges || null,
   };

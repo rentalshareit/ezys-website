@@ -5,12 +5,8 @@ import React, { useEffect } from "react";
 import { updateMiscCharges } from "@/redux/actions/checkoutActions";
 
 const deliveryTimeSlots = [
-  { label: "11 AM - 1 PM", value: "11-13" },
-  { label: "1 PM - 3 PM", value: "13-15" },
-  { label: "3 PM - 5 PM", value: "15-17" },
-  { label: "5 PM - 7 PM", value: "17-19" },
-  { label: "7 PM - 9 PM", value: "19-21" },
-  { label: "9 PM - 11 PM", value: "21-23" },
+  { label: "10 AM - 1 PM", value: "10-13" },
+  { label: "7 PM - 10 PM", value: "19-22" },
 ];
 
 const ShippingForm = () => {
