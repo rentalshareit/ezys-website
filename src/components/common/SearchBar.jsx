@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import * as ROUTE from "@/constants/routes";
 import { DatePicker, Divider, Space, Input } from "antd";
 import { updateRentalPeriod } from "@/redux/actions/miscActions";
@@ -117,13 +117,23 @@ const SearchBar = () => {
       date ? date.startOf("day") : null
     );
 
+    if (!startDate) {
+      setCustomDisabledDate(disabledDate);
+      return;
+    }
+
     if (startDate) {
-      const maxRentalDate = startDate.startOf("day").add(30, "day");
+      const maxRentalDate = startDate.clone().add(30, "day").endOf("day"); // Ensure exactly 30 days rental period, inclusive of the last day
 
       setCustomDisabledDate(() => (current) => {
+        const normalizedCurrent = current?.startOf("day");
         return (
-          disabledDate(current?.startOf("day")) || // Apply original disabled date rules
-          (current && current.startOf("day") > maxRentalDate)
+          disabledDate(normalizedCurrent) || // Apply original disabled date rules
+          (normalizedCurrent &&
+            (normalizedCurrent < startDate.clone().subtract(30, "day") || // Disable dates before 30 days prior to startDate
+              normalizedCurrent > maxRentalDate)) || // Disable dates beyond 30 days from startDate
+          (normalizedCurrent &&
+            normalizedCurrent.isBefore(dayjs().startOf("day"))) // Disable current and past dates
         );
       });
     }
@@ -153,6 +163,11 @@ const SearchBar = () => {
     dispatch(clearRecentSearch());
   };
 
+  const memoizedDisabledDate = useMemo(
+    () => customDisabledDate,
+    [customDisabledDate]
+  );
+
   if (!isPathAllowed(pathname)) return null;
 
   return (
@@ -171,7 +186,7 @@ const SearchBar = () => {
               : null
           }
           prefix="Rental Period"
-          disabledDate={customDisabledDate}
+          disabledDate={memoizedDisabledDate} // Use memoized function to avoid unnecessary re-renders
           format="DD-MMM"
           onChange={onRangeChange}
           onCalendarChange={onRangeChange}
