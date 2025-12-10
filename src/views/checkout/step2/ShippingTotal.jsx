@@ -9,7 +9,7 @@ import { useShippingCharges } from "@/hooks";
 const ShippingTotal = ({ subtotal }) => {
   const { values, setFieldValue } = useFormikContext();
   const [shippingCharges, isDistanceLoading] = useShippingCharges(
-    values.pinCode
+    values.address.pinCode
   );
 
   useEffect(() => {

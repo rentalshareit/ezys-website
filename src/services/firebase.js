@@ -17,34 +17,75 @@ class Firebase {
 
   // AUTH ACTIONS ------------
   captchaVerify = async () => {
-    if (!window.RecaptchaVerifier) {
-      return new Promise((resolve) => {
-        window.recaptchaVerifier = new firebaseRoot.auth.RecaptchaVerifier(
-          "recaptcha-container",
-          {
-            size: "invisible",
-            callback: () => {
-              resolve(window.recaptchaVerifier);
-            },
-          }
-        );
-        window.recaptchaVerifier.verify();
-      });
+    let recaptchaContainer = document.getElementById("recaptcha-container");
+
+    // Remove the existing recaptcha-container if it exists
+    if (recaptchaContainer) {
+      recaptchaContainer.remove();
     }
-    return Promise.resolve(window.recaptchaVerifier);
+
+    // Recreate the recaptcha-container element
+    recaptchaContainer = document.createElement("div");
+    recaptchaContainer.id = "recaptcha-container";
+    recaptchaContainer.style.display = "none"; // Keep it hidden
+    document.body.appendChild(recaptchaContainer); // Append it to the body or a specific parent element
+
+    // Clear the existing reCAPTCHA instance if it exists
+    if (window.recaptchaVerifier) {
+      try {
+        window.recaptchaVerifier.clear(); // Clear the existing instance
+      } catch (error) {
+        console.warn("Failed to clear reCAPTCHA verifier:", error.message);
+      }
+      window.recaptchaVerifier = null;
+    }
+
+    // Create a new reCAPTCHA instance
+    return new Promise((resolve) => {
+      window.recaptchaVerifier = new firebaseRoot.auth.RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "invisible", // Use "invisible" for better UX
+          callback: () => {
+            console.log("reCAPTCHA solved");
+            resolve(window.recaptchaVerifier);
+          },
+          "expired-callback": () => {
+            console.error("Captcha expired. Please try again.");
+            window.recaptchaVerifier.clear(); // Reset reCAPTCHA on expiry
+          },
+        }
+      );
+
+      // Trigger the reCAPTCHA verification
+      window.recaptchaVerifier.verify();
+    });
   };
 
   sendOTP = async (phoneNumber) => {
-    const appVerifier = await this.captchaVerify();
-    const confirmationResult = await this.auth.signInWithPhoneNumber(
-      phoneNumber,
-      appVerifier
-    );
-    window.confirmationResult = confirmationResult;
+    try {
+      const appVerifier = await this.captchaVerify();
+      const confirmationResult = await this.auth.signInWithPhoneNumber(
+        phoneNumber,
+        appVerifier
+      );
+      window.confirmationResult = confirmationResult;
+    } catch (error) {
+      console.error("Failed to send OTP:", error.message);
+      throw new Error(
+        "Failed to send OTP. Please check the phone number and try again."
+      );
+    }
   };
 
   verifyOTP = async (otp) => {
-    return window.confirmationResult.confirm(otp);
+    try {
+      return await window.confirmationResult.confirm(otp);
+    } catch (error) {
+      console.error("Invalid OTP:", error.message);
+      window.confirmationResult = null; // Clear confirmation result
+      throw new Error("Invalid OTP. Please try again.");
+    }
   };
 
   signOut = () => this.auth.signOut();

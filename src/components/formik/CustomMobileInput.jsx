@@ -8,7 +8,7 @@ const ReactPhoneInput = PI.default ? PI.default : PI;
 
 const CustomMobileInput = (props) => {
   const [field, meta, helpers] = useField(props);
-  const { label, placeholder, defaultValue, disabled } = props;
+  const { label, defaultValue, disabled } = props;
   const { touched, error } = meta;
   const { setValue } = helpers;
 
@@ -36,8 +36,9 @@ const CustomMobileInput = (props) => {
       )}
       <ReactPhoneInput
         name={field.name}
-        country="in"
-        disableDropdown
+        country="in" // Set default country to India
+        disableDropdown // Disable the dropdown
+        countryCodeEditable={false} // Make country code non-editable
         disabled={disabled}
         inputClass="input-form d-block"
         style={{
@@ -45,7 +46,6 @@ const CustomMobileInput = (props) => {
         }}
         inputExtraProps={{ required: true }}
         onChange={handleChange}
-        placeholder={placeholder}
         value={defaultValue.value}
       />
     </div>
@@ -54,12 +54,10 @@ const CustomMobileInput = (props) => {
 
 CustomMobileInput.defaultProps = {
   label: "Mobile Number",
-  placeholder: "09254461351",
 };
 
 CustomMobileInput.propTypes = {
   label: PropType.string,
-  placeholder: PropType.string,
   defaultValue: PropType.object.isRequired,
 };
 

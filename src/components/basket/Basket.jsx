@@ -185,7 +185,13 @@ const Basket = () => {
           </div>
         </div>
       </Boundary>
-      <SignIn show={show} onClose={() => setShow(false)} />
+      <SignIn
+        show={show}
+        onClose={() => {
+          window.confirmationResult = null; // Clear confirmation result
+          setShow(false);
+        }}
+      />
     </>
   );
 };

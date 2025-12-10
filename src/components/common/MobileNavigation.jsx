@@ -79,7 +79,10 @@ const Navigation = (props) => {
       <div className="mobile-navigation-sec">
         <SearchBar />
       </div>
-      <Signin show={show} onClose={() => setShow(false)} />
+      <Signin show={show} onClose={() => {
+        window.confirmationResult = null; // Clear confirmation result
+        setShow(false);
+      }} />
     </nav>
   );
 };

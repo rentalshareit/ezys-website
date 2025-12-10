@@ -46,6 +46,12 @@ const Payment = ({
   useDocumentTitle("Check Out Final Step | Ezys");
   useScrollTop();
 
+  const customerAddress = `Flat Number: ${shipping.flatOrHouseNumber} \n
+  ${shipping.buildingName ? `Building Name: ${shipping.buildingName}` : ""} \n
+  Address: ${shipping.address.address} \n
+  Pin Code: ${shipping.address.pinCode} \n
+  LatLng: ${shipping.address.position.lat}, ${shipping.address.position.lng}`;
+
   const initFormikValues = {
     type: payment.type || "payondelivery",
     tncAccepted: !!payment.tncAccepted || false,
@@ -70,7 +76,7 @@ const Payment = ({
             timeZone: "Asia/Kolkata",
           }),
           name: shipping.fullname,
-          address: shipping.address,
+          address: customerAddress,
           phone,
           period: `${rentalPeriod.dates.join(" - ")} (${rentalPeriod.days})`,
           email: shipping.email,

@@ -160,7 +160,13 @@ const Navigation = () => {
           <LocationDisplay />
         </li>
       </ul>
-      <Signin show={show} onClose={() => setShow(false)} />
+      <Signin
+        show={show}
+        onClose={() => {
+          window.confirmationResult = null; // Clear confirmation result
+          setShow(false);
+        }}
+      />
     </nav>
   );
 };

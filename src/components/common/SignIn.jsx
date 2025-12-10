@@ -22,7 +22,12 @@ const SignInSchema = Yup.object().shape({
       country: Yup.string(),
       countryCode: Yup.string(),
       dialCode: Yup.string(),
-      value: Yup.string(),
+      value: Yup.string()
+        .required("Phone number is required.")
+        .matches(
+          /^\91\d{10}$/,
+          "Phone number should contain exactly 10 digits."
+        ),
     })
     .required("Phone is required."),
   otp: Yup.string().required("OTP is required."),
@@ -67,7 +72,6 @@ const SignIn = ({ onClose }) => {
 
   return (
     <div className="auth-content">
-      <div id="recaptcha-container" />
       <div className="auth-main">
         <h4>Login</h4>
         <br />
@@ -78,6 +82,7 @@ const SignIn = ({ onClose }) => {
               otp: "",
             }}
             validateOnChange
+            validateOnMount
             validationSchema={SignInSchema}
           >
             {(props) => (
@@ -100,7 +105,7 @@ const SignIn = ({ onClose }) => {
                       <button
                         className="button auth-button button-small"
                         type="button"
-                        disabled={loading}
+                        disabled={loading || !!props.errors.phone} // Disable if form is invalid
                         onClick={() => handleSendOtp(props.values.phone)}
                       >
                         {loading ? <LoadingOutlined /> : ""}&nbsp;Send OTP

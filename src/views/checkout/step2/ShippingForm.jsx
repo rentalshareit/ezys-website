@@ -11,6 +11,7 @@ const deliveryTimeSlots = [
 
 const ShippingForm = () => {
   const { values } = useFormikContext();
+  const shippingAddress = values?.address?.address;
 
   return (
     <div className="checkout-shipping-wrapper">
@@ -39,19 +40,32 @@ const ShippingForm = () => {
         <div className="checkout-fieldset">
           <div className="d-block checkout-field">
             <Field
-              name="address"
-              label="* Shipping Address"
-              placeholder="Enter full shipping address (e.g., Flat No. 101, House No. 12, Street Name, Area)"
-              component={CustomTextarea}
+              name="flatOrHouseNumber"
+              type="text"
+              label="* Flat/House Number"
+              placeholder="Enter your flat or house number"
+              component={CustomInput}
+              style={{ marginRight: "8px" }}
             />
           </div>
           <div className="d-block checkout-field">
             <Field
-              name="pinCode"
-              type="number"
-              label="* Pin Code"
-              placeholder="Enter your pin code"
+              name="buildingName"
+              type="text"
+              label="Building Name"
+              placeholder="Enter your building name"
               component={CustomInput}
+            />
+          </div>
+        </div>
+        <div className="checkout-fieldset">
+          <div className="d-block checkout-field">
+            <Field
+              name="address"
+              label="* Shipping Location"
+              disabled
+              value={shippingAddress}
+              component={CustomTextarea}
             />
           </div>
         </div>

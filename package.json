@@ -85,6 +85,7 @@
     "use-debounce": "^10.0.4",
     "uuid": "^8.3.2",
     "webfontloader": "^1.6.28",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "@vis.gl/react-google-maps": "^1.7.1"
   }
 }

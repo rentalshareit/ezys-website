@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useRef, useState, useCallback, useMemo } from "react";
+import React, { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import * as ROUTE from "@/constants/routes";
 import { DatePicker, Divider, Space, Input } from "antd";
 import { updateRentalPeriod } from "@/redux/actions/miscActions";
@@ -107,6 +107,25 @@ const SearchBar = () => {
     }
   };
 
+  // Initialize the default start date (tomorrow)
+  useEffect(() => {
+    const tomorrow = dayjs().startOf("day").add(1, "day");
+    const maxRentalDate = tomorrow.clone().add(30, "day").endOf("day");
+
+    setCustomDisabledDate(() => (current) => {
+      const normalizedCurrent = current?.startOf("day");
+      return (
+        disabledDate(normalizedCurrent) || // Apply original disabled date rules
+        (normalizedCurrent &&
+          (normalizedCurrent < tomorrow || // Disable dates before tomorrow
+            normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from tomorrow
+            normalizedCurrent.isSame(tomorrow))) || // Disable the same date as tomorrow
+        (normalizedCurrent &&
+          normalizedCurrent.isBefore(dayjs().startOf("day"))) // Disable current and past dates
+      );
+    });
+  }, []);
+
   const onRangeChange = useCallback((dates, dateStrings) => {
     if (!dates || dates.length === 0) {
       setCustomDisabledDate(disabledDate);
@@ -117,13 +136,8 @@ const SearchBar = () => {
       date ? date.startOf("day") : null
     );
 
-    if (!startDate) {
-      setCustomDisabledDate(disabledDate);
-      return;
-    }
-
     if (startDate) {
-      const maxRentalDate = startDate.clone().add(30, "day").endOf("day"); // Ensure exactly 30 days rental period, inclusive of the last day
+      const maxRentalDate = startDate.clone().add(30, "day").endOf("day");
 
       setCustomDisabledDate(() => (current) => {
         const normalizedCurrent = current?.startOf("day");
@@ -131,14 +145,15 @@ const SearchBar = () => {
           disabledDate(normalizedCurrent) || // Apply original disabled date rules
           (normalizedCurrent &&
             (normalizedCurrent < startDate.clone().subtract(30, "day") || // Disable dates before 30 days prior to startDate
-              normalizedCurrent > maxRentalDate)) || // Disable dates beyond 30 days from startDate
+              normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from startDate
+              normalizedCurrent.isSame(startDate))) || // Disable the same date as startDate
           (normalizedCurrent &&
             normalizedCurrent.isBefore(dayjs().startOf("day"))) // Disable current and past dates
         );
       });
     }
 
-    if (endDate) {
+    if (startDate && endDate) {
       dispatch(
         updateRentalPeriod({
           dates: [
