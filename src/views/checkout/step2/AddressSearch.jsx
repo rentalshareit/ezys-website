@@ -12,7 +12,7 @@ const AddressSearch = ({ onSubmit }) => {
     <Boundary>
       <div className="checkout-step-2">
         <AddressLocator
-          apiKey="AIzaSyCiC5Miz0vfZc_-7xyj6hI9eCIwSAyg-wk"
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
           onSelect={(a) => setAddress(a)}
         />
         <div
