@@ -28,7 +28,7 @@ const FormSchema = Yup.object().shape({
   email: Yup.string()
     .email("Email is not valid.")
     .required("Email is required."),
-  address: Yup.string().required("Shipping address is required."),
+  address: Yup.object().required("Shipping address is required."),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),
@@ -47,7 +47,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
   const history = useHistory();
 
   const [currentPart, setCurrentPart] = React.useState(1);
-  const [address, setAddress] = React.useState("");
+  const [address, setAddress] = React.useState({});
 
   const initFormikValues = {
     fullname: shipping.fullname || profile.fullname || "",
