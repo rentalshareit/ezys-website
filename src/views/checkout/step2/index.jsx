@@ -29,6 +29,8 @@ const FormSchema = Yup.object().shape({
     .email("Email is not valid.")
     .required("Email is required."),
   address: Yup.object().required("Shipping address is required."),
+  flatOrHouseNumber: Yup.string().required("Flat or House Number is required."),
+  buildingName: Yup.string(),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),

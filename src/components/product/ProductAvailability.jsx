@@ -4,11 +4,73 @@ import PropType from "prop-types";
 import useProductAvailability from "@/hooks/useProductAvailability";
 import dayjs, { parseDate } from "@/helpers/dayjs";
 
+const formatDateWithOrdinal = (dateString) => {
+  const [day, month, year] = dateString.split("/"); // Split the date string (DD/MM/YYYY)
+
+  // Function to get the ordinal suffix
+  const getOrdinalSuffix = (day) => {
+    const dayNum = parseInt(day, 10);
+    if (dayNum > 3 && dayNum < 21) return "th"; // Covers 4th-20th
+    switch (dayNum % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const ordinalSuffix = getOrdinalSuffix(day);
+
+  // Convert the month number to a short month name
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthName = monthNames[parseInt(month, 10) - 1];
+
+  // Return the formatted date with superscript for the ordinal suffix
+  return (
+    <>
+      {day}
+      <sup>{ordinalSuffix}</sup> {monthName}
+    </>
+  );
+};
+
 const ProductAvailability = ({ product }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const { getAvailableSlots } = useProductAvailability();
+  const [nextAvailableDate, setNextAvailableDate] = useState(null);
+
+  useEffect(() => {
+    const fetchNextAvailableDate = async () => {
+      if (getAvailableSlots) {
+        const slots = await getAvailableSlots(product);
+        if (slots && slots.length > 0) {
+          setNextAvailableDate(slots[0].start); // Assuming slots[0].start is in DD/MM/YYYY format
+        }
+      } else {
+        setNextAvailableDate(null);
+      }
+    };
+    fetchNextAvailableDate();
+  }, [getAvailableSlots, product]);
 
   useEffect(() => {
     const handleModalClick = (e) => {
@@ -69,7 +131,17 @@ const ProductAvailability = ({ product }) => {
         onClick={showModal}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        Check Availability
+        {nextAvailableDate ? (
+          <>
+            <span style={{ fontWeight: 700, fontSize: "10px" }}>
+              Available from {formatDateWithOrdinal(nextAvailableDate)}
+            </span>
+            <br />
+            Check Availability
+          </>
+        ) : (
+          "Check Availability"
+        )}
       </Button>
 
       <Modal

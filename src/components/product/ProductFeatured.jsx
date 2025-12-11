@@ -18,9 +18,9 @@ const ProductActionButton = ({
   isOutOfStock,
   isInBasket,
   onClick,
-  productId,
-  category,
+  product,
 }) => {
+  const { id: productId, category } = product;
   const getButtonType = () => {
     if (isOutOfStock || isInBasket) {
       return "default";
@@ -108,8 +108,7 @@ const getCardActions = ({
       isOutOfStock={isOutOfStock}
       isInBasket={isInBasket}
       onClick={onAddToBasket}
-      productId={product.id}
-      category={product.category}
+      product={product}
     />,
     isOutOfStock ? (
       <ProductAvailability key="availability" product={product} />
