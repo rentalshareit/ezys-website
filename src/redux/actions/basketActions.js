@@ -7,6 +7,7 @@ import {
   SET_BASKET_ITEMS,
   UPDATE_RENTAL_PERIOD,
   UPDATE_AVAILABLE_TAG_ITEMS,
+  UPDATE_COUPON,
 } from "@/constants/constants";
 
 export const setBasketItems = (items = []) => ({
@@ -41,4 +42,9 @@ export const minusQtyItem = (id) => ({
 export const updateAvailableTagItems = (id, availableTagItems) => ({
   type: UPDATE_AVAILABLE_TAG_ITEMS,
   payload: { id, availableTagItems },
+});
+
+export const updateCoupon = (payload) => ({
+  type: UPDATE_COUPON,
+  payload,
 });

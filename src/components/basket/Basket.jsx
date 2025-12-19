@@ -1,6 +1,13 @@
 /* eslint-disable max-len */
 import { BasketItem, BasketToggle } from "@/components/basket";
-import { Boundary, Modal, SignIn } from "@/components/common";
+import {
+  Boundary,
+  Modal,
+  SignIn,
+  formatDateWithOrdinal,
+} from "@/components/common";
+import { Alert, Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import { CHECKOUT_STEP_1 } from "@/constants/routes";
 import firebase from "@/services/firebase";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
@@ -10,22 +17,34 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { clearBasket } from "@/redux/actions/basketActions";
+import { calculateProductPrice } from "@/helpers/utils";
+import Coupons from "./Coupons";
 
 const Basket = () => {
   const [show, setShow] = useState(false);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
+  const [isCouponApplying, setIsCouponApplying] = useState(false);
   const { isProductAvailable, getAvailableSlots } = useProductAvailability();
-  const { basket, user, authStatus, rentalPeriod } = useSelector((state) => ({
-    basket: state.basket,
-    user: state.auth,
-    authStatus: state.app.authStatus,
-    rentalPeriod: state.app.rentalPeriod,
-  }));
+  const { basket, user, authStatus, rentalPeriod, coupon } = useSelector(
+    (state) => ({
+      basket: state.basket,
+      user: state.auth,
+      authStatus: state.app.authStatus,
+      rentalPeriod: state.app.rentalPeriod,
+      coupon: state.coupon,
+    })
+  );
 
   const history = useHistory();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const didMount = useDidMount();
+
+  const couponDiscountAmount = useMemo(() => {
+    if (!coupon || !coupon.discount) return 0;
+    const amount = Number(coupon.discount || 0);
+    return amount;
+  }, [coupon]);
 
   useEffect(() => {
     if (didMount && firebase.auth.currentUser) {
@@ -85,6 +104,20 @@ const Basket = () => {
     }
   };
 
+  const cartItems = useMemo(() => {
+    return basket.map((item) => {
+      const [originalPrice, discountedPrice] = calculateProductPrice(
+        item,
+        rentalPeriod.days
+      );
+      return {
+        name: item.name,
+        qty: item.quantity,
+        price: discountedPrice,
+      };
+    });
+  }, [basket]);
+
   return (
     <>
       <Boundary>
@@ -139,6 +172,62 @@ const Basket = () => {
                 <h5 className="basket-empty-msg">Your basket is empty</h5>
               </div>
             )}
+            {basket.length > 0 && (
+              <Alert
+                style={{ marginBottom: "1rem" }}
+                message={`Rental Period: ${formatDateWithOrdinal(
+                  rentalPeriod.dates[0],
+                  false
+                )} - ${formatDateWithOrdinal(rentalPeriod.dates[1], false)} (${
+                  rentalPeriod.days
+                } days)`}
+                className="alert-white-text"
+                type="info"
+                showIcon
+                description="Click the icon to understand rental period."
+                icon={
+                  <Tooltip
+                    title={
+                      <div
+                        style={{
+                          color: "#fff",
+                          textAlign: "left",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        We will deliver products at your address on{" "}
+                        <strong>
+                          {formatDateWithOrdinal(rentalPeriod.dates[0], false)}
+                        </strong>
+                        .
+                        <br />
+                        <br />
+                        Pick up would be on{" "}
+                        <strong>
+                          {formatDateWithOrdinal(rentalPeriod.dates[1], false)}
+                        </strong>
+                        .
+                        <br />
+                        <br />
+                        <small style={{ opacity: 0.9 }}>
+                          You can choose delivery time slot at checkout.
+                          <br />1 day = 24 hours from the time of delivery.
+                        </small>
+                      </div>
+                    }
+                    trigger="click"
+                  >
+                    <InfoCircleOutlined
+                      style={{
+                        color: "#fff",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                      }}
+                    />
+                  </Tooltip>
+                }
+              />
+            )}
             {basket.map((product, i) => (
               <BasketItem
                 // eslint-disable-next-line react/no-array-index-key
@@ -148,33 +237,56 @@ const Basket = () => {
               />
             ))}
           </div>
-
+          <Coupons
+            cartItems={cartItems}
+            onApplyingChange={setIsCouponApplying}
+          />
           <div className="basket-checkout">
-            <div>
-              {basket.length > 0 && (
-                <div className="basket-rental-period">
-                  <span className="basket-rental-period-title">
-                    Rental Period:
-                  </span>
-                  &nbsp;
-                  {rentalPeriod.dates[0]} {" to "}
-                  {rentalPeriod.dates[1]} ({rentalPeriod.days} days)
-                </div>
-              )}
-              <div className="basket-total">
-                <span className="basket-total-title">Subtotal Amout:</span>
-                <h4 className="basket-total-amount">
-                  {calculateTotal(basket, rentalPeriod.days, true)}
-                </h4>
-              </div>
+            <div className="basket-total">
+              <span className="basket-total-title">Subtotal Amount:</span>
+              <span className="basket-total-title-value">
+                {calculateTotal(basket, rentalPeriod.days, true)}
+              </span>
             </div>
-            <div style={{ flexShrink: 0, flexGrow: 0 }}>
+
+            {couponDiscountAmount > 0 && (
+              <>
+                <div className="basket-total">
+                  <span className="basket-total-title">
+                    Coupon Discount{coupon?.code ? ` (${coupon.code})` : ""}:
+                  </span>
+                  <span
+                    className="basket-total-title-value"
+                    style={{
+                      color: "#16a34a",
+                    }}
+                  >
+                    - {displayMoney(couponDiscountAmount)}
+                  </span>
+                </div>
+                <div className="basket-total">
+                  <span className="basket-total-title">Net Payable:</span>
+                  <span className="basket-total-title-value">
+                    {displayMoney(
+                      Math.max(
+                        0,
+                        calculateTotal(basket, rentalPeriod.days, false) -
+                          couponDiscountAmount
+                      )
+                    )}
+                  </span>
+                </div>
+              </>
+            )}
+
+            <div style={{ marginTop: "8px" }}>
               <button
                 className="button-small basket-checkout-button button"
                 disabled={
                   basket.length === 0 ||
                   pathname === "/checkout" ||
-                  isAnyItemOutOfStock
+                  isAnyItemOutOfStock ||
+                  isCouponApplying
                 }
                 onClick={onCheckOut}
                 type="button"

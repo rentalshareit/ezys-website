@@ -33,6 +33,8 @@ const Payment = ({
   profile,
   basket,
   subtotal,
+  code,
+  discount,
   miscCharges,
   rentalPeriod,
 }) => {
@@ -95,6 +97,8 @@ const Payment = ({
               getAvailableProductCode(b, ...rentalPeriod.dates).join("\n")
             )
             .join("\n"),
+          code,
+          discount,
         }),
       }
     );

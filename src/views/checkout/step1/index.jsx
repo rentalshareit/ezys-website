@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import { StepTracker } from "../components";
 import withCheckout from "../hoc/withCheckout";
 
-const OrderSummary = ({ basket, subtotal }) => {
+const OrderSummary = ({ basket, subtotal, discount, code }) => {
   useDocumentTitle("Check Out Step 1 | Ezys");
   useScrollTop();
   const dispatch = useDispatch();
@@ -37,8 +37,17 @@ const OrderSummary = ({ basket, subtotal }) => {
         </div>
         <br />
         <div className="basket-total text-right">
-          <p className="basket-total-title">Subtotal:</p>
-          <p className="basket-total-amount">{displayMoney(subtotal)}</p>
+          <p className="basket-total-title">Net Payable:</p>
+          <p className="basket-total-amount">
+            {displayMoney(subtotal)}
+            {discount > 0 ? (
+              <span style={{ fontSize: 10, marginLeft: 8, color: "rgb(13, 148, 136)" }}>
+                (Saved {displayMoney(discount)} with coupon code {code})
+              </span>
+            ) : (
+              ""
+            )}
+          </p>
         </div>
         <div className="checkout-note-wrapper">
           <b>Note:</b>{" "}

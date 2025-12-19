@@ -177,7 +177,7 @@ const UserOrdersTab = () => {
                     <span>{displayMoney(d.shippingCharges || 0)}</span>
                   </span>
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
-                    Discount:{" "}
+                    Total Savings:{" "}
                     <span>
                       {displayMoney(
                         d.items.reduce(
