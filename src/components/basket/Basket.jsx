@@ -13,7 +13,13 @@ import firebase from "@/services/firebase";
 import { calculateTotal, displayMoney } from "@/helpers/utils";
 import { useDidMount, useModal } from "@/hooks";
 import useProductAvailability from "@/hooks/useProductAvailability";
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { clearBasket } from "@/redux/actions/basketActions";
@@ -22,6 +28,7 @@ import Coupons from "./Coupons";
 
 const Basket = () => {
   const [show, setShow] = useState(false);
+  const couponsRef = useRef(null);
   const { isOpenModal, onOpenModal, onCloseModal } = useModal();
   const [isCouponApplying, setIsCouponApplying] = useState(false);
   const { isProductAvailable, getAvailableSlots } = useProductAvailability();
@@ -116,7 +123,14 @@ const Basket = () => {
         price: discountedPrice,
       };
     });
-  }, [basket]);
+  }, [basket, rentalPeriod]);
+
+  // Recompute discount whenever cartItems changes
+  useEffect(() => {
+    if (couponsRef.current?.recomputeDiscount) {
+      couponsRef.current.recomputeDiscount();
+    }
+  }, [cartItems]);
 
   return (
     <>
@@ -238,6 +252,7 @@ const Basket = () => {
             ))}
           </div>
           <Coupons
+            ref={couponsRef}
             cartItems={cartItems}
             onApplyingChange={setIsCouponApplying}
           />

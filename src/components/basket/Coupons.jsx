@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { Collapse, Card, Input, Button, Alert } from "antd";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +11,7 @@ import { updateCoupon } from "@/redux/actions/basketActions";
 
 const { Panel } = Collapse;
 
-const Coupons = ({ cartItems, onApplyingChange }) => {
+const Coupons = ({ cartItems, onApplyingChange }, ref) => {
   const [coupons, setCoupons] = useState([]);
   const [manualCoupon, setManualCoupon] = useState("");
   const { code: appliedCouponCode, discount: appliedDiscount } = useSelector(
@@ -42,6 +47,13 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
   };
 
   const redeemCoupon = async (couponCode) => {
+    if (!cartItems || cartItems.length === 0) {
+      return Promise.reject({
+        success: false,
+        error: "Your cart is empty.",
+      });
+    }
+
     try {
       const response = await fetch("/api/redeem-coupon", {
         method: "POST",
@@ -60,7 +72,6 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
       const result = await response.json();
       return result;
     } catch (error) {
-      console.error("Failed to redeem coupon:", error);
       return {
         success: false,
         error: "Failed to redeem coupon. Please try again.",
@@ -85,7 +96,7 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
     return undefined;
   }, [appliedCouponCode, appliedDiscount]);
 
-  const handleToggleCoupon = async (code, manual = false) => {
+  const applyOrRemoveCoupon = async (code, manual = false) => {
     if (isApplying) return;
 
     if (!manual) setManualCoupon("");
@@ -94,8 +105,8 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
     onApplyingChange?.(true);
 
     try {
-      // Remove if same coupon
       if (appliedCouponCode === code) {
+        // remove
         dispatch(
           updateCoupon({
             code: "",
@@ -105,11 +116,10 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
       } else {
         const response = await redeemCoupon(code);
         if (response.success) {
-          // response.discount is already a number (total savings)
           dispatch(
             updateCoupon({
               code,
-              discount: response.discount,
+              discount: response.discount, // number
             })
           );
         } else {
@@ -125,8 +135,35 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
 
   const handleManualCouponApply = () => {
     if (!manualCoupon.trim() || isApplying) return;
-    handleToggleCoupon(manualCoupon.trim(), true);
+    applyOrRemoveCoupon(manualCoupon.trim(), true);
   };
+
+  // EXPOSE IMPERATIVE API
+  useImperativeHandle(ref, () => ({
+    async recomputeDiscount() {
+      if (!appliedCouponCode) return;
+      // re-preview for current cartItems
+      const response = await redeemCoupon(appliedCouponCode);
+      if (response.success) {
+        dispatch(
+          updateCoupon({
+            code: appliedCouponCode,
+            discount: response.discount,
+          })
+        );
+        setErrorMsg("");
+      } else {
+        // clear coupon if no longer valid
+        dispatch(
+          updateCoupon({
+            code: "",
+            discount: 0,
+          })
+        );
+        setErrorMsg(response.error || "Coupon no longer valid for this cart.");
+      }
+    },
+  }));
 
   const formatDate = (date) =>
     new Intl.DateTimeFormat("en-GB", {
@@ -265,7 +302,7 @@ const Coupons = ({ cartItems, onApplyingChange }) => {
                     <Button
                       type={isApplied ? "default" : "primary"}
                       size="middle"
-                      onClick={() => handleToggleCoupon(coupon.code)}
+                      onClick={() => applyOrRemoveCoupon(coupon.code)}
                       disabled={isApplying}
                       style={{
                         backgroundColor: isApplied
@@ -377,4 +414,5 @@ Coupons.propTypes = {
   onApplyingChange: PropTypes.func,
 };
 
-export default Coupons;
+// wrap with forwardRef
+export default forwardRef(Coupons);

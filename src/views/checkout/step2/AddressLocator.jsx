@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { APIProvider, Map, Marker, useMap } from "@vis.gl/react-google-maps";
 import { EnvironmentOutlined, AimOutlined } from "@ant-design/icons";
 
+const DEFAULT_CENTER = { lat: 17.385, lng: 78.4867 }; // Hyderabad fallback
+
 function MapMarkers({ markerPosition, onMarkerDragEnd, panToPosition }) {
   const map = useMap();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (map && panToPosition) {
       const latLng = new window.google.maps.LatLng(
         panToPosition.lat,
@@ -15,6 +17,8 @@ function MapMarkers({ markerPosition, onMarkerDragEnd, panToPosition }) {
       map.setZoom(15);
     }
   }, [map, panToPosition]);
+
+  if (!markerPosition) return null;
 
   return (
     <Marker
@@ -42,17 +46,28 @@ function AddressLocator({ apiKey, onSelect }) {
   const geocoderRef = useRef(null);
   const [isApiLoaded, setIsApiLoaded] = useState(false);
 
+  // Try to get user location, but do NOT block UI if it fails
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
         const pos = { lat: coords.latitude, lng: coords.longitude };
         setInitialPosition(pos);
         setMarkerPosition(pos);
         setPanToPosition(pos);
-      });
-    }
+      },
+      (error) => {
+        console.warn("Geolocation error:", error);
+        // Fallback: keep initialPosition null; map will use DEFAULT_CENTER
+        // Optionally set a default marker:
+        setMarkerPosition(DEFAULT_CENTER);
+        setPanToPosition(DEFAULT_CENTER);
+      }
+    );
   }, []);
 
+  // Places Autocomplete
   useEffect(() => {
     if (
       isApiLoaded &&
@@ -81,25 +96,26 @@ function AddressLocator({ apiKey, onSelect }) {
     }
   }, [isApiLoaded, inputRef.current]);
 
+  // Geocoder
   useEffect(() => {
     if (isApiLoaded && window.google && !geocoderRef.current) {
       geocoderRef.current = new window.google.maps.Geocoder();
     }
   }, [isApiLoaded]);
 
+  // Call onSelect when address / pincode ready
   useEffect(() => {
-    if (onSelect && formattedAddress) {
+    if (onSelect && formattedAddress && markerPosition) {
       onSelect({
         address: formattedAddress,
-        pinCode: pinCode,
+        pinCode,
         position: markerPosition,
       });
     }
-  }, [formattedAddress, pinCode]);
+  }, [formattedAddress, pinCode, markerPosition]);
 
   const reverseGeocode = (latLng, retries = 3) => {
     if (!geocoderRef.current) {
-      // Retry if geocoder is not initialized
       if (retries > 0) {
         setTimeout(() => reverseGeocode(latLng, retries - 1), 1000);
       } else {
@@ -114,10 +130,10 @@ function AddressLocator({ apiKey, onSelect }) {
       if (status === "OK" && results[0]) {
         const address = results[0].formatted_address;
         const components = results[0].address_components;
-        let pinCode = "";
+        let nextPinCode = "";
         components.forEach((component) => {
           if (component.types.includes("postal_code")) {
-            pinCode = component.long_name;
+            nextPinCode = component.long_name;
           }
         });
 
@@ -127,7 +143,7 @@ function AddressLocator({ apiKey, onSelect }) {
             document.createElement("div")
           );
           service.getDetails({ placeId }, (place, placeStatus) => {
-            if (placeStatus === "OK" && place.name) {
+            if (placeStatus === "OK" && place?.name) {
               setFormattedAddress(`${place.name}, ${address}`);
             } else {
               setFormattedAddress(address);
@@ -137,12 +153,10 @@ function AddressLocator({ apiKey, onSelect }) {
           setFormattedAddress(address);
         }
 
-        setPinCode(pinCode);
+        setPinCode(nextPinCode);
       } else if (retries > 0) {
-        // Retry the reverse geocoding
         setTimeout(() => reverseGeocode(latLng, retries - 1), 1000);
       } else {
-        // Fallback to default message after retries
         console.error("Reverse geocoding failed:", status);
         setFormattedAddress("");
         setPinCode("");
@@ -150,6 +164,7 @@ function AddressLocator({ apiKey, onSelect }) {
     });
   };
 
+  // Reverse geocode when marker changes
   useEffect(() => {
     if (markerPosition) {
       reverseGeocode(markerPosition);
@@ -178,95 +193,100 @@ function AddressLocator({ apiKey, onSelect }) {
       setMarkerPosition(initialPosition);
       setPanToPosition(initialPosition);
       setZoom(15);
+    } else {
+      // fallback to default center if no user location
+      setMarkerPosition(DEFAULT_CENTER);
+      setPanToPosition(DEFAULT_CENTER);
+      setZoom(15);
     }
   };
 
+  const mapCenter = markerPosition || initialPosition || DEFAULT_CENTER;
+
   return (
     <APIProvider apiKey={apiKey} libraries={["places"]} onLoad={onApiLoad}>
-      {initialPosition && (
-        <>
-          <input
-            type="text"
-            placeholder="Search your address or nearby location"
-            ref={inputRef}
-            style={{ width: "100%", padding: 8, marginBottom: 8 }}
-          />
-          <div style={{ position: "relative" }}>
-            <Map
-              defaultCenter={initialPosition}
-              zoom={zoom}
-              options={{
-                draggable: true,
-                zoomControl: true,
-                fullscreenControl: false,
-                streetViewControl: false,
-              }}
-              onZoomChanged={onZoomChange}
-              style={{ height: 400, width: "100%" }}
-            >
-              <MapMarkers
-                markerPosition={markerPosition}
-                onMarkerDragEnd={onMarkerDragEnd}
-                panToPosition={panToPosition}
-              />
-            </Map>
-            {/* Reset button near zoom controls */}
-            <button
-              onClick={resetToUserLocation}
-              title="Reset to current location"
-              aria-label="Reset to current location"
-              style={{
-                position: "absolute",
-                bottom: 200, // adjust to appear above zoom control (zoom control usually top-right at ~56px)
-                right: 16,
-                backgroundColor: "white",
-                border: "none",
-                borderRadius: "50%",
-                width: 32,
-                height: 32,
-                boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 0,
-                zIndex: 10,
-              }}
-            >
-              <AimOutlined
-                style={{ color: "rgb(13, 148, 136)", fontSize: 18 }}
-              />
-            </button>
-          </div>
+      <>
+        <input
+          type="text"
+          placeholder="Search your address or nearby location"
+          ref={inputRef}
+          style={{ width: "100%", padding: 8, marginBottom: 8 }}
+        />
 
-          <div
-            className="address-label"
+        <div style={{ position: "relative" }}>
+          <Map
+            defaultCenter={DEFAULT_CENTER}
+            center={mapCenter}
+            zoom={zoom}
+            options={{
+              draggable: true,
+              zoomControl: true,
+              fullscreenControl: false,
+              streetViewControl: false,
+            }}
+            onZoomChanged={onZoomChange}
+            style={{ height: 400, width: "100%" }}
+          >
+            <MapMarkers
+              markerPosition={markerPosition}
+              onMarkerDragEnd={onMarkerDragEnd}
+              panToPosition={panToPosition}
+            />
+          </Map>
+
+          <button
+            onClick={resetToUserLocation}
+            title="Reset to current location"
+            aria-label="Reset to current location"
             style={{
-              color: "rgb(13, 148, 136)",
-              marginBottom: "8px",
-              marginTop: "16px",
+              position: "absolute",
+              bottom: 200,
+              right: 16,
+              backgroundColor: "white",
+              border: "none",
+              borderRadius: "50%",
+              width: 32,
+              height: 32,
+              boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+              cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              fontSize: "14px",
+              justifyContent: "center",
+              padding: 0,
+              zIndex: 10,
             }}
           >
-            Your order will be delivered at:
-          </div>
-          <div
-            className="formatted-address"
-            style={{
-              marginLeft: "16px",
-              marginBottom: "16px",
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <EnvironmentOutlined style={{ marginRight: "8px" }} />
-            <span>{formattedAddress || "No address selected yet."}</span>
-          </div>
-        </>
-      )}
+            <AimOutlined style={{ color: "rgb(13, 148, 136)", fontSize: 18 }} />
+          </button>
+        </div>
+
+        <div
+          className="address-label"
+          style={{
+            color: "rgb(13, 148, 136)",
+            marginBottom: "8px",
+            marginTop: "16px",
+            display: "flex",
+            alignItems: "center",
+            fontSize: "14px",
+          }}
+        >
+          Your order will be delivered at:
+        </div>
+        <div
+          className="formatted-address"
+          style={{
+            marginLeft: "16px",
+            marginBottom: "16px",
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <EnvironmentOutlined style={{ marginRight: "8px" }} />
+          <span>{formattedAddress || "No address selected yet."}</span>
+        </div>
+      </>
     </APIProvider>
   );
 }

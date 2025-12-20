@@ -23,7 +23,7 @@ const BasketItemControl = ({ product }) => {
     <div className="basket-item-control">
       <button
         className="button button-border button-border-gray button-small basket-control basket-control-add"
-        disabled={product.maxQuantity === product.quantity}
+        disabled
         onClick={onAddQty}
         type="button"
       >
@@ -31,7 +31,7 @@ const BasketItemControl = ({ product }) => {
       </button>
       <button
         className="button button-border button-border-gray button-small basket-control basket-control-minus"
-        disabled={product.quantity === 1}
+        disabled
         onClick={onMinusQty}
         type="button"
       >
