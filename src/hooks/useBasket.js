@@ -15,14 +15,8 @@ const useBasket = () => {
   const addToBasket = (product) => {
     if (isItemOnBasket(product.id)) {
       dispatch(removeFromBasket(product.id));
-      notification.info({
-        message: "Item removed from basket",
-      });
     } else {
       dispatch(dispatchAddToBasket(product));
-      notification.success({
-        message: "Item added to basket",
-      });
     }
   };
 

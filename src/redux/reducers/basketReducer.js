@@ -19,10 +19,16 @@ export default (state = [], action) => {
           })) || []
       );
     case ADD_TO_BASKET:
-      if (state.some((product) => product.id === action.payload.id))
-        return state;
+      const { payload, _meta } = action;
 
-      return [{ ...action.payload }, ...state];
+      // Skip if not confirmed (user cancelled modal)
+      if (_meta?.confirmed !== true) {
+        return state;
+      }
+
+      if (state.some((product) => product.id === payload.id)) return state;
+
+      return [{ ...payload }, ...state];
     case UPDATE_AVAILABLE_TAG_ITEMS:
       return state.map((product) => {
         if (product.id === action.payload.id) {

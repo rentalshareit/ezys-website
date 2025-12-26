@@ -1,10 +1,14 @@
 import * as ACTION from "@/constants/constants";
-import { takeLatest } from "redux-saga/effects";
+import { takeLatest, all, fork } from "redux-saga/effects";
 import authSaga from "./authSaga";
 import productSaga from "./productSaga";
 import profileSaga from "./profileSaga";
+import basketSaga from "./basketSaga";
 
 function* rootSaga() {
+  yield all([
+    fork(basketSaga), // Your new basketSaga
+  ]);
   yield takeLatest(
     [
       ACTION.SIGNOUT,

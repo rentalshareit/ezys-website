@@ -4,21 +4,10 @@ import { MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
 import Skeleton from "react-loading-skeleton";
 import GoogleReviews from "@/components/misc/GoogleReviews";
-import {
-  FEATURED_PRODUCTS,
-  RECOMMENDED_PRODUCTS,
-  PRODUCTS_BY_CATEGORY,
-} from "@/constants/routes";
-import {
-  useDocumentTitle,
-  useFeaturedProducts,
-  useRecommendedProducts,
-  useScrollTop,
-  useProducts,
-  useTour,
-} from "@/hooks";
+import { PRODUCTS_BY_CATEGORY } from "@/constants/routes";
+import { useDocumentTitle, useScrollTop, useProducts, useTour } from "@/hooks";
 import { formatCategory } from "@/helpers/utils";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import HomeCarousel from "@/components/misc/HomeCarousel";
 

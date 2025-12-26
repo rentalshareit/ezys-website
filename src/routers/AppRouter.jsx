@@ -29,16 +29,6 @@ const AppRouter = () => (
             exact
             path={ROUTES.PRODUCTS_BY_CATEGORY}
           />
-          <PublicRoute
-            component={view.FeaturedProducts}
-            exact
-            path={ROUTES.FEATURED_PRODUCTS}
-          />
-          <PublicRoute
-            component={view.RecommendedProducts}
-            exact
-            path={ROUTES.RECOMMENDED_PRODUCTS}
-          />
           <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
           <PublicRoute component={view.AboutUs} path={ROUTES.ABOUT_US} />
           <PublicRoute component={view.Terms} path={ROUTES.TERMS} />

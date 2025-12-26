@@ -6,6 +6,9 @@ import {
   SET_REQUEST_STATUS,
   UPDATE_TOUR_STATUS,
   UPDATE_RENTAL_PERIOD,
+  SHOW_PLUS_DISCLAIMER_MODAL,
+  DISCLAIMER_CONFIRMED,
+  DISCLAIMER_CANCELLED,
 } from "@/constants/constants";
 
 const getDefaultRangeDate = () => [
@@ -27,6 +30,7 @@ const initState = {
     dates: getDefaultRangeDate(),
     days: 7,
   },
+  psPlusDisclaimerModal: { visible: false },
 };
 
 export default (state = initState, action) => {
@@ -77,6 +81,16 @@ export default (state = initState, action) => {
           days: action.payload.days,
         },
       };
+    case SHOW_PLUS_DISCLAIMER_MODAL:
+      return {
+        ...state,
+        psPlusDisclaimerModal: {
+          visible: true,
+        },
+      };
+    case DISCLAIMER_CONFIRMED:
+    case DISCLAIMER_CANCELLED:
+      return { ...state, psPlusDisclaimerModal: { visible: false } };
     default:
       return state;
   }

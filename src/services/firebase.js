@@ -209,12 +209,6 @@ class Firebase {
     });
   };
 
-  getFeaturedProducts = () =>
-    this.db.collection("products").where("isFeatured", "==", true).get();
-
-  getRecommendedProducts = () =>
-    this.db.collection("products").where("isRecommended", "==", true).get();
-
   addProduct = (id, product) =>
     this.db.collection("products").doc(id).set(product);
 

@@ -1,6 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useRef, useState, useCallback, useMemo, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+} from "react";
 import * as ROUTE from "@/constants/routes";
 import { DatePicker, Divider, Space, Input } from "antd";
 import { updateRentalPeriod } from "@/redux/actions/miscActions";
@@ -37,8 +43,6 @@ const disabledDate = (current) => {
 const allowedPathPatterns = [
   { path: ROUTE.HOME, exact: true },
   { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/products\/.+/ },
-  { path: ROUTE.FEATURED_PRODUCTS, exact: true },
-  { path: ROUTE.RECOMMENDED_PRODUCTS, exact: true },
   { path: ROUTE.SEARCH, pattern: /^\/search\/.+/ },
   { path: ROUTE.VIEW_PRODUCT, pattern: /^\/product\/.+/ },
 ];

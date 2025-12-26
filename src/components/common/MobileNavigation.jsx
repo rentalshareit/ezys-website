@@ -36,9 +36,82 @@ const Navigation = (props) => {
     <nav className="mobile-navigation">
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
-          <Link to="/">
-            <img alt="Logo" src={logo} />
-          </Link>
+          <div className="logo">
+            <Link to="/">
+              <svg
+                width="50"
+                height="50"
+                viewBox="0 0 200 200"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="10"
+                  y1="10"
+                  x2="80"
+                  y2="10"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+
+                <line
+                  x1="10"
+                  y1="190"
+                  x2="80"
+                  y2="190"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="120"
+                  y1="190"
+                  x2="190"
+                  y2="190"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+
+                <line
+                  x1="10"
+                  y1="10"
+                  x2="10"
+                  y2="80"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="10"
+                  y1="120"
+                  x2="10"
+                  y2="190"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+
+                <line
+                  x1="190"
+                  y1="120"
+                  x2="190"
+                  y2="190"
+                  stroke="#1C8C80"
+                  stroke-width="10"
+                  stroke-linecap="round"
+                />
+                <image
+                  href={logo}
+                  x="35"
+                  y="35"
+                  width="130"
+                  height="130"
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              </svg>
+            </Link>
+          </div>
         </div>
 
         <BasketToggle>
@@ -79,10 +152,13 @@ const Navigation = (props) => {
       <div className="mobile-navigation-sec">
         <SearchBar />
       </div>
-      <Signin show={show} onClose={() => {
-        window.confirmationResult = null; // Clear confirmation result
-        setShow(false);
-      }} />
+      <Signin
+        show={show}
+        onClose={() => {
+          window.confirmationResult = null; // Clear confirmation result
+          setShow(false);
+        }}
+      />
     </nav>
   );
 };

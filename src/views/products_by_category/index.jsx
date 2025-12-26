@@ -76,7 +76,7 @@ const ProductsByCategory = () => {
           {error && !isLoading ? (
             <MessageDisplay
               message={error}
-              action={fetchFeaturedProducts}
+              action={() => {}}
               buttonLabel="Try Again"
             />
           ) : (

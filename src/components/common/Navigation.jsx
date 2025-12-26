@@ -85,35 +85,81 @@ const Navigation = () => {
     <nav className="navigation" ref={navbar}>
       <div className="logo">
         <Link to="/">
-          <img alt="Logo" src={logo} />
+          <svg
+            width="60"
+            height="60"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="10"
+              y1="10"
+              x2="80"
+              y2="10"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+
+            <line
+              x1="10"
+              y1="190"
+              x2="80"
+              y2="190"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <line
+              x1="120"
+              y1="190"
+              x2="190"
+              y2="190"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+
+            <line
+              x1="10"
+              y1="10"
+              x2="10"
+              y2="80"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <line
+              x1="10"
+              y1="120"
+              x2="10"
+              y2="190"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+
+            <line
+              x1="190"
+              y1="120"
+              x2="190"
+              y2="190"
+              stroke="#1C8C80"
+              stroke-width="10"
+              stroke-linecap="round"
+            />
+            <image
+              href={logo}
+              x="35"
+              y="35"
+              width="130"
+              height="130"
+              preserveAspectRatio="xMidYMid meet"
+            />
+          </svg>
         </Link>
       </div>
       <ul className="navigation-menu-main">
-        <li>
-          <NavLink
-            activeClassName="navigation-menu-active"
-            exact
-            to={ROUTE.HOME}
-          >
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            activeClassName="navigation-menu-active"
-            to={ROUTE.FEATURED_PRODUCTS}
-          >
-            Featured
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            activeClassName="navigation-menu-active"
-            to={ROUTE.RECOMMENDED_PRODUCTS}
-          >
-            Recommended
-          </NavLink>
-        </li>
         {!!store.user && store.user.role === "ADMIN" && (
           <li>
             <NavLink

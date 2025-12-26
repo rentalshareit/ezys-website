@@ -96,8 +96,6 @@ BasketItem.propTypes = {
     imageCollection: PropType.arrayOf(PropType.string),
     sizes: PropType.arrayOf(PropType.number),
     image: PropType.string,
-    isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
     availableColors: PropType.arrayOf(PropType.string),
   }).isRequired,
   rentalPeriod: PropType.number,

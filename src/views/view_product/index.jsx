@@ -3,17 +3,17 @@ import { Spin, Tour, Badge } from "antd";
 import { useSelector } from "react-redux";
 import { ImageLoader, MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
-import { RECOMMENDED_PRODUCTS } from "@/constants/routes";
+import ProductAvailability from "@/components/product/ProductAvailability";
 import { displayMoney, calculateProductPrice } from "@/helpers/utils";
 import {
   useBasket,
   useDocumentTitle,
   useProduct,
-  useRecommendedProducts,
   useScrollTop,
   useTour,
 } from "@/hooks";
-import React, { useEffect, useRef, useState } from "react";
+import useProductAvailability from "@/hooks/useProductAvailability";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 
 const steps = [
@@ -106,6 +106,7 @@ const ViewProduct = () => {
     100
   );
   const { addToBasket, isItemOnBasket } = useBasket();
+  const { isProductAvailable } = useProductAvailability();
   useScrollTop();
   useDocumentTitle(`View ${product?.name || "Item"}`);
 
@@ -120,14 +121,14 @@ const ViewProduct = () => {
   );
 
   const [selectedImage, setSelectedImage] = useState(product?.image || "");
-
-  const {
-    recommendedProducts,
-    fetchRecommendedProducts,
-    isLoading: isLoadingFeatured,
-    error: errorFeatured,
-  } = useRecommendedProducts(6);
   const colorOverlay = useRef(null);
+
+  const isItemOutOfStock = useMemo(() => {
+    if (product?.skeleton) {
+      return false;
+    }
+    return !isProductAvailable(product, ...rentalPeriod.dates);
+  }, [isProductAvailable, product, rentalPeriod]);
 
   useEffect(() => {
     setSelectedImage(product?.image);
@@ -269,44 +270,27 @@ const ViewProduct = () => {
                       : ""
                   }`}
                   onClick={handleAddToBasket}
+                  disabled={isItemOutOfStock}
                   type="button"
                 >
-                  {isItemOnBasket(product.id)
+                  {isItemOutOfStock
+                    ? "Out Of Stock"
+                    : isItemOnBasket(product.id)
                     ? "Remove From Cart"
                     : "Add To Cart"}
                 </button>
-                <ProductPrice
-                  key="price"
-                  original={original}
-                  discounted={discounted}
-                  days={rentalPeriod.days}
-                />
+                {isItemOutOfStock ? (
+                  <ProductAvailability key="availability" product={product} />
+                ) : (
+                  <ProductPrice
+                    key="price"
+                    original={original}
+                    discounted={discounted}
+                    days={rentalPeriod.days}
+                  />
+                )}
               </div>
             </div>
-          </div>
-          <div style={{ marginTop: "5rem" }}>
-            <div className="display-header">
-              <h3>Recommended</h3>
-              <button
-                className="button button-border button-small"
-                type="button"
-                onClick={() => history.push(RECOMMENDED_PRODUCTS)}
-              >
-                See All
-              </button>
-            </div>
-            {errorFeatured && !isLoadingFeatured ? (
-              <MessageDisplay
-                message={error}
-                action={fetchRecommendedProducts}
-                buttonLabel="Try Again"
-              />
-            ) : (
-              <ProductShowcaseGrid
-                products={recommendedProducts}
-                skeletonCount={3}
-              />
-            )}
           </div>
         </div>
       )}
