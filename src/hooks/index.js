@@ -12,3 +12,4 @@ export { default as useShippingCharges } from "./useShippingCharges";
 export { default as useShippingDistance } from "./useShippingDistance";
 export { default as useTour } from "./useTour";
 export { default as useIsFirstVisit } from "./useIsFirstVisit";
+export { default as useProductAvailability } from "./useProductAvailability";

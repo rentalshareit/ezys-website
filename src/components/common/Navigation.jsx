@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Select, Button } from "antd";
 import UserAvatar from "@/views/account/components/UserAvatar";
+import HideOOSToggle from "@/components/misc/HideOOSToggle";
 import BasketToggle from "../basket/BasketToggle";
 import Badge from "./Badge";
 import MobileNavigation from "./MobileNavigation";
@@ -204,6 +205,9 @@ const Navigation = () => {
         )}
         <li className="navigation-action" style={{ marginLeft: "1rem" }}>
           <LocationDisplay />
+        </li>
+        <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+          <HideOOSToggle />
         </li>
       </ul>
       <Signin

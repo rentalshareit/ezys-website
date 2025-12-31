@@ -9,6 +9,7 @@ import {
   SHOW_PLUS_DISCLAIMER_MODAL,
   DISCLAIMER_CONFIRMED,
   DISCLAIMER_CANCELLED,
+  HIDE_OOS_PRODUCTS,
 } from "@/constants/constants";
 
 const getDefaultRangeDate = () => [
@@ -31,6 +32,7 @@ const initState = {
     days: 7,
   },
   psPlusDisclaimerModal: { visible: false },
+  hideOutOfStock: false,
 };
 
 export default (state = initState, action) => {
@@ -87,6 +89,11 @@ export default (state = initState, action) => {
         psPlusDisclaimerModal: {
           visible: true,
         },
+      };
+    case HIDE_OOS_PRODUCTS:
+      return {
+        ...state,
+        hideOutOfStock: action.payload.hideOutOfStock,
       };
     case DISCLAIMER_CONFIRMED:
     case DISCLAIMER_CANCELLED:

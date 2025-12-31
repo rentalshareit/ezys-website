@@ -1,4 +1,5 @@
 import { BasketToggle } from "@/components/basket";
+import HideOOSToggle from "@/components/misc/HideOOSToggle";
 import { ShoppingOutlined } from "@ant-design/icons";
 import { HOME } from "@/constants/routes";
 import PropType from "prop-types";
@@ -146,6 +147,9 @@ const Navigation = (props) => {
           )}
           <li className="navigation-action" style={{ marginLeft: "1rem" }}>
             <LocationDisplay />
+          </li>
+          <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+            <HideOOSToggle />
           </li>
         </ul>
       </div>

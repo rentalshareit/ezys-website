@@ -17,7 +17,7 @@ export const priceContainerStyles = {
 };
 //
 export const priceStyles = {
-  fontSize: "small",
+  fontSize: "smaller",
   color: "rgb(13, 148, 136)",
 };
 

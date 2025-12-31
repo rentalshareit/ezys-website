@@ -8,6 +8,7 @@ import {
   SHOW_PLUS_DISCLAIMER_MODAL,
   DISCLAIMER_CONFIRMED,
   DISCLAIMER_CANCELLED,
+  HIDE_OOS_PRODUCTS,
 } from "@/constants/constants";
 
 export const setLoading = (bool = true) => ({
@@ -37,6 +38,11 @@ export const updateTourStatus = (payload) => ({
 
 export const updateRentalPeriod = (payload) => ({
   type: UPDATE_RENTAL_PERIOD,
+  payload,
+});
+
+export const hideOOSProducts = (payload) => ({
+  type: HIDE_OOS_PRODUCTS,
   payload,
 });
 

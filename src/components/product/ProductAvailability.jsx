@@ -1,11 +1,17 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Button, Modal, List, Card, Spin, Empty } from "antd";
-import PropType from "prop-types";
+import PropTypes from "prop-types";
 import useProductAvailability from "@/hooks/useProductAvailability";
 import dayjs, { parseDate } from "@/helpers/dayjs";
 import { formatDateWithOrdinal } from "@/components/common";
 
-const ProductAvailability = ({ product }) => {
+const ProductAvailability = ({
+  product,
+  showNextDateLink = true,
+  showAllSlotsLink = true,
+  onNextDateClick, // Callback for date picker focus
+  className = "",
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,10 +23,10 @@ const ProductAvailability = ({ product }) => {
       if (getAvailableSlots) {
         const slots = await getAvailableSlots(product);
         if (slots && slots.length > 0) {
-          setNextAvailableDate(slots[0].start); // Assuming slots[0].start is in DD/MM/YYYY format
+          setNextAvailableDate(slots[0].start);
+        } else {
+          setNextAvailableDate(null);
         }
-      } else {
-        setNextAvailableDate(null);
       }
     };
     fetchNextAvailableDate();
@@ -73,30 +79,68 @@ const ProductAvailability = ({ product }) => {
     [loadAvailableSlots]
   );
 
+  const handleNextDateClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (onNextDateClick) {
+        onNextDateClick(nextAvailableDate, product);
+      }
+    },
+    [nextAvailableDate, product, onNextDateClick]
+  );
+
   const handleCancel = useCallback((e) => {
     e.stopPropagation();
     setIsModalVisible(false);
   }, []);
 
+  const renderLinks = () => {
+    const links = [];
+
+    if (showNextDateLink && nextAvailableDate) {
+      links.push(
+        <Button
+          key="next-date"
+          type="link"
+          onClick={handleNextDateClick}
+          onMouseDown={(e) => e.stopPropagation()}
+          style={{
+            padding: 0,
+            fontSize: "10px",
+            fontWeight: 600,
+            gap: 1,
+            color: "rgb(13, 148, 136)",
+          }}
+        >
+          <span>Book for</span> {formatDateWithOrdinal(nextAvailableDate)}
+        </Button>
+      );
+    }
+
+    if (showAllSlotsLink) {
+      links.push(
+        <Button
+          key="all-slots"
+          type="link"
+          onClick={showModal}
+          onMouseDown={(e) => e.stopPropagation()}
+          style={{ padding: 0, fontSize: "12px" }}
+        >
+          Check All Available Slots
+        </Button>
+      );
+    }
+
+    return links;
+  };
+
   return (
     <>
-      <Button
-        type="link"
-        onClick={showModal}
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        {nextAvailableDate ? (
-          <>
-            <span style={{ fontWeight: 700, fontSize: "10px" }}>
-              Available from {formatDateWithOrdinal(nextAvailableDate)}
-            </span>
-            <br />
-            Check Availability
-          </>
-        ) : (
-          "Check Availability"
-        )}
-      </Button>
+      <div className={`product-availability-links ${className}`}>
+        {renderLinks()}
+      </div>
 
       <Modal
         title={`Available Rental Slots - ${product.name}`}
@@ -154,10 +198,19 @@ const ProductAvailability = ({ product }) => {
 };
 
 ProductAvailability.propTypes = {
-  product: PropType.shape({
-    id: PropType.string.isRequired,
-    name: PropType.string.isRequired,
+  product: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
   }).isRequired,
+  showNextDateLink: PropTypes.bool,
+  showAllSlotsLink: PropTypes.bool,
+  onNextDateClick: PropTypes.func, // Callback when next date clicked
+  className: PropTypes.string,
+};
+
+ProductAvailability.defaultProps = {
+  showNextDateLink: true,
+  showAllSlotsLink: true,
 };
 
 export default ProductAvailability;

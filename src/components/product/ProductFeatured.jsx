@@ -1,6 +1,16 @@
 import React, { useCallback, useMemo } from "react";
 import PropType from "prop-types";
 import { Badge, Button, Card } from "antd";
+import {
+  EllipsisOutlined,
+  ShoppingOutlined,
+  ShoppingCartOutlined,
+  EyeInvisibleOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+  PlusOutlined,
+  MinusOutlined,
+} from "@ant-design/icons";
 import ProductAvailability from "./ProductAvailability";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -13,6 +23,55 @@ import {
   priceStyles,
   daysTextStyles,
 } from "./ProductFeatured.styles";
+
+const CartButton = ({ inCart, available, category, productId, onClick }) => {
+  if (!available) {
+    return (
+      <Button
+        id={`btn-add-basket-${category}-${productId}`}
+        type="text"
+        disabled
+        style={{
+          width: 30,
+          height: 30, // iOS/Android touch target minimum
+          padding: 0,
+          backgroundColor: "#818181",
+        }}
+        icon={<EyeInvisibleOutlined style={{ fontSize: 18 }} />}
+      />
+    );
+  }
+
+  if (!inCart) {
+    return (
+      <Button
+        id={`btn-add-basket-${category}-${productId}`}
+        type="text"
+        style={{
+          width: 30,
+          height: 30, // iOS/Android touch target minimum
+          padding: 0,
+          backgroundColor: "rgb(13, 148, 136)",
+        }}
+        icon={<PlusOutlined style={{ fontSize: 18 }} />}
+      />
+    );
+  }
+
+  return (
+    <Button
+      id={`btn-add-basket-${category}-${productId}`}
+      type="text"
+      style={{
+        width: 30,
+        height: 30, // iOS/Android touch target minimum
+        padding: 0,
+        backgroundColor: "rgba(240, 63, 63, 0.99)",
+      }}
+      icon={<MinusOutlined style={{ fontSize: 18 }} />}
+    />
+  );
+};
 
 const ProductActionButton = ({
   isOutOfStock,
@@ -39,14 +98,13 @@ const ProductActionButton = ({
   };
 
   return (
-    <Button
-      id={`btn-add-basket-${category}-${productId}`}
-      disabled={isOutOfStock}
-      type={getButtonType()}
+    <CartButton
+      inCart={isInBasket}
+      available={!isOutOfStock}
+      category={category}
+      productId={productId}
       onClick={onClick}
-    >
-      {getButtonText()}
-    </Button>
+    />
   );
 };
 
@@ -111,7 +169,11 @@ const getCardActions = ({
       product={product}
     />,
     isOutOfStock ? (
-      <ProductAvailability key="availability" product={product} />
+      <ProductAvailability
+        key="availability"
+        product={product}
+        showAllSlotsLink={false}
+      />
     ) : (
       <ProductPrice
         key="price"
@@ -120,6 +182,7 @@ const getCardActions = ({
         days={rentalPeriod.days}
       />
     ),
+    <EllipsisOutlined key="ellipsis" />,
   ];
 };
 
@@ -127,6 +190,7 @@ const ProductFeatured = ({ product }) => {
   const { skeleton = false } = product;
   const { addToBasket, isItemOnBasket } = useBasket();
   const { isProductAvailable, isLoading } = useProductAvailability();
+  const hideOutOfStock = useSelector((state) => state.app.hideOutOfStock);
   const history = useHistory();
   const { rentalPeriod } = useSelector((state) => ({
     rentalPeriod: state.app.rentalPeriod,
@@ -159,6 +223,10 @@ const ProductFeatured = ({ product }) => {
     rentalPeriod.days,
     true
   );
+
+  if (hideOutOfStock && isItemOutOfStock) {
+    return null;
+  }
 
   if (skeleton || isLoading) {
     return <ProductSkeleton />;
