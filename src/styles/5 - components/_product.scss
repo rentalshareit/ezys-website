@@ -577,11 +577,15 @@
   }
 }
 
-.product-showcase-grid .ant-card-actions li:nth-child(2) {
-  width: 51.33333%!important;
+.product-showcase-grid .ant-card-actions li:nth-child(1), .product-slider-item .ant-card-actions li:nth-child(1) {
+  width: 20.33333%!important;
 }
 
-.product-showcase-grid .ant-card-actions li:nth-child(3) {
+.product-showcase-grid .ant-card-actions li:nth-child(2), .product-slider-item .ant-card-actions li:nth-child(2) {
+  width: 61.33333%!important;
+}
+
+.product-showcase-grid .ant-card-actions li:nth-child(3), .product-slider-item .ant-card-actions li:nth-child(3) {
   width: 15.33333%!important;
 }
 
@@ -597,6 +601,18 @@
     object-fit: contain;
     @include bezier-transition;
   }
+}
+
+.view-games-modal .ant-modal-title, .package-info-modal .ant-modal-title {
+  color: rgb(13, 148, 136);
+  font-weight: bold;
+}
+
+/* Green hover for dropdown menu items */
+.product-featured-dropdown .ant-dropdown-menu-item:hover,
+.product-featured-dropdown .ant-dropdown-menu-item-active {
+  background-color: rgb(13, 148, 136) !important;
+  color: white !important;
 }
 
 .product-display-details {

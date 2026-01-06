@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { singletonHook } from "react-singleton-hook";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -53,6 +53,11 @@ const useAvailabilityStoreImpl = () => {
       setIsLoading(false);
     }
   }, [lastFetched]);
+
+  useEffect(() => {
+    console.log("🎯 Auto-fetching on mount");
+    fetchAvailability();
+  }, []);
 
   const getAvailabilityByTags = useCallback(
     (tags) => {

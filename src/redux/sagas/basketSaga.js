@@ -17,7 +17,7 @@ function* handleAddToBasketSaga(action) {
     return;
   }
 
-  if (isGamingConsoleWithPSPlus(product)) {
+  if (product.subscription) {
     yield put(showDisclaimerModal({ product }));
     const confirmed = yield call(waitForDisclaimerConfirmation);
 
@@ -38,10 +38,6 @@ function* handleAddToBasketSaga(action) {
 function* waitForDisclaimerConfirmation() {
   const action = yield take([DISCLAIMER_CONFIRMED, DISCLAIMER_CANCELLED]);
   return action.type === DISCLAIMER_CONFIRMED;
-}
-
-function isGamingConsoleWithPSPlus(product) {
-  return product.category === "Gaming Consoles";
 }
 
 export default function* basketSaga() {

@@ -1,7 +1,7 @@
 import { BasketToggle } from "@/components/basket";
 import HideOOSToggle from "@/components/misc/HideOOSToggle";
 import { ShoppingOutlined } from "@ant-design/icons";
-import { HOME } from "@/constants/routes";
+import * as ROUTE from "@/constants/routes";
 import PropType from "prop-types";
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -32,6 +32,22 @@ const Navigation = (props) => {
       setShow(false);
     }
   }, [authStatus]);
+
+  const allowedPathPatternsForStockToggle = [
+    { path: ROUTE.HOME, exact: true },
+    { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/products\/.+/ },
+    { path: ROUTE.SEARCH, pattern: /^\/search\/.+/ },
+  ];
+
+  const isPathAllowedForStockToggle = (currentPath) => {
+    return allowedPathPatternsForStockToggle.some(({ path, pattern, exact }) =>
+      exact
+        ? path === currentPath
+        : pattern
+        ? pattern.test(currentPath)
+        : path === currentPath
+    );
+  };
 
   return (
     <nav className="mobile-navigation">
@@ -148,9 +164,11 @@ const Navigation = (props) => {
           <li className="navigation-action" style={{ marginLeft: "1rem" }}>
             <LocationDisplay />
           </li>
-          <li className="navigation-action" style={{ marginLeft: "1rem" }}>
-            <HideOOSToggle />
-          </li>
+          {isPathAllowedForStockToggle(pathname) && (
+            <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+              <HideOOSToggle />
+            </li>
+          )}
         </ul>
       </div>
       <div className="mobile-navigation-sec">

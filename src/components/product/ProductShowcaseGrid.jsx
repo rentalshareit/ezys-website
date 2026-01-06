@@ -9,7 +9,7 @@ import React, { useCallback } from "react";
 import { calculateElementsThatFit } from "@/helpers/utils";
 import ProductSlider from "./ProductSlider";
 
-const ProductShowcase = ({ products, category, showAll }) => {
+const ProductShowcase = ({ products, category, showAll, viewportWidth }) => {
   const { hideOutOfStock, rentalPeriod } = useSelector((state) => ({
     hideOutOfStock: state.app.hideOutOfStock,
     rentalPeriod: state.app.rentalPeriod,
@@ -45,7 +45,7 @@ const ProductShowcase = ({ products, category, showAll }) => {
     <div>
       <ProductSlider
         products={filteredProducts}
-        itemsToShow={calculateElementsThatFit(280, 30, category)}
+        itemsToShow={calculateElementsThatFit(280, 30, viewportWidth)}
       />
     </div>
   );

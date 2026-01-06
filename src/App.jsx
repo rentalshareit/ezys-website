@@ -8,7 +8,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import AppRouter from "@/routers/AppRouter";
 import PageFloaterActions from "@/components/misc/PageFloaterActions";
 import PersistDataInitializer from "@/components/common/PersistDataInitializer";
-import PSPlusDisclaimer from "@/components/misc/PSPlusDisclaimer";
+import SubscriptionDisclaimer from "@/components/misc/SubscriptionDisclaimer";
 
 const App = ({ store, persistor }) => {
   return (
@@ -41,7 +41,7 @@ const App = ({ store, persistor }) => {
           <Provider store={store}>
             <PersistGate loading={<Preloader />} persistor={persistor}>
               <PersistDataInitializer />
-              <PSPlusDisclaimer />
+              <SubscriptionDisclaimer />
               <AppRouter />
             </PersistGate>
             <PageFloaterActions />

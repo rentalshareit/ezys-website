@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Button, Modal, List, Card, Spin, Empty } from "antd";
 import PropTypes from "prop-types";
 import useProductAvailability from "@/hooks/useProductAvailability";
@@ -9,14 +9,18 @@ const ProductAvailability = ({
   product,
   showNextDateLink = true,
   showAllSlotsLink = true,
-  onNextDateClick, // Callback for date picker focus
   className = "",
+  isModalVisible = false,
+  onModalClose = null,
 }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [internalModalVisible, setInternalModalVisible] = useState(false);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const { getAvailableSlots } = useProductAvailability();
   const [nextAvailableDate, setNextAvailableDate] = useState(null);
+
+  // Use external modal visibility if provided
+  const modalVisible = onModalClose ? isModalVisible : internalModalVisible;
 
   useEffect(() => {
     const fetchNextAvailableDate = async () => {
@@ -31,25 +35,6 @@ const ProductAvailability = ({
     };
     fetchNextAvailableDate();
   }, [getAvailableSlots, product]);
-
-  useEffect(() => {
-    const handleModalClick = (e) => {
-      const target = e.target;
-      // Don't stop propagation if clicking the close button
-      if (target.closest(".ant-modal-close")) {
-        return;
-      }
-      if (target.closest(".availability-modal-wrapper")) {
-        e.stopPropagation();
-      }
-    };
-
-    document.addEventListener("click", handleModalClick, true);
-
-    return () => {
-      document.removeEventListener("click", handleModalClick, true);
-    };
-  }, []);
 
   const loadAvailableSlots = useCallback(async () => {
     setLoading(true);
@@ -71,30 +56,42 @@ const ProductAvailability = ({
 
   const showModal = useCallback(
     (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsModalVisible(true);
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      setInternalModalVisible(true);
       loadAvailableSlots();
     },
     [loadAvailableSlots]
   );
 
-  const handleNextDateClick = useCallback(
-    (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+  const handleCancel = useCallback(() => {
+    if (onModalClose) {
+      onModalClose();
+    } else {
+      setInternalModalVisible(false);
+    }
+  }, [onModalClose]);
 
-      if (onNextDateClick) {
-        onNextDateClick(nextAvailableDate, product);
-      }
-    },
-    [nextAvailableDate, product, onNextDateClick]
-  );
-
-  const handleCancel = useCallback((e) => {
+  const handleNextDateClick = useCallback((e) => {
+    e.preventDefault();
     e.stopPropagation();
-    setIsModalVisible(false);
+
+    const datePicker = document.querySelector(
+      ".ant-picker-range .ant-picker-input"
+    );
+    if (datePicker) {
+      datePicker.click();
+    }
   }, []);
+
+  // When external modal becomes visible, load slots
+  useEffect(() => {
+    if (modalVisible && onModalClose) {
+      loadAvailableSlots();
+    }
+  }, [modalVisible, onModalClose, loadAvailableSlots]);
 
   const renderLinks = () => {
     const links = [];
@@ -126,7 +123,12 @@ const ProductAvailability = ({
           type="link"
           onClick={showModal}
           onMouseDown={(e) => e.stopPropagation()}
-          style={{ padding: 0, fontSize: "12px" }}
+          style={{
+            padding: 0,
+            fontSize: "10px",
+            fontWeight: 600,
+            color: "rgb(13, 148, 136)",
+          }}
         >
           Check All Available Slots
         </Button>
@@ -144,11 +146,20 @@ const ProductAvailability = ({
 
       <Modal
         title={`Available Rental Slots - ${product.name}`}
-        styles={{ header: { color: "rgb(13, 148, 136)!important" } }}
-        open={isModalVisible}
+        open={modalVisible}
         onCancel={handleCancel}
-        footer={null}
         width={600}
+        closable={false}
+        footer={[
+          <Button
+            key="ok"
+            type="primary"
+            onClick={handleCancel}
+            style={{ marginRight: 8 }}
+          >
+            OK
+          </Button>,
+        ]}
         className="availability-modal-wrapper"
         maskStyle={{ backgroundColor: "rgba(0, 0, 0, 0.45)" }}
       >
@@ -204,13 +215,9 @@ ProductAvailability.propTypes = {
   }).isRequired,
   showNextDateLink: PropTypes.bool,
   showAllSlotsLink: PropTypes.bool,
-  onNextDateClick: PropTypes.func, // Callback when next date clicked
   className: PropTypes.string,
-};
-
-ProductAvailability.defaultProps = {
-  showNextDateLink: true,
-  showAllSlotsLink: true,
+  isModalVisible: PropTypes.bool,
+  onModalClose: PropTypes.func,
 };
 
 export default ProductAvailability;

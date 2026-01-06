@@ -62,6 +62,22 @@ const Navigation = () => {
     setShow(true);
   };
 
+  const allowedPathPatternsForStockToggle = [
+    { path: ROUTE.HOME, exact: true },
+    { path: ROUTE.PRODUCTS_BY_CATEGORY, pattern: /^\/products\/.+/ },
+    { path: ROUTE.SEARCH, pattern: /^\/search\/.+/ },
+  ];
+
+  const isPathAllowedForStockToggle = (currentPath) => {
+    return allowedPathPatternsForStockToggle.some(({ path, pattern, exact }) =>
+      exact
+        ? path === currentPath
+        : pattern
+        ? pattern.test(currentPath)
+        : path === currentPath
+    );
+  };
+
   // disable the basket toggle to these pathnames
   const basketDisabledpathnames = [
     ROUTE.CHECKOUT_STEP_1,
@@ -206,9 +222,11 @@ const Navigation = () => {
         <li className="navigation-action" style={{ marginLeft: "1rem" }}>
           <LocationDisplay />
         </li>
-        <li className="navigation-action" style={{ marginLeft: "1rem" }}>
-          <HideOOSToggle />
-        </li>
+        {isPathAllowedForStockToggle(pathname) && (
+          <li className="navigation-action" style={{ marginLeft: "1rem" }}>
+            <HideOOSToggle />
+          </li>
+        )}
       </ul>
       <Signin
         show={show}

@@ -34,7 +34,7 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
         "https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getCoupons&userId=" +
           encodeURIComponent(userId)
       );
-      const { coupons: c } = await response.json();
+      const { coupons: c = [] } = await response.json();
       return c.map((coupon) => ({
         code: coupon.Code,
         description: coupon.Description,

@@ -1,6 +1,16 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import PropType from "prop-types";
-import { Badge, Button, Card } from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  Dropdown,
+  Menu,
+  Modal,
+  Typography,
+  List,
+  Space,
+} from "antd";
 import {
   EllipsisOutlined,
   ShoppingOutlined,
@@ -17,6 +27,7 @@ import { useHistory } from "react-router-dom";
 import { useBasket } from "@/hooks";
 import useProductAvailability from "@/hooks/useProductAvailability";
 import { calculateProductPrice } from "@/helpers/utils";
+import { ViewGamesModal, PackageInfoModal } from "@/components/common";
 import ProductSkeleton from "./ProductSkeleton";
 import {
   priceContainerStyles,
@@ -24,17 +35,30 @@ import {
   daysTextStyles,
 } from "./ProductFeatured.styles";
 
+const { Title, Text, Paragraph } = Typography;
+
 const CartButton = ({ inCart, available, category, productId, onClick }) => {
+  const baseProps = {
+    id: `btn-add-basket-${category}-${productId}`,
+    type: "text",
+    style: {
+      width: 30,
+      height: 30,
+      padding: 0,
+    },
+    onClick: (e) => {
+      e.stopPropagation();
+      onClick?.(e);
+    },
+    onMouseDown: (e) => e.stopPropagation(),
+  };
   if (!available) {
     return (
       <Button
-        id={`btn-add-basket-${category}-${productId}`}
-        type="text"
+        {...baseProps}
         disabled
         style={{
-          width: 30,
-          height: 30, // iOS/Android touch target minimum
-          padding: 0,
+          ...baseProps.style,
           backgroundColor: "#818181",
         }}
         icon={<EyeInvisibleOutlined style={{ fontSize: 18 }} />}
@@ -45,27 +69,20 @@ const CartButton = ({ inCart, available, category, productId, onClick }) => {
   if (!inCart) {
     return (
       <Button
-        id={`btn-add-basket-${category}-${productId}`}
-        type="text"
+        {...baseProps}
         style={{
-          width: 30,
-          height: 30, // iOS/Android touch target minimum
-          padding: 0,
+          ...baseProps.style,
           backgroundColor: "rgb(13, 148, 136)",
         }}
         icon={<PlusOutlined style={{ fontSize: 18 }} />}
       />
     );
   }
-
   return (
     <Button
-      id={`btn-add-basket-${category}-${productId}`}
-      type="text"
+      {...baseProps}
       style={{
-        width: 30,
-        height: 30, // iOS/Android touch target minimum
-        padding: 0,
+        ...baseProps.style,
         backgroundColor: "rgba(240, 63, 63, 0.99)",
       }}
       icon={<MinusOutlined style={{ fontSize: 18 }} />}
@@ -159,7 +176,52 @@ const getCardActions = ({
   original,
   rentalPeriod,
   discounted,
+  onViewGames,
+  onCheckAvailability,
+  onPackageInfo,
+  onCarouselPause,
+  onCarouselResume,
 }) => {
+  const items = [];
+  if (product.subscription) {
+    items.push({
+      key: "view_games",
+      label: "View Games",
+    });
+  }
+
+  items.push({
+    key: "show_availability",
+    label: "Check Availability",
+  });
+
+  if (product.included) {
+    items.push({
+      type: "divider",
+    });
+    items.push({
+      key: "package_information",
+      label: "Package Information",
+    });
+  }
+
+  const handleMenuClick = ({ key, domEvent }) => {
+    domEvent.stopPropagation();
+    switch (key) {
+      case "view_games":
+        onViewGames?.();
+        break;
+      case "show_availability":
+        onCheckAvailability?.();
+        break;
+      case "package_information":
+        onPackageInfo?.();
+        break;
+      default:
+        break;
+    }
+  };
+
   return [
     <ProductActionButton
       key="action"
@@ -182,11 +244,56 @@ const getCardActions = ({
         days={rentalPeriod.days}
       />
     ),
-    <EllipsisOutlined key="ellipsis" />,
+    <Dropdown
+      menu={{
+        items,
+        onClick: handleMenuClick,
+      }}
+      onOpenChange={(open) => {
+        if (open) {
+          onCarouselPause?.();
+          console.log("Dropdown opened - carousel paused");
+        } else {
+          onCarouselResume?.();
+          console.log("Dropdown closed - carousel resumed");
+        }
+      }}
+      placement="bottomRight"
+      trigger={["click"]}
+      key="ellipsis"
+      popupRender={(menu) => (
+        <div
+          className="product-featured-dropdown"
+          style={{
+            border: "1px solid #f1f0f0ff", // Grey border around dropdown
+            borderRadius: 8,
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          }}
+        >
+          {menu}
+        </div>
+      )}
+      style={{ padding: 10, border: "2px solid #f0f0f0" }}
+    >
+      <Button
+        type="text"
+        size="small"
+        icon={
+          <EllipsisOutlined
+            key="ellipsis"
+            style={{ color: "rgb(13, 148, 136)", fontSize: "1.8rem" }}
+          />
+        }
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        style={{ padding: 0 }}
+      />
+    </Dropdown>,
   ];
 };
 
-const ProductFeatured = ({ product }) => {
+const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
   const { skeleton = false } = product;
   const { addToBasket, isItemOnBasket } = useBasket();
   const { isProductAvailable, isLoading } = useProductAvailability();
@@ -195,6 +302,35 @@ const ProductFeatured = ({ product }) => {
   const { rentalPeriod } = useSelector((state) => ({
     rentalPeriod: state.app.rentalPeriod,
   }));
+  const [gamesModalVisible, setGamesModalVisible] = useState(false);
+  const [packageModalVisible, setPackageModalVisible] = useState(false);
+  const [availabilityModalVisible, setAvailabilityModalVisible] =
+    useState(false);
+
+  // Modal handlers
+  const handleViewGames = useCallback(() => {
+    setGamesModalVisible(true);
+  }, []);
+
+  const handlePackageInfo = useCallback(() => {
+    setPackageModalVisible(true);
+  }, []);
+
+  const handleCloseGamesModal = useCallback(() => {
+    setGamesModalVisible(false);
+  }, []);
+
+  const handleClosePackageModal = useCallback(() => {
+    setPackageModalVisible(false);
+  }, []);
+
+  const handleCheckAvailability = useCallback(() => {
+    setAvailabilityModalVisible(true);
+  }, []);
+
+  const handleCloseAvailabilityModal = useCallback(() => {
+    setAvailabilityModalVisible(false);
+  }, []);
 
   const onClickItem = useCallback(() => {
     if (!product || skeleton) return;
@@ -261,6 +397,11 @@ const ProductFeatured = ({ product }) => {
             original,
             rentalPeriod,
             discounted,
+            onCheckAvailability: handleCheckAvailability,
+            onViewGames: handleViewGames,
+            onPackageInfo: handlePackageInfo,
+            onCarouselPause,
+            onCarouselResume,
           })}
           cover={
             <ProductCardContent
@@ -274,6 +415,26 @@ const ProductFeatured = ({ product }) => {
           <Card.Meta title={product.name} description={product.brand} />
         </Card>
       </Badge>
+
+      {/* Add availability modal here */}
+      <ProductAvailability
+        product={product}
+        isModalVisible={availabilityModalVisible}
+        onModalClose={handleCloseAvailabilityModal}
+        showAllSlotsLink={false}
+        showNextDateLink={false}
+      />
+
+      <ViewGamesModal
+        visible={gamesModalVisible}
+        onClose={handleCloseGamesModal}
+        product={product}
+      />
+      <PackageInfoModal
+        product={product}
+        visible={packageModalVisible}
+        onClose={handleClosePackageModal}
+      />
     </div>
   );
 };

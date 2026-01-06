@@ -6,7 +6,7 @@ import {
   SET_REQUEST_STATUS,
   UPDATE_TOUR_STATUS,
   UPDATE_RENTAL_PERIOD,
-  SHOW_PLUS_DISCLAIMER_MODAL,
+  SHOW_SUBSCRIPTION_DISCLAIMER_MODAL,
   DISCLAIMER_CONFIRMED,
   DISCLAIMER_CANCELLED,
   HIDE_OOS_PRODUCTS,
@@ -31,7 +31,7 @@ const initState = {
     dates: getDefaultRangeDate(),
     days: 7,
   },
-  psPlusDisclaimerModal: { visible: false },
+  subscriptionDisclaimerModal: { visible: false },
   hideOutOfStock: false,
 };
 
@@ -83,11 +83,12 @@ export default (state = initState, action) => {
           days: action.payload.days,
         },
       };
-    case SHOW_PLUS_DISCLAIMER_MODAL:
+    case SHOW_SUBSCRIPTION_DISCLAIMER_MODAL:
       return {
         ...state,
-        psPlusDisclaimerModal: {
+        subscriptionDisclaimerModal: {
           visible: true,
+          product: action.payload.product,
         },
       };
     case HIDE_OOS_PRODUCTS:
@@ -97,7 +98,7 @@ export default (state = initState, action) => {
       };
     case DISCLAIMER_CONFIRMED:
     case DISCLAIMER_CANCELLED:
-      return { ...state, psPlusDisclaimerModal: { visible: false } };
+      return { ...state, subscriptionDisclaimerModal: { visible: false } };
     default:
       return state;
   }

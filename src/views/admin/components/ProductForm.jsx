@@ -51,6 +51,12 @@ const brandOptions = [
   { value: "other", label: "Other" },
 ];
 
+const subscriptionTypeOptions = [
+  { value: "psn_deluxe", label: "PSN Deluxe Subscription" },
+  { value: "meta_plus", label: "Meta Plus Subscription" },
+  { value: "ea_play", label: "EA Play Subscription" },
+];
+
 const categoryOptions = [
   { value: "Gaming Consoles", label: "Gaming Consoles" },
   { value: "Virtual Reality", label: "Virtual Reality" },
@@ -73,12 +79,18 @@ const FormSchema = Yup.object().shape({
   keywords: Yup.array()
     .of(Yup.string())
     .min(1, "Please enter at least 1 keyword for this product."),
-  isFeatured: Yup.boolean(),
-  isRecommended: Yup.boolean(),
   setup: Yup.string(),
   included: Yup.string(),
   configuration: Yup.string(),
   features: Yup.string(),
+  subscription: Yup.boolean(),
+  subscription_type: Yup.string().when("subscription", {
+    is: true,
+    then: Yup.string().required(
+      "Subscription type is required when subscription is enabled"
+    ),
+    otherwise: Yup.string().nullable(),
+  }),
   tags: Yup.array()
     .of(Yup.string())
     .min(1, "Please select at least 1 tag for this product."),
@@ -93,14 +105,14 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     maxQuantity: product?.maxQuantity || 0,
     description: product?.description || "",
     keywords: product?.keywords || [],
-    isFeatured: product?.isFeatured || false,
-    isRecommended: product?.isRecommended || false,
     setup: product?.setup || "",
     included: product?.included || "",
     configuration: product?.configuration || "",
     features: product?.features || "",
     tags: product?.tags || [],
     discount: product?.discount || 0,
+    subscription: product?.subscription || false,
+    subscription_type: product?.subscription_type || "",
   };
 
   const { imageFile, isFileLoading, onFileChange, removeImage } =
@@ -180,7 +192,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 <CustomSelect
                   defaultValue={(values.tags || []).map((tag) => ({
                     value: tag,
-                    label: tagOptions.find((t) => t.value === tag).label,
+                    label: tagOptions.find((t) => t.value === tag)?.label,
                   }))}
                   name="tags"
                   id="tags"
@@ -339,36 +351,37 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
               <div className="d-flex">
                 <div className="product-form-field">
                   <input
-                    checked={values.isFeatured}
+                    checked={values.subscription}
                     className=""
-                    id="featured"
+                    id="subscsription"
                     onChange={(e) =>
-                      setValues({ ...values, isFeatured: e.target.checked })
+                      setValues({ ...values, subscription: e.target.checked })
                     }
                     type="checkbox"
                   />
-                  <label htmlFor="featured">
+                  <label htmlFor="subscsription">
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; Add to Featured &nbsp;
+                      &nbsp; Includes Subscription &nbsp;
                     </h5>
                   </label>
                 </div>
-                <div className="product-form-field">
-                  <input
-                    checked={values.isRecommended}
-                    className=""
-                    id="recommended"
-                    onChange={(e) =>
-                      setValues({ ...values, isRecommended: e.target.checked })
-                    }
-                    type="checkbox"
-                  />
-                  <label htmlFor="recommended">
-                    <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; Add to Recommended &nbsp;
-                    </h5>
-                  </label>
-                </div>
+                {values.subscription && (
+                  <div className="product-form-field">
+                    <CustomSelect
+                      name="subscription_type"
+                      id="subscription_type"
+                      defaultValue={subscriptionTypeOptions.find(
+                        (option) =>
+                          option.value === values.subscription_type ||
+                          "psn_deluxe"
+                      )}
+                      options={subscriptionTypeOptions}
+                      disabled={isLoading}
+                      placeholder="Select Subscription Type"
+                      label="* Subscription Type"
+                    />
+                  </div>
+                )}
               </div>
               <br />
               <br />
@@ -429,12 +442,12 @@ ProductForm.propTypes = {
     keywords: PropType.arrayOf(PropType.string),
     imageCollection: PropType.arrayOf(PropType.object),
     image: PropType.string,
-    isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
     setup: PropType.string,
     included: PropType.string,
     configuration: PropType.string,
     features: PropType.string,
+    subscription: PropType.bool,
+    subscription_type: PropType.string,
   }).isRequired,
   onSubmit: PropType.func.isRequired,
   isLoading: PropType.bool.isRequired,

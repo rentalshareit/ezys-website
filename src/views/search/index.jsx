@@ -2,7 +2,7 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Boundary, MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
-import { useDidMount } from "@/hooks";
+import { useDidMount, useProductAvailability } from "@/hooks";
 import { Spin } from "antd";
 import PropType from "prop-types";
 import React, { useEffect } from "react";
@@ -20,6 +20,18 @@ const Search = ({ match }) => {
     basket: state.basket,
     requestStatus: state.app.requestStatus,
   }));
+
+  const { isProductAvailable, isLoading: isProductAvailabilityLoading } =
+    useProductAvailability();
+
+  useEffect(() => {
+    if (isProductAvailable && !isProductAvailabilityLoading) {
+      store.products = store.products.map((product) => ({
+        ...product,
+        isProductAvailable: (...args) => isProductAvailable(product, ...args),
+      }));
+    }
+  }, [isProductAvailable, isProductAvailabilityLoading, store]);
 
   useEffect(() => {
     if (didMount && !store.isLoading) {
@@ -45,7 +57,11 @@ const Search = ({ match }) => {
     );
   }
 
-  if (!store.requestStatus && !store.isLoading) {
+  if (
+    !store.requestStatus &&
+    !store.isLoading &&
+    !isProductAvailabilityLoading
+  ) {
     return (
       <Boundary>
         <main className="content">

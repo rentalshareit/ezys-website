@@ -11,11 +11,6 @@ const useProductAvailability = () => {
     getAvailabilityByTags,
   } = useAvailabilityStore();
 
-  // Fetch availability data on mount
-  useEffect(() => {
-    fetchAvailability();
-  }, []);
-
   // Memoize the availability data by product tags
   const availabilityByTag = useMemo(() => {
     return itemsAvailable.reduce((acc, item) => {
@@ -53,51 +48,96 @@ const useProductAvailability = () => {
     [availabilityByTag]
   );
 
-  // Get available slots for a product
+  // Get available slots for a product (intersection of all tags)
   const getAvailableSlots = useCallback(
     (product) => {
-      if (!product?.tags) return [];
+      if (!product?.tags || product.tags.length === 0) return [];
 
-      const allTagsIntervals = product.tags.map((tag) => {
+      // Step 1: Get all availability intervals for each tag
+      const tagIntervals = product.tags.map((tag) => {
         const tagItems = availabilityByTag[tag] || [];
 
-        const mergedIntervals = tagItems
+        // Flatten all availability intervals for this tag
+        const intervals = tagItems
           .flatMap((item) => item.availability)
           .map(([start, end]) => ({
-            start: parseDate(start),
-            end: parseDate(end),
+            start: parseDate(start).startOf("day"),
+            end: parseDate(end).startOf("day"),
           }))
-          .sort((a, b) => a.start.valueOf() - b.start.valueOf())
-          .reduce((merged, current) => {
-            const last = merged[merged.length - 1];
-            if (!last || current.start.isAfter(last.end)) {
-              merged.push(current);
-            } else if (current.end.isAfter(last.end)) {
-              last.end = current.end;
-            }
-            return merged;
-          }, []);
+          .sort((a, b) => a.start.valueOf() - b.start.valueOf());
 
-        return mergedIntervals;
+        // Merge overlapping intervals for this tag
+        return intervals.reduce((merged, current) => {
+          const last = merged[merged.length - 1];
+          if (!last || current.start.isAfter(last.end.add(1, "day"))) {
+            // No overlap, add as new interval
+            merged.push(current);
+          } else if (current.end.isAfter(last.end)) {
+            // Overlapping, extend the last interval
+            last.end = current.end;
+          }
+          return merged;
+        }, []);
       });
 
-      // Find common intervals across all tags
-      const commonIntervals = allTagsIntervals.reduce((common, intervals) => {
-        if (!common.length) return intervals;
+      // Step 2: Find intersection of all tag intervals
+      if (tagIntervals.length === 0) return [];
 
-        return common.filter((commonInterval) =>
-          intervals.some(
-            (interval) =>
-              interval.start.isSameOrBefore(commonInterval.end) &&
-              interval.end.isSameOrAfter(commonInterval.start)
-          )
-        );
-      }, []);
+      // Start with the first tag's intervals
+      let commonIntervals = tagIntervals[0];
 
-      return commonIntervals.map((interval) => ({
-        start: formatDate(interval.start),
-        end: formatDate(interval.end),
-      }));
+      // Intersect with each subsequent tag's intervals
+      for (let i = 1; i < tagIntervals.length; i++) {
+        const currentTagIntervals = tagIntervals[i];
+        const newCommonIntervals = [];
+
+        // For each interval in common, find overlaps with current tag
+        commonIntervals.forEach((commonInterval) => {
+          currentTagIntervals.forEach((tagInterval) => {
+            // Find the intersection of two intervals
+            const intersectStart = commonInterval.start.isAfter(
+              tagInterval.start
+            )
+              ? commonInterval.start
+              : tagInterval.start;
+            const intersectEnd = commonInterval.end.isBefore(tagInterval.end)
+              ? commonInterval.end
+              : tagInterval.end;
+
+            // If there's a valid intersection, add it
+            if (intersectStart.isSameOrBefore(intersectEnd)) {
+              newCommonIntervals.push({
+                start: intersectStart,
+                end: intersectEnd,
+              });
+            }
+          });
+        });
+
+        commonIntervals = newCommonIntervals;
+      }
+
+      // Step 3: Merge any adjacent or overlapping common intervals
+      commonIntervals = commonIntervals
+        .sort((a, b) => a.start.valueOf() - b.start.valueOf())
+        .reduce((merged, current) => {
+          const last = merged[merged.length - 1];
+          if (!last || current.start.isAfter(last.end.add(1, "day"))) {
+            merged.push(current);
+          } else if (current.end.isAfter(last.end)) {
+            last.end = current.end;
+          }
+          return merged;
+        }, []);
+
+      // Step 4: Filter out dates in the past and format the result
+      const today = dayjs().startOf("day");
+      return commonIntervals
+        .filter((interval) => interval.end.isAfter(today))
+        .map((interval) => ({
+          start: formatDate(interval.start),
+          end: formatDate(interval.end),
+        }));
     },
     [availabilityByTag]
   );

@@ -131,12 +131,8 @@ export function formatCategory(category) {
 export function calculateElementsThatFit(
   elementWidth,
   gapBetweenElements = 0, // New parameter for the gap
-  category
+  viewportWidth
 ) {
-  const viewportWidth = document.querySelector(
-    `#${formatCategory(category)}_display`
-  )?.clientWidth;
-
   // 1. Calculate the total occupied width of a single element (excluding the gap)
   // This is the content width + left padding + right padding + left margin + right margin
   const individualElementVisualWidth = elementWidth;

@@ -7,7 +7,7 @@ import GoogleReviews from "@/components/misc/GoogleReviews";
 import { PRODUCTS_BY_CATEGORY } from "@/constants/routes";
 import { useDocumentTitle, useScrollTop, useProducts, useTour } from "@/hooks";
 import { formatCategory } from "@/helpers/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import HomeCarousel from "@/components/misc/HomeCarousel";
 
@@ -46,6 +46,8 @@ const Home = () => {
   useScrollTop();
 
   const { products, isLoading, error } = useProducts();
+  const containerRef = useRef(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
   const tourProps = useTour(
     "home",
     steps,
@@ -55,6 +57,19 @@ const Home = () => {
   );
 
   const isSkeleton = products[Object.keys(products)[0]].some((p) => p.skeleton);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const measure = () => {
+      setViewportWidth(containerRef.current.clientWidth || 0);
+    };
+
+    measure();
+
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
     <main className="content" style={{ flexDirection: "column" }}>
@@ -84,6 +99,7 @@ const Home = () => {
             className="display"
             style={{ order: index === 0 ? 1 : index === 1 ? 0 : index }}
             key={category}
+            ref={containerRef}
           >
             <div className="display-header">
               <h3>
@@ -111,6 +127,7 @@ const Home = () => {
             <ProductShowcaseGrid
               category={category}
               products={products[category]}
+              viewportWidth={viewportWidth}
               showAll={false}
             />
           </div>

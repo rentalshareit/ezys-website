@@ -5,7 +5,7 @@ import {
   SET_REQUEST_STATUS,
   UPDATE_TOUR_STATUS,
   UPDATE_RENTAL_PERIOD,
-  SHOW_PLUS_DISCLAIMER_MODAL,
+  SHOW_SUBSCRIPTION_DISCLAIMER_MODAL,
   DISCLAIMER_CONFIRMED,
   DISCLAIMER_CANCELLED,
   HIDE_OOS_PRODUCTS,
@@ -46,9 +46,9 @@ export const hideOOSProducts = (payload) => ({
   payload,
 });
 
-export const showDisclaimerModal = (product, pendingAction) => ({
-  type: SHOW_PLUS_DISCLAIMER_MODAL,
-  payload: { product, pendingAction },
+export const showDisclaimerModal = (payload) => ({
+  type: SHOW_SUBSCRIPTION_DISCLAIMER_MODAL,
+  payload,
 });
 
 export const confirmDisclaimer = () => ({ type: DISCLAIMER_CONFIRMED });

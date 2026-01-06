@@ -280,7 +280,11 @@ const ViewProduct = () => {
                     : "Add To Cart"}
                 </button>
                 {isItemOutOfStock ? (
-                  <ProductAvailability key="availability" product={product} />
+                  <ProductAvailability
+                    key="availability"
+                    product={product}
+                    showAllSlotsLink={false}
+                  />
                 ) : (
                   <ProductPrice
                     key="price"
