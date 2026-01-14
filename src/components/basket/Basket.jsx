@@ -53,6 +53,7 @@ const Basket = () => {
     return amount;
   }, [coupon]);
 
+  /* Temporarily disabled saving basket to firebase as its creating issue.
   useEffect(() => {
     if (didMount && firebase.auth.currentUser) {
       const clonedBasket = basket.map((obj) => {
@@ -71,6 +72,7 @@ const Basket = () => {
         });
     }
   }, [basket.length]);
+  */
 
   useEffect(() => {
     if (authStatus?.success && show) {

@@ -27,13 +27,13 @@ class Firebase {
     // Recreate the recaptcha-container element
     recaptchaContainer = document.createElement("div");
     recaptchaContainer.id = "recaptcha-container";
-    recaptchaContainer.style.display = "none"; // Keep it hidden
-    document.body.appendChild(recaptchaContainer); // Append it to the body or a specific parent element
+    recaptchaContainer.style.display = "none";
+    document.body.appendChild(recaptchaContainer);
 
     // Clear the existing reCAPTCHA instance if it exists
     if (window.recaptchaVerifier) {
       try {
-        window.recaptchaVerifier.clear(); // Clear the existing instance
+        window.recaptchaVerifier.clear();
       } catch (error) {
         console.warn("Failed to clear reCAPTCHA verifier:", error.message);
       }
@@ -45,19 +45,17 @@ class Firebase {
       window.recaptchaVerifier = new firebaseRoot.auth.RecaptchaVerifier(
         "recaptcha-container",
         {
-          size: "invisible", // Use "invisible" for better UX
+          size: "invisible",
           callback: () => {
             console.log("reCAPTCHA solved");
             resolve(window.recaptchaVerifier);
           },
           "expired-callback": () => {
             console.error("Captcha expired. Please try again.");
-            window.recaptchaVerifier.clear(); // Reset reCAPTCHA on expiry
+            window.recaptchaVerifier.clear();
           },
         }
       );
-
-      // Trigger the reCAPTCHA verification
       window.recaptchaVerifier.verify();
     });
   };
@@ -83,7 +81,7 @@ class Firebase {
       return await window.confirmationResult.confirm(otp);
     } catch (error) {
       console.error("Invalid OTP:", error.message);
-      window.confirmationResult = null; // Clear confirmation result
+      window.confirmationResult = null;
       throw new Error("Invalid OTP. Please try again.");
     }
   };
@@ -100,7 +98,6 @@ class Firebase {
       user.email,
       currentPassword
     );
-
     return user.reauthenticateWithCredential(cred);
   };
 
@@ -124,9 +121,31 @@ class Firebase {
   setAuthPersistence = () =>
     this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL);
 
-  // // PRODUCT ACTIONS --------------
+  // MIGRATION-SAFE PRODUCT ACTIONS --------------
 
-  getSingleProduct = (id) => this.db.collection("products").doc(id).get();
+  // ✅ MAGIC: Works with old IDs AND new slugs
+  getSingleProduct = async (idOrSlug) => {
+    try {
+      // 1. Try direct document lookup first (old numeric IDs & new slugs)
+      let docSnap = await this.db.collection("products").doc(idOrSlug).get();
+
+      // 2. If not found, try originalId field lookup
+      if (!docSnap.exists) {
+        const q = this.db
+          .collection("products")
+          .where("originalId", "==", idOrSlug);
+        const querySnap = await q.get();
+        if (!querySnap.empty) {
+          docSnap = querySnap.docs[0];
+        }
+      }
+
+      return docSnap;
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      throw error;
+    }
+  };
 
   getProducts = () => {
     let didTimeout = false;
@@ -150,18 +169,30 @@ class Firebase {
           clearTimeout(timeout);
           if (!didTimeout) {
             const products = [];
-            snapshot.forEach((doc) =>
-              products.push({ id: doc.id, ...doc.data() })
-            );
-
+            snapshot.forEach((doc) => {
+              const data = doc.data();
+              // ✅ BACKWARD COMPATIBLE: Return originalId as 'id'
+              products.push({
+                id: data.originalId || doc.id,
+                ...data,
+              });
+            });
             resolve(products);
           }
         } catch (e) {
           if (didTimeout) return;
-          reject(e?.message || ":( Failed to fetch products.");
+          reject(e?.message || "Failed to fetch products.");
         }
       })();
     });
+  };
+
+  // ✅ Collection group search by original ID (for subcollections)
+  getProductsByOriginalId = (originalId) => {
+    return this.db
+      .collectionGroup("products")
+      .where("originalId", "==", originalId)
+      .get();
   };
 
   searchProducts = (searchKey) => {
@@ -172,7 +203,7 @@ class Firebase {
 
     return new Promise((resolve, reject) => {
       (async () => {
-        const products = await this.getProducts();
+        const products = await this.getProducts(); // Already migration-safe
 
         const timeout = setTimeout(() => {
           didTimeout = true;
@@ -209,15 +240,69 @@ class Firebase {
     });
   };
 
-  addProduct = (id, product) =>
-    this.db.collection("products").doc(id).set(product);
+  // ✅ Migration-safe: Auto-generates slugs + stores originalId
+  addProduct = async (id, product) => {
+    try {
+      // Generate slug if no ID provided
+      if (!id) {
+        id = this.generateSlug(product.name);
+      }
+
+      // Always store both IDs for compatibility
+      const productWithIds = {
+        ...product,
+        originalId: id,
+        slug: id,
+        createdAt: app.firestore.FieldValue.serverTimestamp(),
+      };
+
+      return await this.db.collection("products").doc(id).set(productWithIds);
+    } catch (error) {
+      console.error("Error adding product:", error);
+      throw error;
+    }
+  };
+
+  // ✅ Works with original ID (finds via getSingleProduct)
+  editProduct = async (idOrSlug, updates) => {
+    try {
+      const productSnap = await this.getSingleProduct(idOrSlug);
+
+      if (!productSnap.exists) {
+        throw new Error("Product not found");
+      }
+
+      const productRef = productSnap.ref;
+      return await productRef.update(updates);
+    } catch (error) {
+      console.error("Error editing product:", error);
+      throw error;
+    }
+  };
+
+  // ✅ Works with original ID (finds via getSingleProduct)
+  removeProduct = async (idOrSlug) => {
+    try {
+      const productSnap = await this.getSingleProduct(idOrSlug);
+
+      if (!productSnap.exists) {
+        throw new Error("Product not found");
+      }
+
+      const productRef = productSnap.ref;
+      return await productRef.delete();
+    } catch (error) {
+      console.error("Error removing product:", error);
+      throw error;
+    }
+  };
 
   generateKey = () => this.db.collection("products").doc().id;
 
+  // STORAGE METHODS (UNCHANGED - use originalId)
   storeImage = async (id, folder, imageFile) => {
     const snapshot = await this.storage.ref(folder).child(id).put(imageFile);
     const downloadURL = await snapshot.ref.getDownloadURL();
-
     return downloadURL;
   };
 
@@ -273,10 +358,18 @@ class Firebase {
     return Promise.all(uploadPromises);
   };
 
-  editProduct = (id, updates) =>
-    this.db.collection("products").doc(id).update(updates);
+  // NEW: Slug generator for URL-friendly IDs
+  generateSlug = (name) => {
+    if (!name) return this.db.collection("products").doc().id;
 
-  removeProduct = (id) => this.db.collection("products").doc(id).delete();
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "") // Remove special chars
+      .replace(/[\s_-]+/g, "-") // Replace spaces/underscores with -
+      .replace(/^-+|-+$/g, "") // Remove leading/trailing -
+      .substring(0, 100); // Limit length
+  };
 }
 
 const firebaseInstance = new Firebase();
