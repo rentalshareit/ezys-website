@@ -1,5 +1,6 @@
 import { Basket } from "@/components/basket";
 import { Footer, Navigation } from "@/components/common";
+import ExternalRedirector from "@/components/misc/ExternalRedirector";
 import * as ROUTES from "@/constants/routes";
 import { createBrowserHistory } from "history";
 import React from "react";
@@ -28,6 +29,10 @@ const AppRouter = () => (
             component={view.ProductsByCategory}
             exact
             path={ROUTES.PRODUCTS_BY_CATEGORY}
+          />
+          <PublicRoute
+            path={ROUTES.EXTERNAL_REDIRECTOR}
+            component={ExternalRedirector}
           />
           <PublicRoute component={view.Faq} path={ROUTES.FAQ} />
           <PublicRoute component={view.AboutUs} path={ROUTES.ABOUT_US} />

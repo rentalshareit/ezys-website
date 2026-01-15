@@ -105,25 +105,17 @@ export function formatCategory(category) {
   // 1. Convert to lowercase
   let normalized = category.toLowerCase();
 
-  // 2. Replace spaces with underscores
-  normalized = normalized.replace(/ /g, "_");
+  // 2. Replace spaces with hyphens
+  normalized = normalized.replace(/ /g, "-");
 
-  // 3. Remove any characters that are NOT lowercase letters (a-z), digits (0-9), or underscores (_)
-  //    This step also takes care of converting non-alphanumeric special characters
-  //    that might become underscores (like multiple hyphens becoming multiple underscores)
-  //    into a single underscore after the next step.
-  normalized = normalized.replace(/[^a-z0-9_]/g, "");
+  // 3. Remove any characters that are NOT lowercase letters (a-z), digits (0-9), or hyphens (-)
+  normalized = normalized.replace(/[^a-z0-9-]/g, "");
 
-  // 4. Reduce multiple consecutive underscores to a single underscore
-  //    The regex /__+/g means:
-  //    - __: Matches two underscores literally
-  //    - +: Matches one or more of the preceding character (so, two or more underscores)
-  //    - g: Global flag (replace all occurrences)
-  normalized = normalized.replace(/__+/g, "_");
+  // 4. Reduce multiple consecutive hyphens to a single hyphen
+  normalized = normalized.replace(/-+/g, "-");
 
-  // Optional: Remove leading/trailing underscores if you don't want them
-  // This is often desired for clean "slugs"
-  // normalized = normalized.replace(/^_|_$/g, '');
+  // Optional: Remove leading/trailing hyphens if you don't want them
+  // normalized = normalized.replace(/^-|-$/g, '');
 
   return normalized;
 }

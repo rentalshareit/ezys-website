@@ -334,7 +334,7 @@ const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
 
   const onClickItem = useCallback(() => {
     if (!product || skeleton) return;
-    history.push(`/product/${product.id}`);
+    history.push(`/product/${product.slug}`);
   }, [product, skeleton, history]);
 
   const isItemAlreadyInBasket = isItemOnBasket(product.id);

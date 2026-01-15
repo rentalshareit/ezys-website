@@ -114,7 +114,8 @@ const Home = () => {
                 className="button button-border button-small"
                 type="button"
                 onClick={() => {
-                  if (!isSkeleton) history.push(`/products/${category}`);
+                  if (!isSkeleton)
+                    history.push(`/products/${formatCategory(category)}`);
                 }}
               >
                 {isSkeleton ? (

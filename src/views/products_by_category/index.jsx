@@ -14,6 +14,14 @@ const images = {
   games_controllers,
 };
 
+// Map URL-friendly category names to actual category titles
+const categoriesMap = {
+  "gaming-consoles": "Gaming Consoles",
+  "virtual-reality": "Virtual Reality",
+  "games-controllers": "Games & Controllers",
+  "projectors-screen": "Projectors & Screen",
+};
+
 const steps = [
   {
     title: "Add To Cart",
@@ -41,7 +49,8 @@ const steps = [
 const ProductsByCategory = () => {
   const params = useParams();
   const [filterBy, setFilterBy] = useState(null);
-  const { category } = params;
+  const { category: formattedCategory } = params;
+  const category = categoriesMap[formattedCategory];
   useDocumentTitle("Products By Category | Ezys");
   useScrollTop();
 
