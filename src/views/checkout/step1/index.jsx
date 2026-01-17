@@ -41,7 +41,13 @@ const OrderSummary = ({ basket, subtotal, discount, code }) => {
           <p className="basket-total-amount">
             {displayMoney(subtotal)}
             {discount > 0 ? (
-              <span style={{ fontSize: 10, marginLeft: 8, color: "rgb(13, 148, 136)" }}>
+              <span
+                style={{
+                  fontSize: 10,
+                  marginLeft: 8,
+                  color: "rgb(13, 148, 136)",
+                }}
+              >
                 (Saved {displayMoney(discount)} with coupon code {code})
               </span>
             ) : (

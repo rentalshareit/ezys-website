@@ -11,7 +11,7 @@ const normalizeKey = (key) => {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, "_") // Spaces → underscores
-    .replace(/[+]/g, "_") // + → underscore
+    .replace(/[+]/g, "_") // + → underscore ezys_webhook_penguin_bot
     .replace(/\./g, "_"); // Dots → underscores (optional)
 };
 

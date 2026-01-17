@@ -4,12 +4,7 @@ import { Field, useFormikContext } from "formik";
 import React, { useEffect } from "react";
 import { updateMiscCharges } from "@/redux/actions/checkoutActions";
 
-const deliveryTimeSlots = [
-  { label: "10 AM - 1 PM", value: "10-13" },
-  { label: "7 PM - 10 PM", value: "19-22" },
-];
-
-const ShippingForm = () => {
+const ShippingForm = ({ deliveryTimeSlots }) => {
   const { values } = useFormikContext();
   const shippingAddress = values?.address?.address;
 
@@ -76,7 +71,7 @@ const ShippingForm = () => {
               id="deliveryTimeSlot"
               options={deliveryTimeSlots}
               placeholder="Choose Delivery Time Slot"
-              label="Delivery Time Slot"
+              label="* Delivery Time Slot"
               value={deliveryTimeSlots.find(
                 (o) => o.value === values.deliveryTimeSlot
               )}

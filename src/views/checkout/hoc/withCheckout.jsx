@@ -41,7 +41,8 @@ const withCheckout = (Component) =>
     const subtotal = calculateTotal(state?.basket, rentalPeriod.days);
     const discount = coupon?.discount || 0;
     const code = coupon?.code || "";
-    const discountedSubtotal = subtotal - discount;
+    const sameDayDeliveryCharge = rentalPeriod.sameDayDeliveryCharge || 0;
+    const discountedSubtotal = subtotal - discount + sameDayDeliveryCharge;
 
     if (state.isAuth) {
       return (

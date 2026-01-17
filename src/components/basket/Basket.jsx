@@ -53,6 +53,12 @@ const Basket = () => {
     return amount;
   }, [coupon]);
 
+  const sameDayDeliveryCharge = useMemo(() => {
+    return rentalPeriod.isSameDayDelivery
+      ? rentalPeriod.sameDayDeliveryCharge
+      : 0;
+  }, [rentalPeriod]);
+
   /* Temporarily disabled saving basket to firebase as its creating issue.
   useEffect(() => {
     if (didMount && firebase.auth.currentUser) {
@@ -133,6 +139,11 @@ const Basket = () => {
       couponsRef.current.recomputeDiscount();
     }
   }, [cartItems]);
+
+  // Calculate subtotal, delivery charges, and final total
+  const subtotal = calculateTotal(basket, rentalPeriod.days, false);
+  const totalAfterCoupon = Math.max(0, subtotal - couponDiscountAmount);
+  const finalTotal = totalAfterCoupon + sameDayDeliveryCharge;
 
   return (
     <>
@@ -262,39 +273,63 @@ const Basket = () => {
             <div className="basket-total">
               <span className="basket-total-title">Subtotal Amount:</span>
               <span className="basket-total-title-value">
-                {calculateTotal(basket, rentalPeriod.days, true)}
+                {displayMoney(subtotal)}
               </span>
             </div>
 
             {couponDiscountAmount > 0 && (
-              <>
-                <div className="basket-total">
-                  <span className="basket-total-title">
-                    Coupon Discount{coupon?.code ? ` (${coupon.code})` : ""}:
-                  </span>
-                  <span
-                    className="basket-total-title-value"
-                    style={{
-                      color: "#16a34a",
-                    }}
-                  >
-                    - {displayMoney(couponDiscountAmount)}
-                  </span>
-                </div>
-                <div className="basket-total">
-                  <span className="basket-total-title">Net Payable:</span>
-                  <span className="basket-total-title-value">
-                    {displayMoney(
-                      Math.max(
-                        0,
-                        calculateTotal(basket, rentalPeriod.days, false) -
-                          couponDiscountAmount
-                      )
-                    )}
-                  </span>
-                </div>
-              </>
+              <div className="basket-total">
+                <span className="basket-total-title">
+                  Coupon Discount{coupon?.code ? ` (${coupon.code})` : ""}:
+                </span>
+                <span
+                  className="basket-total-title-value"
+                  style={{
+                    color: "#16a34a",
+                  }}
+                >
+                  - {displayMoney(couponDiscountAmount)}
+                </span>
+              </div>
             )}
+
+            {sameDayDeliveryCharge > 0 && (
+              <div className="basket-total">
+                <span className="basket-total-title">Same Day Charge:</span>
+                <span
+                  className="basket-total-title-value"
+                  style={{
+                    color: "#ff914d",
+                  }}
+                >
+                  + {displayMoney(sameDayDeliveryCharge)}
+                </span>
+              </div>
+            )}
+
+            {couponDiscountAmount > 0 || sameDayDeliveryCharge > 0 ? (
+              <div
+                className="basket-total"
+                style={{
+                  borderTop: "1px solid #e0e0e0",
+                  paddingTop: "8px",
+                  marginTop: "8px",
+                }}
+              >
+                <span
+                  className="basket-total-title"
+                  style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                >
+                  Net Payable:
+                </span>
+                <span
+                  className="basket-total-title-value"
+                  style={{ fontWeight: "bold", fontSize: "1.1em" }}
+                >
+                  {displayMoney(finalTotal)}
+                </span>
+              </div>
+            ) : null}
 
             <div style={{ marginTop: "8px" }}>
               <button

@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from "react";
 import * as ROUTE from "@/constants/routes";
-import { DatePicker, Divider, Space, Input } from "antd";
+import { DatePicker, Divider, Space, Input, Tag } from "antd";
 import { updateRentalPeriod } from "@/redux/actions/miscActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -24,19 +24,22 @@ import {
 
 const { RangePicker } = DatePicker;
 
+const SAME_DAY_DELIVERY_CUTOFF_HOUR = 17; // 5 PM
+const SAME_DAY_DELIVERY_CHARGE = 199;
+
 const disabledDate = (current) => {
-  // Get tomorrow's date in IST
-  const tomorrow = dayjs().startOf("day").add(1, "day");
+  // Get today's date in IST
+  const today = dayjs().startOf("day");
   // Get max allowed date (2 months from today for advance booking)
   const maxAdvanceDate = dayjs().startOf("day").add(2, "month");
 
   // Normalize current date to start of day
   const normalizedCurrent = current?.startOf("day");
 
-  // Disable dates before tomorrow and after max advance date
+  // Disable dates before today and after max advance date
   return (
     normalizedCurrent &&
-    (normalizedCurrent < tomorrow || normalizedCurrent > maxAdvanceDate)
+    (normalizedCurrent < today || normalizedCurrent > maxAdvanceDate)
   );
 };
 
@@ -74,6 +77,12 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   const isMobile = window.screen.width <= 800;
 
+  // Check if same-day delivery is available
+  const isSameDayDeliveryAvailable = useCallback(() => {
+    const now = dayjs();
+    return now.hour() < SAME_DAY_DELIVERY_CUTOFF_HOUR;
+  }, []);
+
   const onSearchChange = (e) => {
     const val = e.target.value.trimStart();
     setSearchInput(val);
@@ -81,7 +90,6 @@ const SearchBar = () => {
 
   const onKeyUp = (e) => {
     if (e.keyCode === 13) {
-      // dispatch(setTextFilter(searchInput));
       e.target.blur();
       searchbarRef.current.classList.remove("is-open-recent-search");
 
@@ -111,69 +119,76 @@ const SearchBar = () => {
     }
   };
 
-  // Initialize the default start date (tomorrow)
+  // Initialize the default start date
   useEffect(() => {
-    const tomorrow = dayjs().startOf("day").add(1, "day");
-    const maxRentalDate = tomorrow.clone().add(30, "day").endOf("day");
+    const today = dayjs().startOf("day");
+    const maxRentalDate = today.clone().add(30, "day").endOf("day");
 
     setCustomDisabledDate(() => (current) => {
       const normalizedCurrent = current?.startOf("day");
       return (
         disabledDate(normalizedCurrent) || // Apply original disabled date rules
         (normalizedCurrent &&
-          (normalizedCurrent < tomorrow || // Disable dates before tomorrow
-            normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from tomorrow
-            normalizedCurrent.isSame(tomorrow))) || // Disable the same date as tomorrow
-        (normalizedCurrent &&
-          normalizedCurrent.isBefore(dayjs().startOf("day"))) // Disable current and past dates
+          (normalizedCurrent < today || // Disable dates before today
+            normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from today
+            (normalizedCurrent.isSame(today) && !isSameDayDeliveryAvailable()))) // Disable today if cutoff time has passed
       );
     });
-  }, []);
+  }, [isSameDayDeliveryAvailable]);
 
-  const onRangeChange = useCallback((dates, dateStrings) => {
-    if (!dates || dates.length === 0) {
-      setCustomDisabledDate(disabledDate);
-      return;
-    }
+  const onRangeChange = useCallback(
+    (dates, dateStrings) => {
+      if (!dates || dates.length === 0) {
+        setCustomDisabledDate(disabledDate);
+        return;
+      }
 
-    const [startDate, endDate] = dates.map((date) =>
-      date ? date.startOf("day") : null
-    );
-
-    if (startDate) {
-      const maxRentalDate = startDate.clone().add(30, "day").endOf("day");
-
-      setCustomDisabledDate(() => (current) => {
-        const normalizedCurrent = current?.startOf("day");
-        return (
-          disabledDate(normalizedCurrent) || // Apply original disabled date rules
-          (normalizedCurrent &&
-            (normalizedCurrent < startDate.clone().subtract(30, "day") || // Disable dates before 30 days prior to startDate
-              normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from startDate
-              normalizedCurrent.isSame(startDate))) || // Disable the same date as startDate
-          (normalizedCurrent &&
-            normalizedCurrent.isBefore(dayjs().startOf("day"))) // Disable current and past dates
-        );
-      });
-    }
-
-    if (startDate && endDate) {
-      dispatch(
-        updateRentalPeriod({
-          dates: [
-            formatDate(startDate.startOf("day")),
-            formatDate(endDate.startOf("day")),
-          ],
-          days: Math.abs(
-            endDate.startOf("day").diff(startDate.startOf("day"), "days")
-          ),
-        })
+      const [startDate, endDate] = dates.map((date) =>
+        date ? date.startOf("day") : null
       );
-    }
-  }, []);
+
+      if (startDate) {
+        const maxRentalDate = startDate.clone().add(30, "day").endOf("day");
+
+        setCustomDisabledDate(() => (current) => {
+          const normalizedCurrent = current?.startOf("day");
+          return (
+            disabledDate(normalizedCurrent) || // Apply original disabled date rules
+            (normalizedCurrent &&
+              (normalizedCurrent < startDate.clone().subtract(30, "day") || // Disable dates before 30 days prior
+                normalizedCurrent > maxRentalDate || // Disable dates beyond 30 days from startDate
+                (normalizedCurrent.isSame(startDate) &&
+                  !isSameDayDeliveryAvailable()))) // Disable today if cutoff time has passed
+          );
+        });
+      }
+
+      if (startDate && endDate) {
+        // Check if same-day delivery is selected
+        const today = dayjs().startOf("day");
+        const isSameDayDeliverySelected = startDate.isSame(today);
+
+        dispatch(
+          updateRentalPeriod({
+            dates: [
+              formatDate(startDate.startOf("day")),
+              formatDate(endDate.startOf("day")),
+            ],
+            days: Math.abs(
+              endDate.startOf("day").diff(startDate.startOf("day"), "days")
+            ),
+            isSameDayDelivery: isSameDayDeliverySelected,
+            sameDayDeliveryCharge: isSameDayDeliverySelected
+              ? SAME_DAY_DELIVERY_CHARGE
+              : 0,
+          })
+        );
+      }
+    },
+    [isSameDayDeliveryAvailable]
+  );
 
   const onClickRecentSearch = (keyword) => {
-    // dispatch(setTextFilter(keyword));
     searchbarRef.current.classList.remove("is-open-recent-search");
     history.push(`/search/${keyword.trim().toLowerCase()}`);
   };
@@ -186,6 +201,40 @@ const SearchBar = () => {
     () => customDisabledDate,
     [customDisabledDate]
   );
+
+  const cellRender = (current, info) => {
+    if (info.type !== "date") {
+      return info.originNode;
+    }
+    if (typeof current === "number" || typeof current === "string") {
+      return <div className="ant-picker-cell-inner">{current}</div>;
+    }
+
+    const today = dayjs().startOf("day");
+    const isSameDayDeliveryAvail = isSameDayDeliveryAvailable();
+    return (
+      <div
+        className="ant-picker-cell-inner"
+        style={
+          current.date() === today.date() && isSameDayDeliveryAvail
+            ? { color: "rgb(228, 165, 31)", position: "relative" }
+            : {}
+        }
+      >
+        {current.date()}
+        {current.date() === today.date() && isSameDayDeliveryAvail && (
+          <div
+            style={{
+              fontSize: "8px",
+              position: "absolute",
+              left: 2,
+              top: 17,
+            }}
+          >{`₹${SAME_DAY_DELIVERY_CHARGE}`}</div>
+        )}
+      </div>
+    );
+  };
 
   if (!isPathAllowed(pathname)) return null;
 
@@ -205,10 +254,11 @@ const SearchBar = () => {
               : null
           }
           prefix="Rental Period"
-          disabledDate={memoizedDisabledDate} // Use memoized function to avoid unnecessary re-renders
+          disabledDate={memoizedDisabledDate}
           format="DD-MMM"
           onChange={onRangeChange}
           onCalendarChange={onRangeChange}
+          cellRender={cellRender}
         />
 
         <Input.Search
@@ -221,6 +271,7 @@ const SearchBar = () => {
           value={searchInput}
         />
       </Space.Compact>
+
       {filter.recent.length !== 0 && (
         <div className="searchbar-recent">
           <div className="searchbar-recent-header">

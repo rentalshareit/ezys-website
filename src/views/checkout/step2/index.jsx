@@ -6,7 +6,7 @@ import { CHECKOUT_STEP_1, CHECKOUT_STEP_3 } from "@/constants/routes";
 import { Form, Formik } from "formik";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import PropType from "prop-types";
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
@@ -20,6 +20,37 @@ import ShippingForm from "./ShippingForm";
 import ShippingTotal from "./ShippingTotal";
 import AddressSearch from "./AddressSearch";
 
+function padZero(num) {
+  return num.toString().padStart(2, "0");
+}
+
+function formatTimePeriod(hour) {
+  if (hour < 12) return "AM";
+  if (hour === 12) return "PM";
+  return "PM";
+}
+
+function getSameDayDeliveryTimeSlot() {
+  const now = new Date();
+  const currentHour = Math.ceil(now.getHours() + now.getMinutes() / 60); // 9:30 → 10
+
+  // Disable if after 5 PM (17:00)
+  if (currentHour >= 17) {
+    return [];
+  }
+
+  // Start: max(8 AM, currentHour + 2)
+  const startHour = Math.max(8, currentHour + 2);
+  const endHour = startHour + 3;
+
+  const label = `${padZero(startHour)} ${formatTimePeriod(
+    startHour
+  )} - ${padZero(endHour)} ${formatTimePeriod(endHour)}`;
+  const value = `${startHour}-${endHour}`;
+
+  return [{ label, value }];
+}
+
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
     .required("Full name is required.")
@@ -31,6 +62,7 @@ const FormSchema = Yup.object().shape({
   address: Yup.object().required("Shipping address is required."),
   flatOrHouseNumber: Yup.string().required("Flat or House Number is required."),
   buildingName: Yup.string(),
+  deliveryTimeSlot: Yup.string().required("Delivery time slot is required."),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),
@@ -42,7 +74,13 @@ const FormSchema = Yup.object().shape({
   isDone: Yup.boolean(),
 });
 
-const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
+const ShippingDetails = ({
+  profile,
+  shipping,
+  subtotal,
+  miscCharges,
+  rentalPeriod,
+}) => {
   useDocumentTitle("Check Out Step 2 | Ezys");
   useScrollTop();
   const dispatch = useDispatch();
@@ -50,6 +88,16 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
 
   const [currentPart, setCurrentPart] = React.useState(1);
   const [address, setAddress] = React.useState({});
+  const isSameDayDelivery = rentalPeriod?.isSameDayDelivery;
+
+  const deliveryTimeSlots = useMemo(() =>
+    isSameDayDelivery
+      ? getSameDayDeliveryTimeSlot()
+      : [
+          { label: "10 AM - 1 PM", value: "10-13" },
+          { label: "7 PM - 10 PM", value: "19-22" },
+        ]
+  );
 
   const initFormikValues = {
     fullname: shipping.fullname || profile.fullname || "",
@@ -59,7 +107,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
     address,
     mobile: profile.mobile,
     isDone: shipping.isDone || false,
-    deliveryTimeSlot: shipping.deliveryTimeSlot || "10-13",
+    deliveryTimeSlot: shipping.deliveryTimeSlot || deliveryTimeSlots[0]?.value,
     shippingCharges: miscCharges.shippingCharges || null,
   };
 
@@ -107,7 +155,7 @@ const ShippingDetails = ({ profile, shipping, subtotal, miscCharges }) => {
             >
               {({ values, isValid }) => (
                 <Form>
-                  <ShippingForm />
+                  <ShippingForm deliveryTimeSlots={deliveryTimeSlots} />
                   <br />
                   {/*  ---- TOTAL --------- */}
                   <ShippingTotal subtotal={subtotal} />

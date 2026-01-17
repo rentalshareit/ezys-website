@@ -99,6 +99,7 @@ const Payment = ({
             .join("\n"),
           code,
           discount,
+          sameDayDeliveryCharge: rentalPeriod.sameDayDeliveryCharge || 0,
         }),
       }
     );

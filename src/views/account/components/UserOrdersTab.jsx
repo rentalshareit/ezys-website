@@ -176,6 +176,12 @@ const UserOrdersTab = () => {
                     Shipping Charges:{" "}
                     <span>{displayMoney(d.shippingCharges || 0)}</span>
                   </span>
+                  {d.sameDayDeliveryCharge && (
+                    <span style={{ color: "#818181", fontSize: "1.4rem" }}>
+                      Same Day Delivery Charges:{" "}
+                      <span>{displayMoney(d.sameDayDeliveryCharge || 0)}</span>
+                    </span>
+                  )}
                   <span style={{ color: "#818181", fontSize: "1.4rem" }}>
                     Total Savings:{" "}
                     <span>
@@ -185,6 +191,7 @@ const UserOrdersTab = () => {
                           0
                         ) *
                           d.rentalDays +
+                          (d.sameDayDeliveryCharge || 0) +
                           (d.shippingCharges || 0) -
                           d.totalPrice
                       )}

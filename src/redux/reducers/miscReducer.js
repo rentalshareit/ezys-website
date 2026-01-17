@@ -28,8 +28,13 @@ const initState = {
     productCategory: false,
   },
   rentalPeriod: {
-    dates: getDefaultRangeDate(),
-    days: 7,
+    dates: [
+      formatDate(dayjs().startOf("day")),
+      formatDate(dayjs().startOf("day").add(1, "day")),
+    ],
+    days: 1,
+    isSameDayDelivery: false,
+    sameDayDeliveryCharge: 0,
   },
   subscriptionDisclaimerModal: { visible: false },
   hideOutOfStock: false,
@@ -79,8 +84,8 @@ export default (state = initState, action) => {
       return {
         ...state,
         rentalPeriod: {
-          dates: action.payload.dates,
-          days: action.payload.days,
+          ...state.rentalPeriod,
+          ...action.payload,
         },
       };
     case SHOW_SUBSCRIPTION_DISCLAIMER_MODAL:
