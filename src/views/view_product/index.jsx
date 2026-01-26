@@ -106,7 +106,8 @@ const ViewProduct = () => {
     100
   );
   const { addToBasket, isItemOnBasket } = useBasket();
-  const { isProductAvailable } = useProductAvailability();
+  const { isProductAvailable, isLoading: isProductAvailabilityLoading } =
+    useProductAvailability();
   useScrollTop();
   useDocumentTitle(`View ${product?.name || "Item"}`);
 
@@ -145,7 +146,7 @@ const ViewProduct = () => {
   return (
     <main className="content">
       <Tour {...tourProps} />
-      {isLoading && (
+      {(isLoading || isProductAvailabilityLoading) && (
         <div className="loader">
           <h3>Loading Product...</h3>
           <div
@@ -157,7 +158,7 @@ const ViewProduct = () => {
         </div>
       )}
       {error && <MessageDisplay message={error} />}
-      {product && !isLoading && (
+      {product && !isLoading && !isProductAvailabilityLoading && (
         <div style={styles.view} className="product-view">
           <div className="product-modal">
             <div className="product-modal-image-wrapper">

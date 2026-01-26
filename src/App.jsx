@@ -37,6 +37,12 @@ const App = ({ store, persistor }) => {
             pauseOnHover: true,
             placement: "topRight",
           }}
+          style={{
+            width: "100%",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
           <Provider store={store}>
             <PersistGate loading={<Preloader />} persistor={persistor}>
