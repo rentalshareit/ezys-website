@@ -46,9 +46,8 @@ function getSameDayDeliveryTimeSlot() {
   const label = `${padZero(startHour)} ${formatTimePeriod(
     startHour
   )} - ${padZero(endHour)} ${formatTimePeriod(endHour)}`;
-  const value = `${startHour}-${endHour}`;
 
-  return [{ label, value }];
+  return [{ label, value: label }];
 }
 
 const FormSchema = Yup.object().shape({
@@ -94,8 +93,8 @@ const ShippingDetails = ({
     isSameDayDelivery
       ? getSameDayDeliveryTimeSlot()
       : [
-          { label: "10 AM - 1 PM", value: "10-13" },
-          { label: "7 PM - 10 PM", value: "19-22" },
+          { label: "10 AM - 1 PM", value: "10 AM - 1 PM" },
+          { label: "7 PM - 10 PM", value: "7 PM - 10 PM" },
         ]
   );
 

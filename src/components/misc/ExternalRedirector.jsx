@@ -18,6 +18,12 @@ const normalizeKey = (key) => {
     .replace(/\./g, "_"); // Dots → underscores
 };
 
+// Allowed transport domains
+const TRANSPORT_DOMAINS = ["rapido", "uber", "porter"];
+
+// Allowed payment domains
+const PAYMENT_DOMAINS = ["paypal", "stripe", "rzp"];
+
 // Mapping of URL keys to target URLs or internal routes with product IDs
 const redirectMap = {
   // External URLs
@@ -53,12 +59,35 @@ const redirectMap = {
   more_games: "/products/games-controllers",
 };
 
+const isAbsoluteTransportUrl = (url) => {
+  try {
+    const urlObj = new URL(url);
+    return TRANSPORT_DOMAINS.some((domain) =>
+      urlObj.hostname.toLowerCase().includes(domain)
+    );
+  } catch {
+    return false;
+  }
+};
+
+const isAbsolutePaymentUrl = (url) => {
+  try {
+    const urlObj = new URL(url);
+    return PAYMENT_DOMAINS.some((domain) =>
+      urlObj.hostname.toLowerCase().includes(domain)
+    );
+  } catch {
+    return false;
+  }
+};
+
 function ExternalRedirector() {
   const location = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
-  const urlKey = normalizeKey(searchParams.get("p"));
+  const unnormalizedUrlKey = searchParams.get("p");
+  const urlKey = normalizeKey(unnormalizedUrlKey);
   const days = parseInt(searchParams.get("d")) || 7;
 
   const [isChecking, setIsChecking] = useState(false);
@@ -90,7 +119,20 @@ function ExternalRedirector() {
   // Check availability and perform redirect
   useEffect(() => {
     const performRedirect = async () => {
-      if (!urlKey || !redirectMap[urlKey] || redirected) {
+      if (!urlKey || redirected) {
+        history.push("/");
+        return;
+      }
+
+      if (
+        isAbsoluteTransportUrl(unnormalizedUrlKey) ||
+        isAbsolutePaymentUrl(unnormalizedUrlKey)
+      ) {
+        window.location.href = unnormalizedUrlKey;
+        return;
+      }
+
+      if (!redirectMap[urlKey]) {
         history.push("/");
         return;
       }
