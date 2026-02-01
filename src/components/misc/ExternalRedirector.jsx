@@ -278,7 +278,7 @@ function ExternalRedirector() {
     <div
       style={{
         display: "flex",
-        height: "100%",
+        minHeight: "60vh",
         justifyContent: "center",
         alignItems: "center",
       }}
