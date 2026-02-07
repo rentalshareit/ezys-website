@@ -11,11 +11,18 @@ import { updateCoupon } from "@/redux/actions/basketActions";
 
 const { Panel } = Collapse;
 
+function cleanAndEncodeMobile(userId) {
+  // Remove +91 or 91 prefix (handles variations like space or no space)
+  let cleanId = userId.replace(/^\+?91\s?/, "");
+  // Encode for URL safety (handles special chars if any)
+  return encodeURIComponent(cleanId);
+}
+
 const Coupons = ({ cartItems, onApplyingChange }, ref) => {
   const [coupons, setCoupons] = useState([]);
   const [manualCoupon, setManualCoupon] = useState("");
   const { code: appliedCouponCode, discount: appliedDiscount } = useSelector(
-    (store) => store.coupon
+    (store) => store.coupon,
   );
   const [showCongrats, setShowCongrats] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
@@ -32,7 +39,7 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
     try {
       const response = await fetch(
         "https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getCoupons&userId=" +
-          encodeURIComponent(userId)
+          cleanAndEncodeMobile(userId),
       );
       const { coupons: c = [] } = await response.json();
       return c.map((coupon) => ({
@@ -65,7 +72,7 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
           action: "redeemCoupon",
           code: couponCode,
           mode: "preview",
-          userId,
+          userId: cleanAndEncodeMobile(userId),
           cartItems,
         }),
       });
@@ -111,7 +118,7 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
           updateCoupon({
             code: "",
             discount: 0,
-          })
+          }),
         );
       } else {
         const response = await redeemCoupon(code);
@@ -119,8 +126,8 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
           dispatch(
             updateCoupon({
               code,
-              discount: response.discount, // number
-            })
+              discount: response.response?.discount || 0,
+            }),
           );
         } else {
           console.error("Failed to apply coupon:", response.error);
@@ -148,8 +155,8 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
         dispatch(
           updateCoupon({
             code: appliedCouponCode,
-            discount: response.discount,
-          })
+            discount: response.response?.discount || 0,
+          }),
         );
         setErrorMsg("");
       } else {
@@ -158,7 +165,7 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
           updateCoupon({
             code: "",
             discount: 0,
-          })
+          }),
         );
         setErrorMsg(response.error || "Coupon no longer valid for this cart.");
       }
@@ -193,8 +200,8 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
               {manualCoupon && isApplying
                 ? "Applying..."
                 : manualCoupon && appliedCouponCode === manualCoupon.trim()
-                ? "Remove"
-                : "Apply"}
+                  ? "Remove"
+                  : "Apply"}
             </Button>
           </div>
 
@@ -317,8 +324,8 @@ const Coupons = ({ cartItems, onApplyingChange }, ref) => {
                       {isApplying
                         ? "Applying..."
                         : isApplied
-                        ? "Remove"
-                        : "Apply"}
+                          ? "Remove"
+                          : "Apply"}
                     </Button>
                   </div>
                 </Card>
