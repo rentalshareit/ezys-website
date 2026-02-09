@@ -45,6 +45,11 @@ const AppRouter = () => (
               path={ROUTES.PRODUCTS_BY_CATEGORY}
             />
             <PublicRoute
+              component={view.PSNGamesCatalog}
+              exact
+              path={ROUTES.PSN_GAMES_CATALOG}
+            />
+            <PublicRoute
               path={ROUTES.EXTERNAL_REDIRECTOR}
               component={ExternalRedirector}
             />

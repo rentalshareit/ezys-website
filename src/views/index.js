@@ -19,3 +19,4 @@ export { default as Cancellation } from "./cancellation";
 export { default as Search } from "./search";
 export { default as ViewProduct } from "./view_product";
 export { default as ProductsByCategory } from "./products_by_category";
+export { default as PSNGamesCatalog } from "./psn_games_catalog";

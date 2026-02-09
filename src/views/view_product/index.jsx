@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Spin, Tour, Badge } from "antd";
+import { Spin, Tour, Badge, Button } from "antd";
 import { useSelector } from "react-redux";
 import { ImageLoader, MessageDisplay } from "@/components/common";
 import { ProductShowcaseGrid } from "@/components/product";
@@ -98,12 +98,13 @@ const ViewProduct = () => {
   const { id } = useParams();
   const history = useHistory();
   const { product, isLoading, error } = useProduct(id);
+  const subscriptionType = product?.subscription_type;
   const tourProps = useTour(
     "productDetails",
     steps,
     () => !!product?.name && !isLoading,
     [product, isLoading],
-    100
+    100,
   );
   const { addToBasket, isItemOnBasket } = useBasket();
   const { isProductAvailable, isLoading: isProductAvailabilityLoading } =
@@ -118,7 +119,7 @@ const ViewProduct = () => {
   const [original, discounted] = calculateProductPrice(
     product,
     rentalPeriod.days,
-    true
+    true,
   );
 
   const [selectedImage, setSelectedImage] = useState(product?.image || "");
@@ -263,6 +264,16 @@ const ViewProduct = () => {
               <br />
 
               <div className="product-modal-action">
+                {subscriptionType === "psn_deluxe" && (
+                  <Button
+                    key="games-link"
+                    type="primary"
+                    href="/psn-games-catalog"
+                    rel="noopener noreferrer"
+                  >
+                    View Games
+                  </Button>
+                )}
                 <button
                   id={`btn-add-basket-${product.id}`}
                   className={`button button-small ${
@@ -277,9 +288,10 @@ const ViewProduct = () => {
                   {isItemOutOfStock
                     ? "Out Of Stock"
                     : isItemOnBasket(product.id)
-                    ? "Remove From Cart"
-                    : "Add To Cart"}
+                      ? "Remove From Cart"
+                      : "Add To Cart"}
                 </button>
+
                 {isItemOutOfStock ? (
                   <ProductAvailability
                     key="availability"

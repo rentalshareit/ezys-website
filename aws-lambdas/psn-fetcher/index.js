@@ -1,5 +1,10 @@
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const zlib = require("zlib");
+const { pipeline } = require("stream/promises");
 
 const s3 = new S3Client({ region: "ap-south-1" });
 const BUCKET = process.env.BUCKET_NAME;
@@ -65,7 +70,7 @@ function generateAllNicknames(title) {
   return Array.from(nicknames).slice(0, 10); // Limit to top 10
 }
 
-exports.handler = async () => {
+const downloadAndSyncWithS3 = async () => {
   try {
     const allGames = [];
 
@@ -149,5 +154,68 @@ exports.handler = async () => {
   } catch (error) {
     console.error("❌ Error:", error);
     return { statusCode: 500, body: error.message };
+  }
+};
+
+exports.handler = async (event) => {
+  // ROUTE BASED ON PATH
+  if (
+    event.path === "/api/psn-list" ||
+    event.resourcePath === "/api/psn-list"
+  ) {
+    return await psnListHandler(event);
+  }
+
+  // YOUR EXISTING LOGIC (unchanged)
+  return await downloadAndSyncWithS3(event);
+};
+
+/**
+ * PSN Games List API Handler - Fetches and decompresses psn-games-latest.json.gz
+ */
+const psnListHandler = async (event) => {
+  const bucket = "ezys-psn-games";
+  const key = "psn-games-latest.json.gz";
+
+  try {
+    console.log(`Fetching ${key} from ${bucket}`);
+
+    const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+    const { Body } = await s3.send(command);
+
+    // ✅ Collect S3 stream chunks (63KB total)
+    const chunks = [];
+    for await (const chunk of Body) {
+      chunks.push(chunk);
+    }
+
+    // ✅ Decompress with zlib.gunzipSync() DIRECTLY
+    const compressedBuffer = Buffer.concat(chunks);
+    const decompressedBuffer = zlib.gunzipSync(compressedBuffer); // ← FIXED
+
+    // Parse JSON (tiny ~500KB)
+    const jsonData = JSON.parse(decompressedBuffer.toString("utf-8"));
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(jsonData),
+    };
+  } catch (error) {
+    console.error("Error:", error);
+    return {
+      statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        error: "Failed to fetch PSN games data",
+        message: error.message,
+      }),
+    };
   }
 };

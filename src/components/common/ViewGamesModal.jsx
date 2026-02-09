@@ -8,7 +8,7 @@ const subscriptionConfigs = {
     name: "PSN Deluxe Subscription",
     vendor: "Sony",
     gamesCount: "100+ PS4/PS5 games",
-    link: "https://www.playstation.com/en-in/ps-plus/games/",
+    link: "/psn-games-catalog",
     description: "Access Sony's Catalog during rental period for free.",
   },
   meta_plus: {
@@ -45,7 +45,7 @@ const ViewGamesModal = ({ visible, onClose, product }) => {
           key="games-link"
           type="primary"
           href={config.link}
-          target="_blank"
+          target={subscriptionType !== "psn_deluxe" ? "_blank" : undefined}
           rel="noopener noreferrer"
         >
           View All Games →

@@ -1,5 +1,6 @@
 export const HOME = "/";
 export const PRODUCTS_BY_CATEGORY = "/products/:category";
+export const PSN_GAMES_CATALOG = "/psn-games-catalog";
 export const ACCOUNT = "/account";
 export const ACCOUNT_EDIT = "/account/edit";
 export const ADMIN_DASHBOARD = "/admin/dashboard";
