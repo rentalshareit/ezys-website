@@ -102,3 +102,15 @@
   visibility: hidden!important;
 }
 
+/* Remove inner input borders */
+.game-search-input .ant-input-affix-wrapper input {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove inner input borders */
+.game-search-input .ant-input-affix-wrapper:focus, .game-search-input .ant-input-affix-wrapper:focus-within, .game-search-input .ant-input-affix-wrapper input:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+

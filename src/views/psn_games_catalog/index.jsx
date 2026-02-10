@@ -14,6 +14,7 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import { Boundary, MessageDisplay } from "@/components/common";
+import psn_deluxe from "@/images/psn_deluxe.png";
 import "./psn_games_catalog.scss";
 
 const ITEMS_PER_PAGE = 12;
@@ -139,10 +140,7 @@ const PSNGamesCatalog = ({ location }) => {
               <p>Explore our premium collection of PlayStation games</p>
             </div>
             <div className="banner-img">
-              <img
-                src="https://via.placeholder.com/600x400?text=PlayStation+Games"
-                alt="PlayStation Games Banner"
-              />
+              <img src={psn_deluxe} alt="PlayStation Games Banner" />
             </div>
           </div>
         </div>
@@ -174,15 +172,20 @@ const PSNGamesCatalog = ({ location }) => {
                       <Pagination
                         current={currentPage}
                         total={totalItems}
+                        showTotal={(total, range) =>
+                          `${range[0]}-${range[1]} of ${total} games`
+                        }
                         pageSize={ITEMS_PER_PAGE}
                         onChange={handlePageChange}
                         showSizeChanger={false}
+                        style={{ color: "rgb(13, 148, 136)" }}
                       />
                     </div>
                   )}
                 </div>
                 <div className="search-right">
                   <Input.Search
+                    className="game-search-input"
                     onChange={(e) => setSearchQuery(e.target.value)}
                     style={{ flex: 2 }}
                     onKeyUp={handleSearchKeyPress}
