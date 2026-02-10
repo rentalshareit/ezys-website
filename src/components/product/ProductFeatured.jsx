@@ -351,13 +351,13 @@ const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
       e.stopPropagation();
       addToBasket(product);
     },
-    [product, addToBasket]
+    [product, addToBasket],
   );
 
   const [original, discounted] = calculateProductPrice(
     product,
     rentalPeriod.days,
-    true
+    true,
   );
 
   if (hideOutOfStock && isItemOutOfStock) {
@@ -378,7 +378,6 @@ const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
         <Card
           id={`card-view-product-details-${product.category}-${product.id}`}
           hoverable
-          variant="borderless"
           onClick={onClickItem}
           style={{
             width: 280,
