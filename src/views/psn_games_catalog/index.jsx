@@ -189,6 +189,7 @@ const PSNGamesCatalog = ({ location }) => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     style={{ flex: 2 }}
                     onKeyUp={handleSearchKeyPress}
+                    onSearch={handleSearchClick}
                     placeholder="Search Game..."
                     readOnly={isLoading}
                     value={searchQuery}
