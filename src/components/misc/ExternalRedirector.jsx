@@ -30,7 +30,7 @@ const EXTERNAL_KEYS = ["psn", "mp", "eap"];
 // Mapping of URL keys to target URLs or internal routes with product IDs
 const redirectMap = {
   // External URLs (no days setting)
-  psn: "https://www.playstation.com/en-in/ps-plus/games/?category=GAME_CATALOG&category=CLASSICS_CATALOG#plus-container",
+  psn: "https://ezyshare.in/psn-games-catalog",
   mp: "https://www.meta.com/en-gb/experiences/meta-horizon-plus/",
   eap: "https://www.ea.com/ea-play/games#playstation",
 
@@ -71,7 +71,7 @@ const isAbsoluteTransportUrl = (url) => {
   try {
     const urlObj = new URL(url);
     return TRANSPORT_DOMAINS.some((domain) =>
-      urlObj.hostname.toLowerCase().includes(domain)
+      urlObj.hostname.toLowerCase().includes(domain),
     );
   } catch {
     return false;
@@ -82,7 +82,7 @@ const isAbsolutePaymentUrl = (url) => {
   try {
     const urlObj = new URL(url);
     return PAYMENT_DOMAINS.some((domain) =>
-      urlObj.hostname.toLowerCase().includes(domain)
+      urlObj.hostname.toLowerCase().includes(domain),
     );
   } catch {
     return false;
@@ -103,8 +103,8 @@ function ExternalRedirector() {
     isExternalUrlCase && externalUrlFromQuery
       ? externalUrlFromQuery
       : unnormalizedUrlKeyParam
-      ? unnormalizedUrlKeyParam.split("0")[0] || ""
-      : "";
+        ? unnormalizedUrlKeyParam.split("0")[0] || ""
+        : "";
 
   // Parse days ONLY for product/internal routes
   const urlKey = isExternalUrlCase ? null : normalizeKey(unnormalizedUrlKey);
@@ -147,7 +147,7 @@ function ExternalRedirector() {
           formatDate(dayjs().add(days + 1, "day")),
         ],
         days,
-      })
+      }),
     );
   }, [days, dispatch, isExternalRedirect]);
 
@@ -243,21 +243,21 @@ function ExternalRedirector() {
         const endDate = formatDate(dayjs().add(days + 1, "day"));
 
         console.log(
-          `Checking availability for product: ${product.name} (${product.id})`
+          `Checking availability for product: ${product.name} (${product.id})`,
         );
 
         const isAvailable = isProductAvailable(product, startDate, endDate);
 
         if (isAvailable) {
           console.log(
-            `Product ${product.name} is available for requested period`
+            `Product ${product.name} is available for requested period`,
           );
           dispatch(updateRentalPeriod({ dates: [startDate, endDate], days }));
           history.push(targetConfig.route);
           setRedirected(true);
         } else {
           console.log(
-            `Product ${product.name} not available. Finding next available date...`
+            `Product ${product.name} not available. Finding next available date...`,
           );
 
           const availableSlots = await getAvailableSlots(product);
@@ -267,13 +267,13 @@ function ExternalRedirector() {
             const nextAvailableStartDate = parseDate(nextAvailableStart);
             const nextAvailableEndDate = nextAvailableStartDate.add(
               days,
-              "day"
+              "day",
             );
 
             console.log(
               `Next availability: ${formatDate(
-                nextAvailableStartDate
-              )} to ${formatDate(nextAvailableEndDate)}`
+                nextAvailableStartDate,
+              )} to ${formatDate(nextAvailableEndDate)}`,
             );
 
             dispatch(
@@ -283,7 +283,7 @@ function ExternalRedirector() {
                   formatDate(nextAvailableEndDate),
                 ],
                 days,
-              })
+              }),
             );
             history.push(targetConfig.route);
             setRedirected(true);
