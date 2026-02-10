@@ -167,7 +167,7 @@ const PSNGamesCatalog = ({ location }) => {
               {/* Top Bar: Pagination (left) and Search (right) */}
               <div className="game-catalog-top-bar">
                 <div className="pagination-left">
-                  {totalPages > 1 && (
+                  {totalPages >= 1 && (
                     <div className="pagination-wrapper">
                       <Pagination
                         current={currentPage}
