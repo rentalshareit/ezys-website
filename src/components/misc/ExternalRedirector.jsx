@@ -7,6 +7,15 @@ import useProductAvailability from "@/hooks/useProductAvailability";
 import useProduct from "@/hooks/useProduct";
 import { Spin } from "antd";
 
+function splitByFirstZero(num) {
+  const str = String(num);
+  const zeroIndex = str.indexOf("0");
+  if (zeroIndex === -1) {
+    return [str, ""];
+  }
+  return [str.slice(0, zeroIndex), str.slice(zeroIndex + 1)];
+}
+
 // Function to normalize URL key
 const normalizeKey = (key) => {
   if (!key) return "";
@@ -103,7 +112,7 @@ function ExternalRedirector() {
     isExternalUrlCase && externalUrlFromQuery
       ? externalUrlFromQuery
       : unnormalizedUrlKeyParam
-        ? unnormalizedUrlKeyParam.split("0")[0] || ""
+        ? splitByFirstZero(unnormalizedUrlKeyParam)[0] || ""
         : "";
 
   // Parse days ONLY for product/internal routes
@@ -113,7 +122,7 @@ function ExternalRedirector() {
 
   const daysParam =
     !isExternalRedirect && unnormalizedUrlKeyParam
-      ? unnormalizedUrlKeyParam.split("0")[1]
+      ? splitByFirstZero(unnormalizedUrlKeyParam)[1]
       : null;
   const days = daysParam ? parseInt(daysParam) : 7;
 
