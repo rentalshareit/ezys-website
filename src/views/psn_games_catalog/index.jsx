@@ -52,7 +52,9 @@ const PSNGamesCatalog = ({ location }) => {
   }, []);
 
   // Handle search - triggered on button click
-  const handleSearchClick = async () => {
+  const handleSearchClick = async (value, event, info) => {
+    if (info?.source === "clear") return;
+    
     if (!searchQuery.trim()) {
       setShowSearchResults(false);
       setSearchResults([]);
@@ -75,7 +77,6 @@ const PSNGamesCatalog = ({ location }) => {
       }
 
       const data = await response.json();
-      // Handle response structure: {games: [], count: N}
       const searchResults = data.games || (Array.isArray(data) ? data : []);
       setSearchResults(searchResults);
       setShowSearchResults(true);
@@ -88,21 +89,16 @@ const PSNGamesCatalog = ({ location }) => {
     }
   };
 
-  // Handle Enter key press in search input
-  const handleSearchKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearchClick();
-    }
-  };
-
   // Get current games to display
   const displayGames = showSearchResults ? searchResults : games;
   const totalItems = displayGames.length;
 
   const handleClearSearch = () => {
-    setSearchQuery("");
-    setShowSearchResults(false);
-    setSearchResults([]);
+    if (searchQuery.trim()) {
+      setShowSearchResults(false);
+      setSearchResults([]);
+      setSearchQuery("");
+    }
   };
 
   return (
@@ -123,47 +119,47 @@ const PSNGamesCatalog = ({ location }) => {
 
         {/* Main Content */}
         <div className="game-catalog-wrapper">
-          {/* Error Message */}
-          {error && !isLoading && (
-            <MessageDisplay message="Error" desc={error} />
-          )}
+          {/* Games Grid */}
 
-          {/* Loading State */}
-          {(isLoading || isSearching) && (
-            <div className="loader">
-              <div className="ezys-spinner">
-                <Spin size="large" />
+          <div className="game-catalog-content">
+            <div className="game-catalog-top-bar">
+              <div className="pagination-left">
+                <div className="pagination-wrapper">
+                  Total Games: {totalItems}
+                </div>
+              </div>
+              <div className="search-right">
+                <Input.Search
+                  className="game-search-input"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ flex: 2 }}
+                  onSearch={handleSearchClick}
+                  placeholder="Search Game..."
+                  readOnly={isLoading}
+                  value={searchQuery}
+                  allowClear
+                  onClear={handleClearSearch}
+                />
+                <div className="search-results-count"></div>
               </div>
             </div>
-          )}
 
-          {/* Games Grid */}
-          {!isLoading && !isSearching && !error && (
-            <div className="game-catalog-content">
-              <div className="game-catalog-top-bar">
-                <div className="pagination-left">
-                  <div className="pagination-wrapper">
-                    Total Games: {totalItems}
-                  </div>
-                </div>
-                <div className="search-right">
-                  <Input.Search
-                    className="game-search-input"
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ flex: 2 }}
-                    onKeyUp={handleSearchKeyPress}
-                    onSearch={handleSearchClick}
-                    placeholder="Search Game..."
-                    readOnly={isLoading}
-                    value={searchQuery}
-                    allowClear
-                    onClear={handleClearSearch}
-                  />
-                  <div className="search-results-count"></div>
+            {/* Error Message */}
+            {error && !isLoading && (
+              <MessageDisplay message="Failed loading games" desc={error} />
+            )}
+
+            {/* Loading State */}
+            {(isLoading || isSearching) && (
+              <div className="loader">
+                <div className="ezys-spinner">
+                  <Spin size="large" />
                 </div>
               </div>
+            )}
 
-              {/* Games Grid */}
+            {/* Games Grid */}
+            {!isLoading && !isSearching && !error && (
               <section className="game-catalog-section">
                 {displayGames.length > 0 ? (
                   <Row gutter={[16, 24]} className="games-grid">
@@ -189,8 +185,8 @@ const PSNGamesCatalog = ({ location }) => {
                   />
                 )}
               </section>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </main>
     </Boundary>
