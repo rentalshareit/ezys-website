@@ -1,16 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Input,
-  Spin,
-  Empty,
-  Pagination,
-  Tag,
-  Row,
-  Col,
-  Button,
-  Space,
-  Card,
-} from "antd";
+import { Input, Spin, Empty, Tag, Row, Col, Button, Space, Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import { Boundary, MessageDisplay } from "@/components/common";
@@ -27,12 +16,10 @@ const PSNGamesCatalog = ({ location }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [error, setError] = useState("");
   const searchTimeoutRef = useRef(null);
-  const paginationRef = useRef(null);
 
   // Get banner text from query param
   const bannerText = new URLSearchParams(location.search).get("banner") || "";
@@ -43,7 +30,7 @@ const PSNGamesCatalog = ({ location }) => {
       try {
         setIsLoading(true);
         setError("");
-        const response = await fetch("https://ezyshare.in/api/psn-list");
+        const response = await fetch("/api/psn-list");
 
         if (!response.ok) {
           throw new Error("Failed to fetch games");
@@ -53,7 +40,6 @@ const PSNGamesCatalog = ({ location }) => {
         // Handle response structure: {games: [], count: 562}
         const gamesList = data.games || (Array.isArray(data) ? data : []);
         setGames(gamesList);
-        setCurrentPage(1);
       } catch (err) {
         setError("Failed to load games. Please try again later.");
         console.error("Error fetching games:", err);
@@ -76,7 +62,7 @@ const PSNGamesCatalog = ({ location }) => {
     try {
       setIsSearching(true);
       setError("");
-      const response = await fetch("https://ezyshare.in/api/psn-search", {
+      const response = await fetch("/api/psn-search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +79,6 @@ const PSNGamesCatalog = ({ location }) => {
       const searchResults = data.games || (Array.isArray(data) ? data : []);
       setSearchResults(searchResults);
       setShowSearchResults(true);
-      setCurrentPage(1);
     } catch (err) {
       console.error("Error searching games:", err);
       setSearchResults([]);
@@ -113,20 +98,11 @@ const PSNGamesCatalog = ({ location }) => {
   // Get current games to display
   const displayGames = showSearchResults ? searchResults : games;
   const totalItems = displayGames.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentGames = displayGames.slice(startIndex, endIndex);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
 
   const handleClearSearch = () => {
     setSearchQuery("");
     setShowSearchResults(false);
     setSearchResults([]);
-    setCurrentPage(1);
   };
 
   return (
@@ -164,24 +140,11 @@ const PSNGamesCatalog = ({ location }) => {
           {/* Games Grid */}
           {!isLoading && !isSearching && !error && (
             <div className="game-catalog-content">
-              {/* Top Bar: Pagination (left) and Search (right) */}
               <div className="game-catalog-top-bar">
                 <div className="pagination-left">
-                  {totalPages >= 1 && (
-                    <div className="pagination-wrapper">
-                      <Pagination
-                        current={currentPage}
-                        total={totalItems}
-                        showTotal={(total, range) =>
-                          `${range[0]}-${range[1]} of ${total} games`
-                        }
-                        pageSize={ITEMS_PER_PAGE}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                        style={{ color: "rgb(13, 148, 136)" }}
-                      />
-                    </div>
-                  )}
+                  <div className="pagination-wrapper">
+                    Total Games: {totalItems}
+                  </div>
                 </div>
                 <div className="search-right">
                   <Input.Search
@@ -196,14 +159,15 @@ const PSNGamesCatalog = ({ location }) => {
                     allowClear
                     onClear={handleClearSearch}
                   />
+                  <div className="search-results-count"></div>
                 </div>
               </div>
 
               {/* Games Grid */}
-              <section className="game-catalog-section" ref={paginationRef}>
-                {currentGames.length > 0 ? (
+              <section className="game-catalog-section">
+                {displayGames.length > 0 ? (
                   <Row gutter={[16, 24]} className="games-grid">
-                    {currentGames.map((game) => (
+                    {displayGames.map((game) => (
                       <Col
                         xs={12}
                         sm={8}
