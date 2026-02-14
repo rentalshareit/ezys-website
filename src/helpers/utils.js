@@ -38,7 +38,7 @@ export const displayMoney = (n) => {
 export const calculateProductPrice = (
   product,
   rentalPeriod,
-  format = false
+  format = false,
 ) => {
   if (!product || !product.price || !rentalPeriod) return [0, 0];
 
@@ -123,7 +123,7 @@ export function formatCategory(category) {
 export function calculateElementsThatFit(
   elementWidth,
   gapBetweenElements = 0, // New parameter for the gap
-  viewportWidth
+  viewportWidth,
 ) {
   // 1. Calculate the total occupied width of a single element (excluding the gap)
   // This is the content width + left padding + right padding + left margin + right margin
@@ -155,7 +155,7 @@ export function calculateElementsThatFit(
   // This formula accounts for the fact that the last element doesn't have a gap *after* it.
   numberOfElements = Math.floor(
     (viewportWidth + gapBetweenElements) /
-      (individualElementVisualWidth + gapBetweenElements)
+      (individualElementVisualWidth + gapBetweenElements),
   );
 
   // One final check: Ensure we don't return a negative number if viewport is tiny or elements are huge.
@@ -225,4 +225,38 @@ export function containsThreeConsecutiveOrderedChars(productName, searchText) {
 
   // If the loop finishes and we haven't found at least 3 consecutive matches, return false
   return false;
+}
+
+export function getSubscriptionConfig(type) {
+  switch (type) {
+    case "psn_deluxe":
+      return {
+        title: "PlayStation Plus Deluxe Consent",
+        serviceName: "PS Plus Deluxe",
+        vendor: "Sony",
+        catalogLink: "/psn-games-catalog",
+        description:
+          "rotating selection of popular titles from Sony's extensive library.",
+      };
+    case "meta_plus":
+      return {
+        title: "Meta Quest+ Consent",
+        serviceName: "Meta Quest+",
+        vendor: "Meta",
+        catalogLink:
+          "https://www.meta.com/experiences/section/746836817401205/",
+        description: "monthly rotating VR games catalog from Meta.",
+      };
+    case "ea_play":
+      return {
+        title: "EA Play Consent",
+        serviceName: "EA Play",
+        vendor: "EA",
+        catalogLink: "https://www.ea.com/ea-play/games#playstation",
+        description:
+          "EA franchises including new game trials and member rewards.",
+      };
+    default:
+      return null;
+  }
 }

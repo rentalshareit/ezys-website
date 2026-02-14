@@ -265,14 +265,14 @@ const ViewProduct = () => {
 
               <div className="product-modal-action">
                 {subscriptionType === "psn_deluxe" && (
-                  <Button
-                    key="games-link"
-                    type="primary"
-                    href="/psn-games-catalog"
-                    rel="noopener noreferrer"
+                  <button
+                    id={`btn-view-games-${product.id}`}
+                    className="button button-small"
+                    onClick={() => history.push("/psn-games-catalog")}
+                    type="button"
                   >
                     View Games
-                  </Button>
+                  </button>
                 )}
                 <button
                   id={`btn-add-basket-${product.id}`}

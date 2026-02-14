@@ -1,5 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Input, Spin, Empty, Tag, Row, Col, Button, Space, Card } from "antd";
+import {
+  Input,
+  Spin,
+  Empty,
+  Tag,
+  Row,
+  Col,
+  Button,
+  Space,
+  Card,
+  Alert,
+} from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDocumentTitle, useScrollTop } from "@/hooks";
 import { Boundary, MessageDisplay } from "@/components/common";
@@ -54,7 +65,7 @@ const PSNGamesCatalog = ({ location }) => {
   // Handle search - triggered on button click
   const handleSearchClick = async (value, event, info) => {
     if (info?.source === "clear") return;
-    
+
     if (!searchQuery.trim()) {
       setShowSearchResults(false);
       setSearchResults([]);
@@ -116,7 +127,12 @@ const PSNGamesCatalog = ({ location }) => {
             </div>
           </div>
         </div>
-
+        <Alert
+          message="All the games listed here would be free to download and play as subsscription would be active."
+          type="info"
+          showIcon
+          style={{ marginTop: "10px" }}
+        />
         {/* Main Content */}
         <div className="game-catalog-wrapper">
           {/* Games Grid */}

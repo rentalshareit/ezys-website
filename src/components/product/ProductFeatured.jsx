@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useBasket } from "@/hooks";
 import useProductAvailability from "@/hooks/useProductAvailability";
-import { calculateProductPrice } from "@/helpers/utils";
+import { calculateProductPrice, getSubscriptionConfig } from "@/helpers/utils";
 import { ViewGamesModal, PackageInfoModal } from "@/components/common";
 import ProductSkeleton from "./ProductSkeleton";
 import {
@@ -183,12 +183,6 @@ const getCardActions = ({
   onCarouselResume,
 }) => {
   const items = [];
-  if (product.subscription) {
-    items.push({
-      key: "view_games",
-      label: "View Games",
-    });
-  }
 
   items.push({
     key: "show_availability",
@@ -208,9 +202,6 @@ const getCardActions = ({
   const handleMenuClick = ({ key, domEvent }) => {
     domEvent.stopPropagation();
     switch (key) {
-      case "view_games":
-        onViewGames?.();
-        break;
       case "show_availability":
         onCheckAvailability?.();
         break;
@@ -244,6 +235,29 @@ const getCardActions = ({
         days={rentalPeriod.days}
       />
     ),
+    ...(product.subscription
+      ? [
+          <Button
+            type="link"
+            size="small"
+            className="view-games-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewGames(e);
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
+            style={{
+              color: "rgb(13, 148, 136)",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              lineHeight: 1.5,
+              textAlign: "center",
+            }}
+          >
+            View Game
+          </Button>,
+        ]
+      : []),
     <Dropdown
       menu={{
         items,
@@ -290,11 +304,11 @@ const getCardActions = ({
         style={{ padding: 0 }}
       />
     </Dropdown>,
-  ];
+  ].filter(Boolean);
 };
 
 const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
-  const { skeleton = false } = product;
+  const { skeleton = false, subscription_type } = product;
   const { addToBasket, isItemOnBasket } = useBasket();
   const { isProductAvailable, isLoading } = useProductAvailability();
   const hideOutOfStock = useSelector((state) => state.app.hideOutOfStock);
@@ -309,8 +323,9 @@ const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
 
   // Modal handlers
   const handleViewGames = useCallback(() => {
-    setGamesModalVisible(true);
-  }, []);
+    const config = getSubscriptionConfig(subscription_type) || {};
+    history.push(config.catalogLink);
+  }, [subscription_type, history]);
 
   const handlePackageInfo = useCallback(() => {
     setPackageModalVisible(true);
@@ -377,6 +392,7 @@ const ProductFeatured = ({ product, onCarouselPause, onCarouselResume }) => {
       >
         <Card
           id={`card-view-product-details-${product.category}-${product.id}`}
+          className={product.subscription ? "subscription" : ""}
           hoverable
           onClick={onClickItem}
           style={{

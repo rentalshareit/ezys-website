@@ -6,48 +6,15 @@ import {
   confirmDisclaimer,
   cancelDisclaimer,
 } from "@/redux/actions/miscActions";
+import { getSubscriptionConfig } from "@/helpers/utils";
 
 const { Text, Link, Title } = Typography;
-
-const getSubscriptionConfig = (type) => {
-  switch (type) {
-    case "psn_deluxe":
-      return {
-        title: "PlayStation Plus Deluxe Consent",
-        serviceName: "PS Plus Deluxe",
-        vendor: "Sony",
-        catalogLink: "https://www.playstation.com/en-in/ps-plus/games/",
-        description:
-          "rotating selection of popular titles from Sony's extensive library.",
-      };
-    case "meta_plus":
-      return {
-        title: "Meta Quest+ Consent",
-        serviceName: "Meta Quest+",
-        vendor: "Meta",
-        catalogLink:
-          "https://www.meta.com/experiences/section/746836817401205/",
-        description: "monthly rotating VR games catalog from Meta.",
-      };
-    case "ea_play":
-      return {
-        title: "EA Play Consent",
-        serviceName: "EA Play",
-        vendor: "EA",
-        catalogLink: "https://www.ea.com/ea-play/games#playstation",
-        description:
-          "EA franchises including new game trials and member rewards.",
-      };
-    default:
-      return null;
-  }
-};
 
 const SubscriptionDisclaimer = () => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
   const { visible, product } = useSelector(
-    (state) => state.app.subscriptionDisclaimerModal || {}
+    (state) => state.app.subscriptionDisclaimerModal || {},
   );
 
   const config = getSubscriptionConfig(product?.subscription_type) || {};
@@ -90,7 +57,11 @@ const SubscriptionDisclaimer = () => {
         <div style={{ padding: "10px" }}>
           <Text style={{ fontWeight: "400" }}>
             Our product provides access to the{" "}
-            <Link href={config.catalogLink} target="_blank">
+            <Link
+              href={config.catalogLink}
+              target="_self"
+              onClick={handleCancel}
+            >
               <span style={{ color: "rgb(13, 148, 136)", fontWeight: "600" }}>
                 {config.serviceName}
               </span>{" "}
