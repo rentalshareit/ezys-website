@@ -1,0 +1,9 @@
+{
+  "name": "whatsapp-otp-auth",
+  "version": "1.0.0",
+  "dependencies": {
+    "mysql2": "^3.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "axios": "^1.6.0"
+  }
+}
