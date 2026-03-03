@@ -339,6 +339,156 @@ async function getProduct(productId) {
   }
 }
 
+/**
+ * Get rental product with options and pricing
+ */
+async function getRentalProduct(productId) {
+  let connection;
+  try {
+    connection = await getDBConnection();
+    const result = await callOpenCartAPI(connection, "api/rental/product", {
+      method: "GET",
+      queryParams: { product_id: productId },
+      requiresAuth: false,
+    });
+    return { statusCode: 200, body: formatResponseBody(result) };
+  } catch (error) {
+    console.error(
+      "[GET_RENTAL_PRODUCT] Error fetching rental product",
+      productId,
+      ":",
+      error.message,
+    );
+    throw error;
+  } finally {
+    await connection?.end().catch((err) => {});
+  }
+}
+
+/**
+ * Calculate price for selected options
+ */
+async function calculatePrice({
+  rentalProductId,
+  rentalDays,
+  selectedOptions,
+}) {
+  let connection;
+  try {
+    connection = await getDBConnection();
+    const result = await callOpenCartAPI(
+      connection,
+      "api/rental/product|calculatePrice",
+      {
+        method: "POST",
+        data: {
+          rental_product_id: rentalProductId,
+          rental_days: rentalDays,
+          selected_options: selectedOptions,
+        },
+        requiresAuth: false,
+      },
+    );
+    return { statusCode: 200, body: formatResponseBody(result) };
+  } catch (error) {
+    console.error("[CALCULATE_PRICE] Error calculating price:", error.message);
+    throw error;
+  } finally {
+    await connection?.end().catch((err) => {});
+  }
+}
+
+/**
+ * Create rental booking with options
+ */
+async function createBooking(
+  customerId,
+  {
+    phoneNumber,
+    firstname,
+    lastname,
+    rentalProductId,
+    selectedOptions,
+    rentalPeriodType,
+    rentalDuration,
+    rentalStartDate,
+  },
+) {
+  let connection;
+  try {
+    connection = await getDBConnection();
+    const result = await callOpenCartAPI(
+      connection,
+      "api/rental/booking|create",
+      {
+        method: "POST",
+        data: {
+          phoneNumber,
+          firstname,
+          lastname,
+          rentalProductId,
+          selectedOptions,
+          rentalPeriodType,
+          rentalDuration,
+          rentalStartDate,
+        },
+        customerId,
+        requiresAuth: true,
+      },
+    );
+    return { statusCode: 200, body: formatResponseBody(result) };
+  } catch (error) {
+    console.error("[CREATE_BOOKING] Error creating booking:", error.message);
+    throw error;
+  } finally {
+    await connection?.end().catch((err) => {});
+  }
+}
+
+/**
+ * Get booking details
+ */
+async function getBooking(customerId, { bookingId }) {
+  let connection;
+  try {
+    connection = await getDBConnection();
+    const result = await callOpenCartAPI(connection, "api/rental/booking|get", {
+      method: "GET",
+      customerId,
+      queryParams: { booking_id: bookingId },
+      requiresAuth: true,
+    });
+    return { statusCode: 200, body: formatResponseBody(result) };
+  } catch (error) {
+    console.error("[GET_BOOKING] Error getting booking:", error.message);
+    throw error;
+  } finally {
+    await connection?.end().catch((err) => {});
+  }
+}
+
+async function getBookings(customerId) {
+  let connection;
+  try {
+    connection = await getDBConnection();
+    const result = await callOpenCartAPI(
+      connection,
+      "api/rental/booking|listBooking",
+      {
+        method: "GET",
+        customerId,
+        requiresAuth: true,
+      },
+    );
+    return { statusCode: 200, body: formatResponseBody(result) };
+  } catch (error) {
+    console.error("[GET_BOOKINGS] Error getting bookings:", error.message);
+    throw error;
+  } finally {
+    await connection?.end().catch((err) => {});
+  }
+}
+
 async function searchProducts(queryParams) {
   let connection;
   try {
@@ -896,6 +1046,14 @@ exports.handler = async (event) => {
     } else if (path.match(/^\/products\/\d+$/) && method === "GET") {
       const productId = path.split("/")[2];
       response = await getProduct(productId);
+    } else if (path.match(/^\/rental\/products\/\d+$/) && method === "GET") {
+      const productId = path.split("/")[3];
+      response = await getRentalProduct(productId);
+    } else if (
+      path.match(/^\/rental\/calculate-price\/\d+$/) &&
+      method === "POST"
+    ) {
+      response = await calculatePrice(body);
     } else if (path === "/products/search" && method === "GET") {
       response = await searchProducts(queryParams);
     }
@@ -953,6 +1111,16 @@ exports.handler = async (event) => {
         response = await getCart(customerId);
       } else if (path === "/cart/remove" && method === "POST") {
         response = await removeFromCart(customerId, body.key);
+      } else if (
+        path.match(/^\/rental\/booking\/create\/\d+$/) &&
+        method === "POST"
+      ) {
+        response = await createBooking(customerId, body);
+      } else if (path.match(/^\/rental\/booking\/\d+$/) && method === "GET") {
+        const bookingId = path.split("/")[4];
+        response = await getBooking(customerId, { bookingId });
+      } else if (path.match(/^\/rental\/bookings\/\d+$/) && method === "GET") {
+        response = await getBookings(customerId);
       }
 
       // Checkout

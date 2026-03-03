@@ -137,7 +137,7 @@ async function sendWhatsAppMessage(mobile, otp) {
     const formattedMobile = mobile.replace("+", "");
 
     const response = await axios.post(
-      `${CONFIG.botPenguin.apiUrl}/whatsapp-automation/wa/send-template?apiKey=${apiKey}`,
+      `${CONFIG.botPenguin.apiUrl}/whatsapp-automation/wa/send-template?apiKey=${CONFIG.botPenguin.apiKey}`,
       {
         wa_id: formattedMobile,
         templateId: CONFIG.botPenguin.templateId,
@@ -171,7 +171,7 @@ async function sendWhatsAppMessage(mobile, otp) {
 }
 
 // Send OTP
-async function sendOTP(mobile, ipAddress) {
+async function sendOTP(mobile, ipAddress, bypass = false) {
   const connection = await getDBConnection();
 
   try {
@@ -208,23 +208,37 @@ async function sendOTP(mobile, ipAddress) {
       [mobile],
     );
 
-    // Store OTP
+    // Store OTP (SIDE EFFECT - must execute)
     await connection.execute(
       "INSERT INTO otp_verifications (mobile, otp, created_at, expires_at, ip_address) VALUES (?, ?, NOW(), ?, ?)",
       [mobile, otp, expiresAt, ipAddress],
     );
 
-    // Send via WhatsApp
-    await sendWhatsAppMessage(mobile, otp);
+    // Try to send via WhatsApp
+    let whatsappError = null;
+    try {
+      await sendWhatsAppMessage(mobile, otp);
+    } catch (error) {
+      console.error("WhatsApp send failed:", error.message);
+      whatsappError = error;
 
-    console.log(`OTP sent to ${mobile} from ${ipAddress}`);
+      // If not in bypass mode, fail the request
+      if (!bypass) {
+        throw error;
+      }
+    }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: "OTP sent to your WhatsApp",
+        message:
+          bypass && whatsappError
+            ? "OTP generated. WhatsApp delivery failed but you can still verify with OTP (check SMS or contact support)"
+            : "OTP sent to your WhatsApp",
         expiresIn: 300,
+        bypass: bypass && whatsappError ? true : false,
+        otp: bypass && whatsappError ? otp : undefined, // Only show OTP in bypass mode if WhatsApp failed
       }),
     };
   } catch (error) {
@@ -242,7 +256,7 @@ async function sendOTP(mobile, ipAddress) {
 }
 
 // Verify OTP
-async function verifyOTP(mobile, otp, ipAddress) {
+async function verifyOTP(mobile, otp, ipAddress, bypass = false) {
   const connection = await getDBConnection();
 
   try {
@@ -253,7 +267,7 @@ async function verifyOTP(mobile, otp, ipAddress) {
     );
 
     if (otpRecords.length === 0) {
-      // Increment attempts
+      // Increment attempts (SIDE EFFECT - must execute)
       await connection.execute(
         "UPDATE otp_verifications SET attempts = attempts + 1 WHERE mobile = ? AND verified = 0",
         [mobile],
@@ -266,6 +280,7 @@ async function verifyOTP(mobile, otp, ipAddress) {
       );
 
       if (failedAttempts[0].total >= CONFIG.rateLimit.maxVerifyAttempts) {
+        // Block user (SIDE EFFECT - must execute)
         await connection.execute(
           "INSERT INTO otp_rate_limits (mobile, ip_address, blocked_until, created_at, last_request_at, request_count) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? HOUR), NOW(), NOW(), 0) ON DUPLICATE KEY UPDATE blocked_until = DATE_ADD(NOW(), INTERVAL ? HOUR)",
           [
@@ -294,18 +309,18 @@ async function verifyOTP(mobile, otp, ipAddress) {
       };
     }
 
-    // Mark verified
+    // Mark verified (SIDE EFFECT - must execute)
     await connection.execute(
       "UPDATE otp_verifications SET verified = 1 WHERE id = ?",
       [otpRecords[0].id],
     );
 
-    // Reset rate limit
+    // Reset rate limit (SIDE EFFECT - must execute)
     await connection.execute("DELETE FROM otp_rate_limits WHERE mobile = ?", [
       mobile,
     ]);
 
-    // Find or create customer
+    // Find or create customer (SIDE EFFECT - must execute)
     const customer = await findOrCreateCustomer(connection, mobile);
 
     // Generate JWT
@@ -362,13 +377,13 @@ async function findOrCreateCustomer(connection, mobile) {
 
   const [result] = await connection.execute(
     "INSERT INTO oc_customer (customer_group_id, store_id, language_id, firstname, lastname, email, telephone, status, safe, date_added) VALUES (1, 0, 1, ?, ?, ?, ?, 1, 1, NOW())",
-    ["Customer", mobile.slice(-4), email, mobile],
+    ["John", "Doe", email, mobile],
   );
 
   return {
     customer_id: result.insertId,
-    firstname: "Customer",
-    lastname: mobile.slice(-4),
+    firstname: "John",
+    lastname: "Doe",
     email: email,
     telephone: mobile,
   };
@@ -408,16 +423,25 @@ async function getCurrentUser(token) {
 
 // Lambda handler
 exports.handler = async (event) => {
-  const path = event.path || event.rawPath || event.requestContext?.http?.path;
+  const pathWithBase =
+    event.path || event.rawPath || event.requestContext?.http?.path;
+
+  // Strip api/auth/ prefix to get the endpoint
+  const path = pathWithBase.replace(/^\/?api\/?auth\/?/, "/") || "/";
+
   const method = event.httpMethod || event.requestContext?.http?.method;
   const body = event.body ? JSON.parse(event.body) : {};
   const headers = event.headers || {};
+  const queryParams = event.queryStringParameters || {};
 
   const ipAddress =
     event.requestContext?.http?.sourceIp ||
     event.requestContext?.identity?.sourceIp ||
     headers["x-forwarded-for"]?.split(",")[0] ||
     "unknown";
+
+  // Check for bypass flag in query params or body
+  const bypass = queryParams.bypass === "true" || body.bypass === true;
 
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
@@ -433,11 +457,11 @@ exports.handler = async (event) => {
   try {
     let response;
 
-    if (path === "/auth/send-otp" && method === "POST") {
-      response = await sendOTP(body.mobile, ipAddress);
-    } else if (path === "/auth/verify-otp" && method === "POST") {
-      response = await verifyOTP(body.mobile, body.otp, ipAddress);
-    } else if (path === "/auth/me" && method === "GET") {
+    if (path === "/send-otp" && method === "POST") {
+      response = await sendOTP(body.mobile, ipAddress, bypass);
+    } else if (path === "/verify-otp" && method === "POST") {
+      response = await verifyOTP(body.mobile, body.otp, ipAddress, bypass);
+    } else if (path === "/me" && method === "GET") {
       const token = headers.authorization?.replace("Bearer ", "");
       response = await getCurrentUser(token);
     } else {
@@ -455,7 +479,7 @@ exports.handler = async (event) => {
       },
     };
   } catch (error) {
-    console.error("Lambda error:", error);
+    console.error("Lambda error:", error.message);
     return {
       statusCode: 500,
       headers: corsHeaders,
