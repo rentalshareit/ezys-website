@@ -18,6 +18,7 @@ const tagOptions = [
   { value: "ps4slim", label: "PS4 Slim" },
   { value: "ps4pro", label: "PS4 Pro" },
   { value: "ps5digital", label: "PS5 Digital" },
+  { value: "ps5slimdisc", label: "PS5 Slim Disc" },
   { value: "metaquest3s", label: "Meta Quest 3S" },
   { value: "ac", label: "Assassins Creed" },
   { value: "cod", label: "Call Of Duty" },
@@ -87,7 +88,7 @@ const FormSchema = Yup.object().shape({
   subscription_type: Yup.string().when("subscription", {
     is: true,
     then: Yup.string().required(
-      "Subscription type is required when subscription is enabled"
+      "Subscription type is required when subscription is enabled",
     ),
     otherwise: Yup.string().nullable(),
   }),
@@ -373,7 +374,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                       defaultValue={subscriptionTypeOptions.find(
                         (option) =>
                           option.value === values.subscription_type ||
-                          "psn_deluxe"
+                          "psn_deluxe",
                       )}
                       options={subscriptionTypeOptions}
                       disabled={isLoading}
