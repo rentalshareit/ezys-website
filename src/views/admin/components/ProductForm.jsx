@@ -28,6 +28,7 @@ const tagOptions = [
   { value: "hz", label: "Horizon Zero Dawn" },
   { value: "nfs", label: "Need for Speed" },
   { value: "sp", label: "Spiderman" },
+  { value: "bmw", label: "Black Myth Wukong" },
   { value: "wwe", label: "WWE 2K18" },
   { value: "t", label: "Tekken 7" },
   { value: "gta5", label: "GTA 5" },
