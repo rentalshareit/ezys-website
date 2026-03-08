@@ -10,7 +10,8 @@ const FILTER_CONFIG = {
     options: [
       { label: "PS4 Slim", value: "ps4slim" },
       { label: "PS4 Pro", value: "ps4pro" },
-      { label: "PS5 Digital", value: "ps5digital" },
+      { label: "PS5 Slim Digital", value: "ps5digital" },
+      { label: "PS5 Slim Disc", value: "ps5slimdisc" },
     ],
   },
   games_controllers: {

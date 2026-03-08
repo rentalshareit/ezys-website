@@ -443,20 +443,20 @@
     width: 100%;
     max-width: 100%;
 
-    .ant-input-search {
-      .ant-input {
-        font-size: $baseFontSize;
-        padding: 0.6rem 0.8rem;
-      }
+    // .ant-input-search {
+    //   .ant-input {
+    //     font-size: $baseFontSize;
+    //     padding: 0.6rem 0.8rem;
+    //   }
 
-      .ant-input-group-addon {
-        .search-button-primary {
-          padding: 0.4rem 1rem;
-          font-size: $font-small;
-          height: 38px;
-        }
-      }
-    }
+    //   .ant-input-group-addon {
+    //     .search-button-primary {
+    //       padding: 0.4rem 1rem;
+    //       font-size: $font-small;
+    //       height: 38px;
+    //     }
+    //   }
+    // }
   }
 
   .game-card {
