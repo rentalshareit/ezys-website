@@ -209,14 +209,30 @@ const Terms = () => {
                 textAlign: "left",
               }}
             >
-              7. Rental Duration & Extensions
+              7. Rental Duration, Extensions and Use
             </h2>
             <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
               Rental durations range from 1 to 30 days.
             </p>
             <p style={{ marginBottom: "1rem", lineHeight: "1.625" }}>
               Only one extension is permitted per order and must be requested
-              before the rental period ends.
+              before the rental period ends. Extension completely depends on
+              product availability.
+            </p>
+            <p
+              style={{
+                marginBottom: "1rem",
+                lineHeight: "1.625",
+                fontWeight: "500",
+              }}
+            >
+              <strong>Personal Use Only:</strong> Gaming consoles are strictly
+              for your personal use only. Re-renting or commercial use is
+              prohibited by Ezys policy.
+            </p>
+            <p style={{ marginBottom: 0, lineHeight: "1.625" }}>
+              Violations result in immediate account suspension and potential
+              legal action for breach of contract.
             </p>
           </section>
 
