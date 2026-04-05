@@ -59,7 +59,7 @@ const Confirm = ({ orderId, isOpen, email }) => {
               color: "rgb(13, 148, 136)",
             }}
           >
-            To confirm your order, please complete your KYC on the order page
+            To confirm your order, please complete your <b>KYC on WhatsApp</b>
             within <b>8 hours</b>
           </div>
           <div

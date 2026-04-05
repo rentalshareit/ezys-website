@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { Spin } from "antd";
 import classNames from "classnames";
 import { displayMoney } from "@/helpers/utils";
-import WithModalKyc from "@/components/common/Kyc";
 
 function capitalizeFirstLetter(string) {
   if (!string) return string;
@@ -12,7 +11,6 @@ function capitalizeFirstLetter(string) {
 
 const UserOrdersTab = () => {
   const [data, setData] = useState();
-  const [kycOrderId, setKycOrderId] = useState();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
@@ -25,11 +23,11 @@ const UserOrdersTab = () => {
     async function getData() {
       const { value, countryCode } = profile.mobile;
       const phone = value.substr(
-        value.indexOf(countryCode) + countryCode.length
+        value.indexOf(countryCode) + countryCode.length,
       );
       setLoading(true);
       const response = await fetch(
-        `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getOrders&phone=${phone}`
+        `https://script.google.com/macros/s/AKfycbxlC2R1EPoKBW65eSoy31fZUbZgMI1prYuG77P5C2guSvUj26bRtKT--JccFVQz5vw/exec?action=getOrders&phone=${phone}`,
       );
       const data = await response.json();
 
@@ -110,16 +108,6 @@ const UserOrdersTab = () => {
                     </span>
                   </div>
                 </div>
-                {(d.status === "kyc_pending" || d.status === "kyc_failed") && (
-                  <button
-                    className="button button-small"
-                    style={{ marginBottom: "1rem" }}
-                    onClick={() => setKycOrderId(d.orderId)}
-                    type="button"
-                  >
-                    Start Kyc
-                  </button>
-                )}
                 <div>
                   <table className="user-orders-table">
                     <thead>
@@ -167,8 +155,8 @@ const UserOrdersTab = () => {
                       {displayMoney(
                         d.items.reduce(
                           (acc, i) => acc + i.price * i.quantity,
-                          0
-                        ) * d.rentalDays
+                          0,
+                        ) * d.rentalDays,
                       )}
                     </span>
                   </span>
@@ -188,12 +176,12 @@ const UserOrdersTab = () => {
                       {displayMoney(
                         d.items.reduce(
                           (acc, i) => acc + i.price * i.quantity,
-                          0
+                          0,
                         ) *
                           d.rentalDays +
                           (d.sameDayDeliveryCharge || 0) +
                           (d.shippingCharges || 0) -
-                          d.totalPrice
+                          d.totalPrice,
                       )}
                     </span>
                   </span>
@@ -205,13 +193,8 @@ const UserOrdersTab = () => {
             );
           })
         : loading
-        ? null
-        : "No orders found"}
-      <WithModalKyc
-        show={!!kycOrderId}
-        onClose={() => setKycOrderId(null)}
-        orderId={kycOrderId}
-      />
+          ? null
+          : "No orders found"}
     </div>
   );
 };

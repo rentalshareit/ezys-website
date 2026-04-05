@@ -48,6 +48,9 @@ const CustomMobileInput = (props) => {
         onChange={handleChange}
         value={defaultValue.value}
       />
+      <span style={{ fontSize: "10px", color: "#818181" }}>
+        Your phone number must be registered on WhatsApp to receive updates
+      </span>
     </div>
   );
 };
